@@ -438,111 +438,134 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "basic_py.l"
 #line 2 "basic_py.l"
-    #include<stdio.h>
-    #include<string.h>
-    #include<ctype.h>
+    #include <stdio.h>
+    #include <string.h>
+    #include <ctype.h>
 
-    typedef struct{
+    typedef struct
+    {
         char name[25];
     } token;
 
     int qtd_tokens = 0;
-    token tokens[100]; 
-     /* INDENT */
-    int qtd_indent=0;
-    int qtd_tab_l=0;
-    int qtd_tab_l_ant=0;
+    token tokens[100];
+    /* INDENT */
+    int qtd_indent = 0;
+    int qtd_tab_l = 0;
+    int qtd_tab_l_ant = 0;
 
-    int qtdTabs(char *textTab){
+    int qtdTabs(char *textTab)
+    {
         int lenTT = strlen(textTab);
-        int i, count=0;
-        for(i=0; i<lenTT; i++){
+        int i, count = 0;
+        for (i = 0; i < lenTT; i++)
+        {
             char c = textTab[i];
-            if(c=='\t'){
+            if (c == '\t')
+            {
                 count++;
             }
         }
         return count;
     }
 
-    
-    void indent(){
+    void indent()
+    {
         int i, j, k;
         int cSpace = 0;
-        int numTab=0;
-        char *textTab=(char*) malloc(sizeof(yytext));
-        int lenYY = strlen(yytext);   
+        int numTab = 0;
+        char *textTab = (char *)malloc(sizeof(yytext));
+        int lenYY = strlen(yytext);
 
-        // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E 
+        // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E
         // REMOVE TUDO QUE VEM ANTES DE ENTER.
-        for(i=0; i<lenYY; i++){
+        for (i = 0; i < lenYY; i++)
+        {
             char c = yytext[i];
-            if(c==' '){
+            if (c == ' ')
+            {
                 cSpace++;
-                if(cSpace==4){
+                if (cSpace == 4)
+                {
                     numTab++;
-                    cSpace=0;
-                    strcat(textTab,"\t");
+                    cSpace = 0;
+                    strcat(textTab, "\t");
                 }
-            } else {
-                cSpace=0;
+            }
+            else
+            {
+                cSpace = 0;
                 strcpy(textTab, "\n");
             }
         }
 
         // TRATAMENTO PARA ESPACOS - OBS: DIF DE TABS
-        if(cSpace>0){
-            for(j=0;j<cSpace; j++){
+        if (cSpace > 0)
+        {
+            for (j = 0; j < cSpace; j++)
+            {
                 strcat(textTab, " ");
             }
         }
-        
-        
+
         int lenTT = strlen(textTab);
         /*
-        printf("\n\n\n INI_TEXT_TAB \n");
-        printf("Numtab: %d\n", numTab);
-        printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
-        for(i=0; i<lenTT; i++){
-            int new_c = textTab[i];
-            printf("@%d@\n", new_c);
-        }
-        printf("END_TEXT_TAB\n");
-        */
+            printf("\n\n\n INI_TEXT_TAB \n");
+            printf("Numtab: %d\n", numTab);
+            printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
+            for(i=0; i<lenTT; i++){
+                int new_c = textTab[i];
+                printf("@%d@\n", new_c);
+            }
+            printf("END_TEXT_TAB\n");
+            */
 
-        for(i=0; i<lenTT; i++){
+        for (i = 0; i < lenTT; i++)
+        {
             char c = textTab[i];
-            if(lenTT>1) {
+            if (lenTT > 1)
+            {
                 qtd_tab_l = qtdTabs(textTab);
                 int diff;
-                if(qtd_tab_l>qtd_tab_l_ant){
-                    diff = qtd_tab_l-qtd_tab_l_ant;
-                    qtd_indent+=diff;
-                    for(j=0; j<diff; j++){
-                        printf("INDENT\n");
+                if (qtd_tab_l > qtd_tab_l_ant)
+                {
+                    diff = qtd_tab_l - qtd_tab_l_ant;
+                    qtd_indent += diff;
+                    for (j = 0; j < diff; j++)
+                    {
+                        printf("\nINDENT");
                     }
-                } else if (qtd_tab_l<qtd_tab_l_ant) {
-                    diff = qtd_tab_l_ant-qtd_tab_l;
-                    qtd_indent-=diff;
-                    for(j=0; j<diff; j++){
-                        printf("DEDENT\n");
+                    printf("\n\n");
+                }
+                else if (qtd_tab_l < qtd_tab_l_ant)
+                {
+                    diff = qtd_tab_l_ant - qtd_tab_l;
+                    qtd_indent -= diff;
+                    for (j = 0; j < diff; j++)
+                    {
+                        printf("\nDEDENT");
                     }
+                    printf("\n\n");
                 }
             }
-            
-            if(c==' '){
-                if(lenTT>1){
+
+            if (c == ' ')
+            {
+                if (lenTT > 1)
+                {
                     printf("ERRO SPACO\n");
                 }
-            } else if (c=='\n') {
-                qtd_tab_l_ant=qtd_tab_l;
-                qtd_tab_l=0;
+            }
+            else if (c == '\n')
+            {
+                qtd_tab_l_ant = qtd_tab_l;
+                qtd_tab_l = 0;
             }
         }
     }
 
-#line 545 "lex.yy.c"
-#line 546 "lex.yy.c"
+#line 568 "lex.yy.c"
+#line 569 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -759,9 +782,9 @@ YY_DECL
 		}
 
 	{
-#line 107 "basic_py.l"
+#line 130 "basic_py.l"
 
-#line 765 "lex.yy.c"
+#line 788 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -821,15 +844,15 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 108 "basic_py.l"
+#line 131 "basic_py.l"
 { indent(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 111 "basic_py.l"
+#line 134 "basic_py.l"
 ECHO;
 	YY_BREAK
-#line 833 "lex.yy.c"
+#line 856 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1834,14 +1857,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 111 "basic_py.l"
+#line 134 "basic_py.l"
 
 int main() {
     yylex();
-    printf("\n\n qtd_indent: %d.\n", qtd_indent);
-    if(qtd_indent!=1){
-        printf("ERRO INDENT\n\n");
-    }
+    printf("\n\nqtd_indent: %d.\n", qtd_indent);
     return 0;
 }
 
