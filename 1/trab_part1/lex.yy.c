@@ -472,6 +472,9 @@ char *yytext;
         int numTab=0;
         char *textTab=(char*) malloc(sizeof(yytext));
         int lenYY = strlen(yytext);   
+
+        // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E 
+        // REMOVE TUDO QUE VEM ANTES DE ENTER.
         for(i=0; i<lenYY; i++){
             char c = yytext[i];
             if(c==' '){
@@ -487,6 +490,7 @@ char *yytext;
             }
         }
 
+        // TRATAMENTO PARA ESPACOS - OBS: DIF DE TABS
         if(cSpace>0){
             for(j=0;j<cSpace; j++){
                 strcat(textTab, " ");
@@ -494,9 +498,9 @@ char *yytext;
         }
         
         
-        //printf("\n\n\n INI_TEXT_TAB \n");
         int lenTT = strlen(textTab);
         /*
+        printf("\n\n\n INI_TEXT_TAB \n");
         printf("Numtab: %d\n", numTab);
         printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
         for(i=0; i<lenTT; i++){
@@ -508,7 +512,6 @@ char *yytext;
 
         for(i=0; i<lenTT; i++){
             char c = textTab[i];
-
             if(lenTT>1) {
                 qtd_tab_l = qtdTabs(textTab);
                 int diff;
@@ -538,8 +541,8 @@ char *yytext;
         }
     }
 
-#line 542 "lex.yy.c"
-#line 543 "lex.yy.c"
+#line 545 "lex.yy.c"
+#line 546 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -756,9 +759,9 @@ YY_DECL
 		}
 
 	{
-#line 104 "basic_py.l"
+#line 107 "basic_py.l"
 
-#line 762 "lex.yy.c"
+#line 765 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -818,15 +821,15 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 105 "basic_py.l"
+#line 108 "basic_py.l"
 { indent(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 108 "basic_py.l"
+#line 111 "basic_py.l"
 ECHO;
 	YY_BREAK
-#line 830 "lex.yy.c"
+#line 833 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1831,7 +1834,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 108 "basic_py.l"
+#line 111 "basic_py.l"
 
 int main() {
     yylex();

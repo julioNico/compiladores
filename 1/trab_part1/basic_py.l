@@ -33,6 +33,9 @@
         int numTab=0;
         char *textTab=(char*) malloc(sizeof(yytext));
         int lenYY = strlen(yytext);   
+
+        // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E 
+        // REMOVE TUDO QUE VEM ANTES DE ENTER.
         for(i=0; i<lenYY; i++){
             char c = yytext[i];
             if(c==' '){
@@ -48,6 +51,7 @@
             }
         }
 
+        // TRATAMENTO PARA ESPACOS - OBS: DIF DE TABS
         if(cSpace>0){
             for(j=0;j<cSpace; j++){
                 strcat(textTab, " ");
@@ -55,9 +59,9 @@
         }
         
         
-        //printf("\n\n\n INI_TEXT_TAB \n");
         int lenTT = strlen(textTab);
         /*
+        printf("\n\n\n INI_TEXT_TAB \n");
         printf("Numtab: %d\n", numTab);
         printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
         for(i=0; i<lenTT; i++){
@@ -69,7 +73,6 @@
 
         for(i=0; i<lenTT; i++){
             char c = textTab[i];
-
             if(lenTT>1) {
                 qtd_tab_l = qtdTabs(textTab);
                 int diff;
