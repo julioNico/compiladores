@@ -442,18 +442,23 @@ char *yytext;
     #include <string.h>
     #include <ctype.h>
 
+    //estruturas
     typedef struct
     {
         char name[25];
     } token;
 
+    //variáveis
     int qtd_tokens = 0;
     token tokens[100];
+
+    char *textTab;
     /* INDENT */
     int qtd_indent = 0;
     int qtd_tab_l = 0;
     int qtd_tab_l_ant = 0;
 
+    //Contando tabs da string tratada(textTab).
     int qtdTabs(char *textTab)
     {
         int lenTT = strlen(textTab);
@@ -469,16 +474,14 @@ char *yytext;
         return count;
     }
 
-    void indent()
-    {
+    void tratamentoIndentacao(){
         int i, j, k;
         int cSpace = 0;
         int numTab = 0;
-        char *textTab = (char *)malloc(sizeof(yytext));
-        int lenYY = strlen(yytext);
 
         // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E
         // REMOVE TUDO QUE VEM ANTES DE ENTER.
+        int lenYY = strlen(yytext);
         for (i = 0; i < lenYY; i++)
         {
             char c = yytext[i];
@@ -491,15 +494,15 @@ char *yytext;
                     cSpace = 0;
                     strcat(textTab, "\t");
                 }
-            }
-            else
+            }else //EH ENTER!
             {
                 cSpace = 0;
                 strcpy(textTab, "\n");
             }
         }
-
-        // TRATAMENTO PARA ESPACOS - OBS: DIF DE TABS
+        
+        //TRATAMENTO PARA yytext
+        //SOMENTE COM ESPACOS(SEM ENTER)
         if (cSpace > 0)
         {
             for (j = 0; j < cSpace; j++)
@@ -507,18 +510,12 @@ char *yytext;
                 strcat(textTab, " ");
             }
         }
-
+    }
+    
+    //IDENT DEDENT SPACE E NEW LINE
+    void indentDedentSpaceNl(){  
+        int i, j;  
         int lenTT = strlen(textTab);
-        /*
-            printf("\n\n\n INI_TEXT_TAB \n");
-            printf("Numtab: %d\n", numTab);
-            printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
-            for(i=0; i<lenTT; i++){
-                int new_c = textTab[i];
-                printf("@%d@\n", new_c);
-            }
-            printf("END_TEXT_TAB\n");
-            */
 
         for (i = 0; i < lenTT; i++)
         {
@@ -527,7 +524,7 @@ char *yytext;
             {
                 qtd_tab_l = qtdTabs(textTab);
                 int diff;
-                if (qtd_tab_l > qtd_tab_l_ant)
+                if (qtd_tab_l > qtd_tab_l_ant) //INDENT
                 {
                     diff = qtd_tab_l - qtd_tab_l_ant;
                     qtd_indent += diff;
@@ -537,7 +534,7 @@ char *yytext;
                     }
                     printf("\n\n");
                 }
-                else if (qtd_tab_l < qtd_tab_l_ant)
+                else if (qtd_tab_l < qtd_tab_l_ant) //DEDENT
                 {
                     diff = qtd_tab_l_ant - qtd_tab_l;
                     qtd_indent -= diff;
@@ -551,21 +548,50 @@ char *yytext;
 
             if (c == ' ')
             {
+                printf("ESPACO");
                 if (lenTT > 1)
                 {
-                    printf("ERRO SPACO\n");
+                    //printf("ERRO ESPACO\n");
                 }
             }
             else if (c == '\n')
             {
+                printf("ENTER");
                 qtd_tab_l_ant = qtd_tab_l;
                 qtd_tab_l = 0;
             }
         }
     }
 
-#line 568 "lex.yy.c"
-#line 569 "lex.yy.c"
+
+    void indent()
+    {
+        int i, j, k;
+        int cSpace = 0;
+        int numTab = 0;
+        int lenYY = strlen(yytext);
+        textTab = (char *)malloc(sizeof(yytext));
+        
+        //funcoes principais
+        tratamentoIndentacao();
+        indentDedentSpaceNl();
+        
+        /*
+        printf("\n\n\n INI_TEXT_TAB \n");
+        printf("Numtab: %d\n", numTab);
+        printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
+        for(i=0; i<lenTT; i++){
+            int new_c = textTab[i];
+            printf("@%d@\n", new_c);
+        }
+        printf("END_TEXT_TAB\n");
+        */
+        
+
+    }
+
+#line 594 "lex.yy.c"
+#line 595 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -782,9 +808,9 @@ YY_DECL
 		}
 
 	{
-#line 130 "basic_py.l"
+#line 156 "basic_py.l"
 
-#line 788 "lex.yy.c"
+#line 814 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -844,15 +870,15 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 131 "basic_py.l"
+#line 157 "basic_py.l"
 { indent(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 134 "basic_py.l"
+#line 160 "basic_py.l"
 ECHO;
 	YY_BREAK
-#line 856 "lex.yy.c"
+#line 882 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1857,7 +1883,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 134 "basic_py.l"
+#line 160 "basic_py.l"
 
 int main() {
     yylex();
