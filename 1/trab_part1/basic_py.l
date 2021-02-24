@@ -1,143 +1,160 @@
 %{
-    #include <stdio.h>
-    #include <string.h>
-    #include <ctype.h>
 
-    //estruturas
-    typedef struct
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+//estruturas
+typedef struct
+{
+    char name[25];
+} token;
+
+//variáveis
+int qtd_tokens = 0;
+token tokens[100];
+
+char *textTab;
+/* INDENT */
+int qtd_indent = 0;
+int qtd_tab_l = 0;
+int qtd_tab_l_ant = 0;
+
+//Contando tabs da string tratada(textTab).
+int qtdChar(char *textTab, char my_c)
+{
+    int lenTT = strlen(textTab);
+    int i, count = 0;
+    for (i = 0; i < lenTT; i++)
     {
-        char name[25];
-    } token;
-
-    //variáveis
-    int qtd_tokens = 0;
-    token tokens[100];
-
-    char *textTab;
-    /* INDENT */
-    int qtd_indent = 0;
-    int qtd_tab_l = 0;
-    int qtd_tab_l_ant = 0;
-
-    //Contando tabs da string tratada(textTab).
-    int qtdTabs(char *textTab)
-    {
-        int lenTT = strlen(textTab);
-        int i, count = 0;
-        for (i = 0; i < lenTT; i++)
+        char c = textTab[i];
+        if (c == my_c)
         {
-            char c = textTab[i];
-            if (c == '\t')
-            {
-                count++;
-            }
+            count++;
         }
-        return count;
     }
+    return count;
+}
 
-    void tratamentoIndentacao(){
-        int i, j, k;
-        int cSpace = 0;
-        int numTab = 0;
+void tratamentoIndentacao()
+{
+    int i, j, k;
+    int cSpace = 0;
+    int numTab = 0;
 
-        // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E
-        // REMOVE TUDO QUE VEM ANTES DE ENTER.
-        int lenYY = strlen(yytext);
-        for (i = 0; i < lenYY; i++)
+    // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E
+    // REMOVE TUDO QUE VEM ANTES DE ENTER.
+    int lenYY = strlen(yytext);
+    for (i = 0; i < lenYY; i++)
+    {
+        char c = yytext[i];
+        if (c == ' ')
         {
-            char c = yytext[i];
-            if (c == ' ')
+            cSpace++;
+            if (cSpace == 4)
             {
-                cSpace++;
-                if (cSpace == 4)
-                {
-                    numTab++;
-                    cSpace = 0;
-                    strcat(textTab, "\t");
-                }
-            }else //EH ENTER!
-            {
+                numTab++;
                 cSpace = 0;
-                strcpy(textTab, "\n");
+                strcat(textTab, "\t");
             }
         }
-        
-        //TRATAMENTO PARA yytext
-        //SOMENTE COM ESPACOS(SEM ENTER)
-        if (cSpace > 0)
+        else //EH ENTER!
         {
-            for (j = 0; j < cSpace; j++)
-            {
-                strcat(textTab, " ");
-            }
+            cSpace = 0;
+            strcpy(textTab, "\n");
         }
     }
-    
-    //IDENT DEDENT SPACE E NEW LINE
-    void indentDedentSpaceNl(){  
-        int i, j;  
-        int lenTT = strlen(textTab);
 
-        for (i = 0; i < lenTT; i++)
+    //TRATAMENTO PARA yytext
+    //SOMENTE COM ESPACOS(SEM ENTER)
+    if (cSpace > 0)
+    {
+        for (j = 0; j < cSpace; j++)
         {
-            char c = textTab[i];
+            strcat(textTab, " ");
+        }
+    }
+}
+
+//IDENT DEDENT SPACE E NEW LINE
+void indentDedentSpaceNl()
+{
+    int i, j, k, qtdSpace, qtdEnter, qtdTab;
+    int lenTT = strlen(textTab);
+    for (i = 0; i < lenTT; i++)
+    {
+        char c = textTab[i];
+        if (c == ' ')
+        {
+            printf(" ESPACO ");
             if (lenTT > 1)
             {
-                qtd_tab_l = qtdTabs(textTab);
-                int diff;
-                if (qtd_tab_l > qtd_tab_l_ant) //INDENT
-                {
-                    diff = qtd_tab_l - qtd_tab_l_ant;
-                    qtd_indent += diff;
-                    for (j = 0; j < diff; j++)
-                    {
-                        printf("\nINDENT");
-                    }
-                    printf("\n\n");
-                }
-                else if (qtd_tab_l < qtd_tab_l_ant) //DEDENT
-                {
-                    diff = qtd_tab_l_ant - qtd_tab_l;
-                    qtd_indent -= diff;
-                    for (j = 0; j < diff; j++)
-                    {
-                        printf("\nDEDENT");
-                    }
-                    printf("\n\n");
-                }
-            }
-
-            if (c == ' ')
-            {
-                printf("ESPACO");
-                if (lenTT > 1)
-                {
-                    //printf("ERRO ESPACO\n");
-                }
-            }
-            else if (c == '\n')
-            {
-                printf("ENTER");
-                qtd_tab_l_ant = qtd_tab_l;
-                qtd_tab_l = 0;
+                //printf("ERRO ESPACO\n");
             }
         }
+        else if (c == '\n')
+        {
+            printf(" ENTER ");
+        }
+        else
+        {
+            qtdSpace = qtdChar(textTab, ' ');
+            qtdTab = qtdChar(textTab, '\t');
+            if ((qtdTab + qtdSpace) == lenTT)
+            {
+                printf(" TAB ");
+            }
+        }
+
+        qtdEnter = qtdChar(textTab, '\n');
+        if (lenTT > 1 && qtdEnter > 0)
+        {
+            qtd_tab_l = qtdChar(textTab, '\t');
+            int diff;
+            if (qtd_tab_l > qtd_tab_l_ant) //INDENT
+            {
+                diff = qtd_tab_l - qtd_tab_l_ant;
+                qtd_indent += diff;
+                for (j = 0; j < diff; j++)
+                {
+                    printf(" INDENT ");
+                }
+                printf("\n\n");
+            }
+            else if (qtd_tab_l < qtd_tab_l_ant) //DEDENT
+            {
+                diff = qtd_tab_l_ant - qtd_tab_l;
+                qtd_indent -= diff;
+                for (j = 0; j < diff; j++)
+                {
+                    printf(" DEDENT ");
+                }
+                printf("\n\n");
+            }
+        }
+
+        if (c == '\n')
+        {
+            qtd_tab_l_ant = qtd_tab_l;
+            qtd_tab_l = 0;
+        }
     }
+}
 
+void indent()
+{
+    int i, j, k;
+    int cSpace = 0;
+    int numTab = 0;
+    int lenYY = strlen(yytext);
+    textTab = (char *)malloc(sizeof(yytext));
 
-    void indent()
-    {
-        int i, j, k;
-        int cSpace = 0;
-        int numTab = 0;
-        int lenYY = strlen(yytext);
-        textTab = (char *)malloc(sizeof(yytext));
-        
-        //funcoes principais
-        tratamentoIndentacao();
-        indentDedentSpaceNl();
-        
-        /*
+    //funcoes principais
+    tratamentoIndentacao();
+    indentDedentSpaceNl();
+
+    /*
+        int lenTT = strlen(textTab);
         printf("\n\n\n INI_TEXT_TAB \n");
         printf("Numtab: %d\n", numTab);
         printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
@@ -147,9 +164,7 @@
         }
         printf("END_TEXT_TAB\n");
         */
-        
-
-    }
+}
 
 %}
 

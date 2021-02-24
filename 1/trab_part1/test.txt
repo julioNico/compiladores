@@ -1,8 +1,8 @@
-int main():    
-    x=true
-    a=3
-    if x:
-        print(x)
-        if   x:
-            print   (x)
+int main():                  
+    x=true            
+    a=3         
+    if x:           
+        print(x)            
+        if          x:              
+            print(x)
     return
