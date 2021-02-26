@@ -20,6 +20,17 @@ typedef enum {
     LBRACE, RBRACE,
     EQEQUAL, NOTEQUAL,
     LESSEQUA, GREATEREQUAL,
+    TILDE, CIRCUMFLEX,
+    LEFTSHIFT, RIGHTSHIFT,
+    DOUBLESTAR,
+    PLUSEQUAL, MINEQUAL,
+    STAREQUAL, SLASHEQUAL,
+    PERCENTEQUAL, AMPEREQUAL,
+    VBAREQUAL, CIRCUMFLEXEQUAL,
+    LEFTSHIFTEQUAL, RIGHTSHIFTEQUAL,
+    DOUBLESTAREQUAL, DOUBLESLASHEQUAL,
+    DOUBLESLASH,
+    AT, ATEQUAL, RARROW, ELLIPSIS, COLONEQUAL,
 
     ENDMARKER
 } TokenType;
@@ -193,8 +204,146 @@ TokenRecord createToken(TokenType token){
 
     case GREATEREQUAL:
         tokenR.type = token;
-        tokenR.lexeme = "=>";
+        tokenR.lexeme = ">=";
         tokenR.nome = "GREATEREQUAL"; 
+        return tokenR;
+
+    case TILDE:
+        tokenR.type = token;
+        tokenR.lexeme = "~";
+        tokenR.nome = "TILDE"; 
+        return tokenR;
+
+    case CIRCUMFLEX:
+        tokenR.type = token;
+        tokenR.lexeme = "^";
+        tokenR.nome = "CIRCUMFLEX"; 
+        return tokenR;
+
+    case LEFTSHIFT:
+        tokenR.type = token;
+        tokenR.lexeme = "<<";
+        tokenR.nome = "LEFTSHIFT"; 
+        return tokenR;
+
+    case RIGHTSHIFT:
+        tokenR.type = token;
+        tokenR.lexeme = ">>";
+        tokenR.nome = "RIGHTSHIFT"; 
+        return tokenR;
+
+    case DOUBLESTAR:
+        tokenR.type = token;
+        tokenR.lexeme = "**";
+        tokenR.nome = "DOUBLESTAR"; 
+        return tokenR;
+
+    case PLUSEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "+=";
+        tokenR.nome = "PLUSEQUAL"; 
+        return tokenR;
+
+    case MINEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "-=";
+        tokenR.nome = "MINEQUAL"; 
+        return tokenR;
+
+    case STAREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "*=";
+        tokenR.nome = "STAREQUAL"; 
+        return tokenR;
+
+    case SLASHEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "/=";
+        tokenR.nome = "SLASHEQUAL"; 
+        return tokenR;
+
+    case PERCENTEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "%=";
+        tokenR.nome = "PERCENTEQUAL"; 
+        return tokenR;
+
+    case AMPEREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "&=";
+        tokenR.nome = "AMPEREQUAL"; 
+        return tokenR;
+
+    case VBAREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "|=";
+        tokenR.nome = "VBAREQUAL"; 
+        return tokenR;
+
+    case CIRCUMFLEXEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "^=";
+        tokenR.nome = "CIRCUMFLEXEQUAL"; 
+        return tokenR;
+
+    case LEFTSHIFTEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "<<=";
+        tokenR.nome = "LEFTSHIFTEQUAL"; 
+        return tokenR;
+
+    case RIGHTSHIFTEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = ">>=";
+        tokenR.nome = "RIGHTSHIFTEQUAL"; 
+        return tokenR;
+
+    case DOUBLESTAREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "**=";
+        tokenR.nome = "DOUBLESTAREQUAL"; 
+        return tokenR;
+
+    case DOUBLESLASH:
+        tokenR.type = token;
+        tokenR.lexeme = "//";
+        tokenR.nome = "DOUBLESLASH"; 
+        return tokenR;
+
+    case DOUBLESLASHEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "//=";
+        tokenR.nome = "DOUBLESLASHEQUAL"; 
+        return tokenR;
+
+    case AT:
+        tokenR.type = token;
+        tokenR.lexeme = "@";
+        tokenR.nome = "AT"; 
+        return tokenR;
+
+    case ATEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "@=";
+        tokenR.nome = "ATEQUAL"; 
+        return tokenR;
+
+    case RARROW:
+        tokenR.type = token;
+        tokenR.lexeme = "->";
+        tokenR.nome = "RARROW"; 
+        return tokenR;
+
+    case ELLIPSIS:
+        tokenR.type = token;
+        tokenR.lexeme = "...";
+        tokenR.nome = "ELLIPSIS"; 
+        return tokenR;
+
+    case COLONEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = ":=";
+        tokenR.nome = "COLONEQUAL"; 
         return tokenR;
 
 //===========//Finish//===============
@@ -406,6 +555,30 @@ void indent()
 "=!"         { processToken(NOTEQUAL); }
 "<="         { processToken(LESSEQUA); }
 ">="         { processToken(GREATEREQUAL); }
+"~"          { processToken(TILDE); }
+"^"          { processToken(CIRCUMFLEX); }
+"<<"         { processToken(LEFTSHIFT); }
+">>"         { processToken(RIGHTSHIFT); }
+"**"         { processToken(DOUBLESTAR); }
+"+="         { processToken(PLUSEQUAL); }
+"-="         { processToken(MINEQUAL); }
+"*="         { processToken(STAREQUAL); }
+"/="         { processToken(SLASHEQUAL); }
+"%="         { processToken(PERCENTEQUAL); }
+"&="         { processToken(AMPEREQUAL); }
+"|="         { processToken(VBAREQUAL); }
+"^="         { processToken(CIRCUMFLEXEQUAL); }
+"<<="         { processToken(LEFTSHIFTEQUAL); }
+">>="         { processToken(RIGHTSHIFTEQUAL); }
+"**="         { processToken(DOUBLESTAREQUAL); }
+"//"          { processToken(DOUBLESLASH); }
+"//="         { processToken(DOUBLESLASHEQUAL); }
+"@"          { processToken(AT); }
+"@="         { processToken(ATEQUAL); }
+"->"         { processToken(RARROW); }
+"..."        { processToken(ELLIPSIS); }
+":="         { processToken(COLONEQUAL); }
+
 
 
 <<EOF>>      { processToken(ENDMARKER); return 0;}
