@@ -7,7 +7,21 @@
 
 //estruturas
 typedef enum {
-    INDENT, DEDENT, NEWLINE, LPAR, RPAR, LSQB, RSQB, ENDMARKER
+    INDENT, DEDENT, NEWLINE,
+    LPAR, RPAR,
+    LSQB, RSQB,
+    COLON, COMMA, SEMI,
+    PLUS, MINUS, STAR, SLASH,
+    VBAR, AMPER,
+    LESS, GREATER,
+    EQUAL,
+    DOT,
+    PERCENT,
+    LBRACE, RBRACE,
+    EQEQUAL, NOTEQUAL,
+    LESSEQUA, GREATEREQUAL,
+
+    ENDMARKER
 } TokenType;
 
 typedef struct {
@@ -62,13 +76,135 @@ TokenRecord createToken(TokenType token){
         tokenR.lexeme = "]";
         tokenR.nome = "RSQB"; 
         return tokenR;
+
+    case COLON:
+        tokenR.type = token;
+        tokenR.lexeme = ":";
+        tokenR.nome = "COLON"; 
+        return tokenR;
+
+    case COMMA:
+        tokenR.type = token;
+        tokenR.lexeme = ",";
+        tokenR.nome = "COMMA"; 
+        return tokenR;
     
+    case SEMI:
+        tokenR.type = token;
+        tokenR.lexeme = ";";
+        tokenR.nome = "SEMI"; 
+        return tokenR;
+
+    case PLUS:
+        tokenR.type = token;
+        tokenR.lexeme = "+";
+        tokenR.nome = "PLUS"; 
+        return tokenR;
+    
+    case MINUS:
+        tokenR.type = token;
+        tokenR.lexeme = "-";
+        tokenR.nome = "MINUS"; 
+        return tokenR;
+
+    case STAR:
+        tokenR.type = token;
+        tokenR.lexeme = "*";
+        tokenR.nome = "STAR"; 
+        return tokenR;
+
+    case SLASH:
+        tokenR.type = token;
+        tokenR.lexeme = "/";
+        tokenR.nome = "SLASH"; 
+        return tokenR;
+
+    case VBAR:
+        tokenR.type = token;
+        tokenR.lexeme = "|";
+        tokenR.nome = "VBAR"; 
+        return tokenR;
+
+    case AMPER:
+        tokenR.type = token;
+        tokenR.lexeme = "&";
+        tokenR.nome = "AMPER"; 
+        return tokenR;
+
+    case LESS:
+        tokenR.type = token;
+        tokenR.lexeme = "<";
+        tokenR.nome = "LESS"; 
+        return tokenR;
+
+    case GREATER:
+        tokenR.type = token;
+        tokenR.lexeme = ">";
+        tokenR.nome = "GREATER"; 
+        return tokenR;
+
+    case EQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=";
+        tokenR.nome = "EQUAL"; 
+        return tokenR;
+
+    case DOT:
+        tokenR.type = token;
+        tokenR.lexeme = ".";
+        tokenR.nome = "DOT"; 
+        return tokenR;
+
+    case PERCENT:
+        tokenR.type = token;
+        tokenR.lexeme = "%";
+        tokenR.nome = "PERCENT"; 
+        return tokenR;
+
+    case LBRACE:
+        tokenR.type = token;
+        tokenR.lexeme = "{";
+        tokenR.nome = "LBRACE"; 
+        return tokenR;
+
+    case RBRACE:
+        tokenR.type = token;
+        tokenR.lexeme = "}";
+        tokenR.nome = "RBRACE"; 
+        return tokenR;
+
+    case EQEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "==";
+        tokenR.nome = "EQEQUAL"; 
+        return tokenR;
+
+    case NOTEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=!";
+        tokenR.nome = "NOTEQUAL"; 
+        return tokenR;
+
+    case LESSEQUA:
+        tokenR.type = token;
+        tokenR.lexeme = "<=";
+        tokenR.nome = "LESSEQUA"; 
+        return tokenR;
+
+    case GREATEREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=>";
+        tokenR.nome = "GREATEREQUAL"; 
+        return tokenR;
+
+//===========//Finish//===============
     case ENDMARKER:
         tokenR.type = token;
         tokenR.lexeme = "<<EOF>>";
         tokenR.nome = "ENDMARKER"; 
         return tokenR;
     }
+
 }
 
 TokenRecord *tokens;
@@ -148,7 +284,7 @@ void tratamentoIndentacao()
 
 void processToken(TokenType token){
     TokenRecord tokenR = tokens[(int)token];
-    printf("\n%d: %s -> %s\n", (yylineno-1), tokenR.lexeme, tokenR.nome);
+    printf("\n%d: %s -> %s\n", (yylineno), tokenR.lexeme, tokenR.nome);
 }
 
 //INDENT DEDENT SPACE E NEW LINE
@@ -246,10 +382,30 @@ void indent()
 
 %%
 [\n\t ]+     { indent(); }
-[(]          { processToken(LPAR); }
-[)]          { processToken(RPAR); }
-"["          { processToken(LSQB); }
-"]"          { processToken(RSQB); }
+[(]          { processToken(LPAR);    }
+[)]          { processToken(RPAR);    }
+"["          { processToken(LSQB);    }
+"]"          { processToken(RSQB);    }
+:            { processToken(COLON);   }
+,            { processToken(COMMA);   }
+;            { processToken(SEMI);    }
+"+"          { processToken(PLUS);    }
+"-"          { processToken(MINUS);   }
+"*"          { processToken(STAR);    }
+"/"          { processToken(SLASH);   }
+"|"          { processToken(VBAR);    }
+"&"          { processToken(AMPER);   }
+"<"          { processToken(LESS);    }
+">"          { processToken(GREATER); }
+"="          { processToken(EQUAL);   }
+"."          { processToken(DOT);     }
+"%"          { processToken(PERCENT); }
+[{]          { processToken(LBRACE);  }
+[}]          { processToken(RBRACE);  }
+"=="         { processToken(EQEQUAL); }
+"=!"         { processToken(NOTEQUAL); }
+"<="         { processToken(LESSEQUA); }
+">="         { processToken(GREATEREQUAL); }
 
 
 <<EOF>>      { processToken(ENDMARKER); return 0;}

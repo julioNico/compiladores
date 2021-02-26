@@ -370,8 +370,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 6
-#define YY_END_OF_BUFFER 7
+#define YY_NUM_RULES 26
+#define YY_END_OF_BUFFER 27
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -379,9 +379,11 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[12] =
+static const flex_int16_t yy_accept[32] =
     {   0,
-        0,    0,    7,    6,    1,    2,    3,    4,    5,    1,
+        0,    0,   27,   26,    1,   19,   14,    2,    3,   11,
+        9,    7,   10,   18,   12,    6,    8,   15,   17,   16,
+        4,    5,   20,   13,   21,    1,   24,   23,   22,   25,
         0
     } ;
 
@@ -390,17 +392,17 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    2,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    2,    1,    1,    1,    1,    1,    1,    1,    3,
-        4,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    2,    3,    1,    1,    1,    4,    5,    1,    6,
+        7,    8,    9,   10,   11,   12,   13,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,   14,   15,   16,
+       17,   18,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        5,    1,    6,    1,    1,    1,    1,    1,    1,    1,
+       19,    1,   20,    1,    1,    1,    1,    1,    1,    1,
 
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,   21,   22,   23,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -417,39 +419,56 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[7] =
+static const YY_CHAR yy_meta[24] =
     {   0,
-        1,    2,    1,    1,    1,    1
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1
     } ;
 
-static const flex_int16_t yy_base[13] =
+static const flex_int16_t yy_base[32] =
     {   0,
-        0,    0,    8,    9,    0,    9,    9,    9,    9,    0,
-        9,    5
+        0,    0,   29,   39,   26,   39,   39,   39,   39,   39,
+       39,   39,   39,   39,   39,   39,   39,   10,   21,    9,
+       39,   39,   39,   39,   39,   23,   39,   39,   39,   39,
+       39
     } ;
 
-static const flex_int16_t yy_def[13] =
+static const flex_int16_t yy_def[32] =
     {   0,
-       11,    1,   11,   11,   12,   11,   11,   11,   11,   12,
-        0,   11
+       31,    1,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+        0
     } ;
 
-static const flex_int16_t yy_nxt[16] =
+static const flex_int16_t yy_nxt[63] =
     {   0,
-        4,    5,    6,    7,    8,    9,   10,   11,    3,   11,
-       11,   11,   11,   11,   11
+        4,    5,    4,    6,    7,    8,    9,   10,   11,   12,
+       13,   14,   15,   16,   17,   18,   19,   20,   21,   22,
+       23,   24,   25,   28,   26,   30,   27,   26,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   29,    3,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31
     } ;
 
-static const flex_int16_t yy_chk[16] =
+static const flex_int16_t yy_chk[63] =
     {   0,
-        1,    1,    1,    1,    1,    1,   12,    3,   11,   11,
-       11,   11,   11,   11,   11
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,   19,   26,   20,   18,    5,    3,    0,
+        0,    0,    0,    0,    0,    0,    0,   19,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31,   31,   31,   31,   31,   31,   31,   31,   31,
+       31,   31
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[7] =
+static const flex_int32_t yy_rule_can_match_eol[27] =
     {   0,
-1, 0, 0, 0, 0, 0,     };
+1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+    0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -474,7 +493,21 @@ char *yytext;
 
 //estruturas
 typedef enum {
-    INDENT, DEDENT, NEWLINE, LPAR, RPAR, LSQB, RSQB, ENDMARKER
+    INDENT, DEDENT, NEWLINE,
+    LPAR, RPAR,
+    LSQB, RSQB,
+    COLON, COMMA, SEMI,
+    PLUS, MINUS, STAR, SLASH,
+    VBAR, AMPER,
+    LESS, GREATER,
+    EQUAL,
+    DOT,
+    PERCENT,
+    LBRACE, RBRACE,
+    EQEQUAL, NOTEQUAL,
+    LESSEQUA, GREATEREQUAL,
+
+    ENDMARKER
 } TokenType;
 
 typedef struct {
@@ -529,13 +562,135 @@ TokenRecord createToken(TokenType token){
         tokenR.lexeme = "]";
         tokenR.nome = "RSQB"; 
         return tokenR;
+
+    case COLON:
+        tokenR.type = token;
+        tokenR.lexeme = ":";
+        tokenR.nome = "COLON"; 
+        return tokenR;
+
+    case COMMA:
+        tokenR.type = token;
+        tokenR.lexeme = ",";
+        tokenR.nome = "COMMA"; 
+        return tokenR;
     
+    case SEMI:
+        tokenR.type = token;
+        tokenR.lexeme = ";";
+        tokenR.nome = "SEMI"; 
+        return tokenR;
+
+    case PLUS:
+        tokenR.type = token;
+        tokenR.lexeme = "+";
+        tokenR.nome = "PLUS"; 
+        return tokenR;
+    
+    case MINUS:
+        tokenR.type = token;
+        tokenR.lexeme = "-";
+        tokenR.nome = "MINUS"; 
+        return tokenR;
+
+    case STAR:
+        tokenR.type = token;
+        tokenR.lexeme = "*";
+        tokenR.nome = "STAR"; 
+        return tokenR;
+
+    case SLASH:
+        tokenR.type = token;
+        tokenR.lexeme = "/";
+        tokenR.nome = "SLASH"; 
+        return tokenR;
+
+    case VBAR:
+        tokenR.type = token;
+        tokenR.lexeme = "|";
+        tokenR.nome = "VBAR"; 
+        return tokenR;
+
+    case AMPER:
+        tokenR.type = token;
+        tokenR.lexeme = "&";
+        tokenR.nome = "AMPER"; 
+        return tokenR;
+
+    case LESS:
+        tokenR.type = token;
+        tokenR.lexeme = "<";
+        tokenR.nome = "LESS"; 
+        return tokenR;
+
+    case GREATER:
+        tokenR.type = token;
+        tokenR.lexeme = ">";
+        tokenR.nome = "GREATER"; 
+        return tokenR;
+
+    case EQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=";
+        tokenR.nome = "EQUAL"; 
+        return tokenR;
+
+    case DOT:
+        tokenR.type = token;
+        tokenR.lexeme = ".";
+        tokenR.nome = "DOT"; 
+        return tokenR;
+
+    case PERCENT:
+        tokenR.type = token;
+        tokenR.lexeme = "%";
+        tokenR.nome = "PERCENT"; 
+        return tokenR;
+
+    case LBRACE:
+        tokenR.type = token;
+        tokenR.lexeme = "{";
+        tokenR.nome = "LBRACE"; 
+        return tokenR;
+
+    case RBRACE:
+        tokenR.type = token;
+        tokenR.lexeme = "}";
+        tokenR.nome = "RBRACE"; 
+        return tokenR;
+
+    case EQEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "==";
+        tokenR.nome = "EQEQUAL"; 
+        return tokenR;
+
+    case NOTEQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=!";
+        tokenR.nome = "NOTEQUAL"; 
+        return tokenR;
+
+    case LESSEQUA:
+        tokenR.type = token;
+        tokenR.lexeme = "<=";
+        tokenR.nome = "LESSEQUA"; 
+        return tokenR;
+
+    case GREATEREQUAL:
+        tokenR.type = token;
+        tokenR.lexeme = "=>";
+        tokenR.nome = "GREATEREQUAL"; 
+        return tokenR;
+
+//===========//Finish//===============
     case ENDMARKER:
         tokenR.type = token;
         tokenR.lexeme = "<<EOF>>";
         tokenR.nome = "ENDMARKER"; 
         return tokenR;
     }
+
 }
 
 TokenRecord *tokens;
@@ -615,7 +770,7 @@ void tratamentoIndentacao()
 
 void processToken(TokenType token){
     TokenRecord tokenR = tokens[(int)token];
-    printf("\n%d: %s -> %s\n", (yylineno-1), tokenR.lexeme, tokenR.nome);
+    printf("\n%d: %s -> %s\n", (yylineno), tokenR.lexeme, tokenR.nome);
 }
 
 //INDENT DEDENT SPACE E NEW LINE
@@ -709,8 +864,8 @@ void indent()
     */
 }
 
-#line 713 "lex.yy.c"
-#line 714 "lex.yy.c"
+#line 868 "lex.yy.c"
+#line 869 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -927,9 +1082,9 @@ YY_DECL
 		}
 
 	{
-#line 247 "basic_py.l"
+#line 383 "basic_py.l"
 
-#line 933 "lex.yy.c"
+#line 1088 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -956,13 +1111,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 12 )
+				if ( yy_current_state >= 32 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 9 );
+		while ( yy_base[yy_current_state] != 39 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -999,39 +1154,139 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 248 "basic_py.l"
+#line 384 "basic_py.l"
 { indent(); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 249 "basic_py.l"
-{ processToken(LPAR); }
+#line 385 "basic_py.l"
+{ processToken(LPAR);    }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 250 "basic_py.l"
-{ processToken(RPAR); }
+#line 386 "basic_py.l"
+{ processToken(RPAR);    }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 251 "basic_py.l"
-{ processToken(LSQB); }
+#line 387 "basic_py.l"
+{ processToken(LSQB);    }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 252 "basic_py.l"
-{ processToken(RSQB); }
-	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 255 "basic_py.l"
-{ processToken(ENDMARKER); return 0;}
+#line 388 "basic_py.l"
+{ processToken(RSQB);    }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 257 "basic_py.l"
+#line 389 "basic_py.l"
+{ processToken(COLON);   }
+	YY_BREAK
+case 7:
+YY_RULE_SETUP
+#line 390 "basic_py.l"
+{ processToken(COMMA);   }
+	YY_BREAK
+case 8:
+YY_RULE_SETUP
+#line 391 "basic_py.l"
+{ processToken(SEMI);    }
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+#line 392 "basic_py.l"
+{ processToken(PLUS);    }
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 393 "basic_py.l"
+{ processToken(MINUS);   }
+	YY_BREAK
+case 11:
+YY_RULE_SETUP
+#line 394 "basic_py.l"
+{ processToken(STAR);    }
+	YY_BREAK
+case 12:
+YY_RULE_SETUP
+#line 395 "basic_py.l"
+{ processToken(SLASH);   }
+	YY_BREAK
+case 13:
+YY_RULE_SETUP
+#line 396 "basic_py.l"
+{ processToken(VBAR);    }
+	YY_BREAK
+case 14:
+YY_RULE_SETUP
+#line 397 "basic_py.l"
+{ processToken(AMPER);   }
+	YY_BREAK
+case 15:
+YY_RULE_SETUP
+#line 398 "basic_py.l"
+{ processToken(LESS);    }
+	YY_BREAK
+case 16:
+YY_RULE_SETUP
+#line 399 "basic_py.l"
+{ processToken(GREATER); }
+	YY_BREAK
+case 17:
+YY_RULE_SETUP
+#line 400 "basic_py.l"
+{ processToken(EQUAL);   }
+	YY_BREAK
+case 18:
+YY_RULE_SETUP
+#line 401 "basic_py.l"
+{ processToken(DOT);     }
+	YY_BREAK
+case 19:
+YY_RULE_SETUP
+#line 402 "basic_py.l"
+{ processToken(PERCENT); }
+	YY_BREAK
+case 20:
+YY_RULE_SETUP
+#line 403 "basic_py.l"
+{ processToken(LBRACE);  }
+	YY_BREAK
+case 21:
+YY_RULE_SETUP
+#line 404 "basic_py.l"
+{ processToken(RBRACE);  }
+	YY_BREAK
+case 22:
+YY_RULE_SETUP
+#line 405 "basic_py.l"
+{ processToken(EQEQUAL); }
+	YY_BREAK
+case 23:
+YY_RULE_SETUP
+#line 406 "basic_py.l"
+{ processToken(NOTEQUAL); }
+	YY_BREAK
+case 24:
+YY_RULE_SETUP
+#line 407 "basic_py.l"
+{ processToken(LESSEQUA); }
+	YY_BREAK
+case 25:
+YY_RULE_SETUP
+#line 408 "basic_py.l"
+{ processToken(GREATEREQUAL); }
+	YY_BREAK
+case YY_STATE_EOF(INITIAL):
+#line 411 "basic_py.l"
+{ processToken(ENDMARKER); return 0;}
+	YY_BREAK
+case 26:
+YY_RULE_SETUP
+#line 413 "basic_py.l"
 ECHO;
 	YY_BREAK
-#line 1035 "lex.yy.c"
+#line 1290 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1326,7 +1581,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 12 )
+			if ( yy_current_state >= 32 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1354,11 +1609,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 12 )
+		if ( yy_current_state >= 32 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 11);
+	yy_is_jam = (yy_current_state == 31);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -2046,7 +2301,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 257 "basic_py.l"
+#line 413 "basic_py.l"
 
 int main() {
     createAllTokens();
