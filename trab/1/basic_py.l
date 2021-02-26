@@ -531,26 +531,26 @@ void indent()
 
 %%
 [\n\t ]+     { indent(); }
-[(]          { processToken(LPAR);    }
-[)]          { processToken(RPAR);    }
-"["          { processToken(LSQB);    }
-"]"          { processToken(RSQB);    }
-:            { processToken(COLON);   }
-,            { processToken(COMMA);   }
-;            { processToken(SEMI);    }
-"+"          { processToken(PLUS);    }
-"-"          { processToken(MINUS);   }
-"*"          { processToken(STAR);    }
-"/"          { processToken(SLASH);   }
-"|"          { processToken(VBAR);    }
-"&"          { processToken(AMPER);   }
-"<"          { processToken(LESS);    }
+[(]          { processToken(LPAR); }
+[)]          { processToken(RPAR); }
+"["          { processToken(LSQB); }
+"]"          { processToken(RSQB); }
+:            { processToken(COLON); }
+,            { processToken(COMMA); }
+;            { processToken(SEMI); }
+"+"          { processToken(PLUS); }
+"-"          { processToken(MINUS); }
+"*"          { processToken(STAR); }
+"/"          { processToken(SLASH); }
+"|"          { processToken(VBAR); }
+"&"          { processToken(AMPER); }
+"<"          { processToken(LESS); }
 ">"          { processToken(GREATER); }
-"="          { processToken(EQUAL);   }
-"."          { processToken(DOT);     }
+"="          { processToken(EQUAL); }
+"."          { processToken(DOT); }
 "%"          { processToken(PERCENT); }
-[{]          { processToken(LBRACE);  }
-[}]          { processToken(RBRACE);  }
+[{]          { processToken(LBRACE); }
+[}]          { processToken(RBRACE); }
 "=="         { processToken(EQEQUAL); }
 "=!"         { processToken(NOTEQUAL); }
 "<="         { processToken(LESSEQUA); }
@@ -568,11 +568,11 @@ void indent()
 "&="         { processToken(AMPEREQUAL); }
 "|="         { processToken(VBAREQUAL); }
 "^="         { processToken(CIRCUMFLEXEQUAL); }
-"<<="         { processToken(LEFTSHIFTEQUAL); }
-">>="         { processToken(RIGHTSHIFTEQUAL); }
-"**="         { processToken(DOUBLESTAREQUAL); }
-"//"          { processToken(DOUBLESLASH); }
-"//="         { processToken(DOUBLESLASHEQUAL); }
+"<<="        { processToken(LEFTSHIFTEQUAL); }
+">>="        { processToken(RIGHTSHIFTEQUAL); }
+"**="        { processToken(DOUBLESTAREQUAL); }
+"//"         { processToken(DOUBLESLASH); }
+"//="        { processToken(DOUBLESLASHEQUAL); }
 "@"          { processToken(AT); }
 "@="         { processToken(ATEQUAL); }
 "->"         { processToken(RARROW); }
@@ -581,7 +581,7 @@ void indent()
 
 
 
-<<EOF>>      { processToken(ENDMARKER); return 0;}
+<<EOF>>      { processToken(ENDMARKER); yyterminate();}
 
 %%
 int main() {

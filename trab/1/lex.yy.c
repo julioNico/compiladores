@@ -1320,72 +1320,72 @@ YY_RULE_SETUP
 case 2:
 YY_RULE_SETUP
 #line 534 "basic_py.l"
-{ processToken(LPAR);    }
+{ processToken(LPAR); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 535 "basic_py.l"
-{ processToken(RPAR);    }
+{ processToken(RPAR); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 536 "basic_py.l"
-{ processToken(LSQB);    }
+{ processToken(LSQB); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 537 "basic_py.l"
-{ processToken(RSQB);    }
+{ processToken(RSQB); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 538 "basic_py.l"
-{ processToken(COLON);   }
+{ processToken(COLON); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 539 "basic_py.l"
-{ processToken(COMMA);   }
+{ processToken(COMMA); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 540 "basic_py.l"
-{ processToken(SEMI);    }
+{ processToken(SEMI); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 541 "basic_py.l"
-{ processToken(PLUS);    }
+{ processToken(PLUS); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 542 "basic_py.l"
-{ processToken(MINUS);   }
+{ processToken(MINUS); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 543 "basic_py.l"
-{ processToken(STAR);    }
+{ processToken(STAR); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 544 "basic_py.l"
-{ processToken(SLASH);   }
+{ processToken(SLASH); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 545 "basic_py.l"
-{ processToken(VBAR);    }
+{ processToken(VBAR); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 546 "basic_py.l"
-{ processToken(AMPER);   }
+{ processToken(AMPER); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 547 "basic_py.l"
-{ processToken(LESS);    }
+{ processToken(LESS); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
@@ -1395,12 +1395,12 @@ YY_RULE_SETUP
 case 17:
 YY_RULE_SETUP
 #line 549 "basic_py.l"
-{ processToken(EQUAL);   }
+{ processToken(EQUAL); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 550 "basic_py.l"
-{ processToken(DOT);     }
+{ processToken(DOT); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
@@ -1410,12 +1410,12 @@ YY_RULE_SETUP
 case 20:
 YY_RULE_SETUP
 #line 552 "basic_py.l"
-{ processToken(LBRACE);  }
+{ processToken(LBRACE); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 553 "basic_py.l"
-{ processToken(RBRACE);  }
+{ processToken(RBRACE); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
@@ -1529,36 +1529,36 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 577 "basic_py.l"
+#line 576 "basic_py.l"
 { processToken(AT); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 578 "basic_py.l"
+#line 577 "basic_py.l"
 { processToken(ATEQUAL); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 579 "basic_py.l"
+#line 578 "basic_py.l"
 { processToken(RARROW); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 580 "basic_py.l"
+#line 579 "basic_py.l"
 { processToken(ELLIPSIS); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 581 "basic_py.l"
+#line 580 "basic_py.l"
 { processToken(COLONEQUAL); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 585 "basic_py.l"
-{ processToken(ENDMARKER); return 0;}
+#line 584 "basic_py.l"
+{ processToken(ENDMARKER); yyterminate();}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 587 "basic_py.l"
+#line 586 "basic_py.l"
 ECHO;
 	YY_BREAK
 #line 1565 "lex.yy.c"
@@ -2576,7 +2576,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 587 "basic_py.l"
+#line 586 "basic_py.l"
 
 int main() {
     createAllTokens();
