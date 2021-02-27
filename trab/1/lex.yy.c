@@ -370,8 +370,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 56
-#define YY_END_OF_BUFFER 57
+#define YY_NUM_RULES 54
+#define YY_END_OF_BUFFER 55
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -379,17 +379,15 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[91] =
+static const flex_int16_t yy_accept[71] =
     {   0,
-        0,    0,   57,   56,    8,   56,    3,   26,   21,   56,
-        9,   10,   18,   16,   14,   17,   25,   19,    5,    5,
-       13,   15,   22,   24,   23,   51,    4,   11,   12,   34,
-       27,   20,   28,   33,    8,    0,    1,    1,    3,   42,
-       43,    0,    2,    2,   37,   40,   38,    0,    1,    2,
-        1,   39,   53,    0,   49,   41,    5,    5,    5,    5,
-        1,   55,   35,   31,   30,   29,   32,   36,   52,    4,
-        4,   45,   44,    0,    6,    0,    7,   48,    0,    2,
-        0,    1,   54,   50,    5,    5,    1,   46,   47,    0
+        0,    0,   55,   54,    6,   54,    1,   24,   19,   54,
+        7,    8,   16,   14,   12,   15,   23,   17,    3,   11,
+       13,   20,   22,   21,   49,    2,    9,   10,   32,   25,
+       18,   26,   31,    6,    0,    4,    1,   40,   41,    0,
+        5,   35,   38,   36,   37,   51,    0,   47,   39,    3,
+        3,   53,   33,   29,   28,   27,   30,   34,   50,    2,
+        2,   43,   42,   46,   52,   48,    3,   44,   45,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -399,15 +397,15 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    4,    5,    6,    7,    8,    9,   10,   11,
        12,   13,   14,   15,   16,   17,   18,   19,   19,   19,
-       20,   19,   19,   19,   19,   19,   19,   21,   22,   23,
-       24,   25,    1,   26,   27,   27,   27,   27,   27,   27,
-       27,   27,   27,   27,   27,   27,   27,   27,   27,   27,
-       27,   27,   27,   27,   27,   27,   27,   27,   27,   27,
-       28,    1,   29,   30,   27,    1,   27,   27,   27,   27,
+       19,   19,   19,   19,   19,   19,   19,   20,   21,   22,
+       23,   24,    1,   25,   26,   26,   26,   26,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,   26,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,   26,   26,   26,
+       27,    1,   28,   29,   26,    1,   26,   26,   26,   26,
 
-       27,   27,   27,   27,   27,   27,   27,   27,   27,   27,
-       27,   27,   27,   27,   27,   27,   27,   27,   27,   27,
-       27,   27,   31,   32,   33,   34,    1,    1,    1,    1,
+       26,   26,   26,   26,   26,   26,   26,   26,   26,   26,
+       26,   26,   26,   26,   26,   26,   26,   26,   26,   26,
+       26,   26,   30,   31,   32,   33,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -424,108 +422,78 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[35] =
+static const YY_CHAR yy_meta[34] =
     {   0,
         1,    1,    2,    1,    1,    1,    3,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1
+        1,    1,    1
     } ;
 
-static const flex_int16_t yy_base[99] =
+static const flex_int16_t yy_base[74] =
     {   0,
-        0,    0,  152,  195,   33,   32,    0,  127,  123,   28,
-      195,  195,   26,  122,   61,   16,  120,   27,   36,   90,
-      109,  195,   34,   38,   43,  101,   50,  195,  195,   98,
-       55,   96,   63,  195,   76,   81,  195,   97,    0,  195,
-      195,   93,  195,   83,   60,  195,  195,   68,   96,   84,
-      195,  195,  195,   56,   40,  195,   71,  111,  115,    0,
-      119,  195,   36,  195,  195,  195,  195,   30,  195,  121,
-      123,  195,  195,   44,  195,   36,  195,  195,  134,  195,
-      140,  195,  195,  195,   78,  139,   99,  195,  195,  195,
-      173,   43,  176,  179,  182,  185,  188,  191
-
+        0,    0,   84,   85,   32,   78,    0,   59,   58,   70,
+       85,   85,   23,   56,   85,   14,   61,   21,   23,   54,
+       85,   25,   37,   26,   53,   26,   85,   85,   52,   85,
+       51,   85,   85,   51,   68,   85,    0,   85,   85,   62,
+       85,   48,   85,   85,   85,   85,   53,   45,   85,   46,
+       38,   85,   39,   85,   85,   85,   85,   38,   85,   32,
+       37,   85,   85,   85,   85,   85,   40,   85,   85,   85,
+       63,   42,   66
     } ;
 
-static const flex_int16_t yy_def[99] =
+static const flex_int16_t yy_def[74] =
     {   0,
-       90,    1,   90,   90,   90,   91,   92,   90,   90,   93,
-       90,   90,   90,   90,   94,   90,   90,   90,   90,   94,
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       20,   90,   20,   90,   90,   91,   90,   95,   92,   90,
-       90,   93,   90,   96,   90,   90,   90,   20,   97,   98,
-       90,   90,   90,   90,   90,   90,   90,   90,   20,   20,
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       90,   90,   90,   95,   90,   96,   90,   90,   97,   90,
-       98,   90,   90,   90,   90,   20,   90,   90,   90,    0,
-       90,   90,   90,   90,   90,   90,   90,   90
-
+       70,    1,   70,   70,   70,   71,   72,   70,   70,   73,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   71,   70,   72,   70,   70,   73,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,    0,
+       70,   70,   70
     } ;
 
-static const flex_int16_t yy_nxt[230] =
+static const flex_int16_t yy_nxt[119] =
     {   0,
         4,    5,    5,    4,    6,    7,    4,    8,    9,   10,
        11,   12,   13,   14,   15,   16,   17,   18,   19,   20,
        21,   22,   23,   24,   25,   26,   27,   28,   29,   30,
-       31,   32,   33,   34,   35,   35,   37,   43,   45,   52,
-       53,   65,   44,   39,   55,   77,   38,   44,   75,   46,
-       56,   38,   57,   89,   58,   58,   63,   64,   44,   88,
-       44,   66,   38,   84,   38,   49,   67,   68,   70,   70,
-       50,   48,   83,   48,   51,   51,   71,   35,   35,   48,
-       51,   48,   51,   78,   48,   37,   48,   51,   82,   85,
-       85,   51,   77,   51,   49,   38,   85,   85,   82,   50,
+       31,   32,   33,   34,   34,   42,   45,   46,   48,   50,
+       55,   51,   37,   49,   60,   43,   53,   54,   57,   58,
+       60,   61,   34,   34,   50,   60,   51,   60,   67,   56,
+       69,   68,   61,   35,   67,   35,   40,   66,   40,   65,
+       64,   41,   36,   63,   62,   59,   52,   47,   44,   41,
+       39,   38,   36,   70,    3,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
 
-       38,   75,   43,   82,   51,   80,   59,   44,   60,   61,
-       80,   38,   44,   38,   82,   80,   82,   85,   85,   73,
-       51,   72,   51,   44,   69,   44,   80,   57,   80,   58,
-       58,   48,   62,   86,   87,   57,   54,   58,   58,   70,
-       70,   70,   70,   80,   82,   47,   41,   70,   80,   71,
-       40,   90,   90,   80,   82,   48,   90,   86,   87,   82,
-       90,   90,   90,   90,   80,   90,   80,   90,   90,   90,
-       82,   90,   82,   36,   90,   36,   42,   90,   42,   48,
-       90,   48,   74,   90,   74,   76,   90,   76,   79,   90,
-       79,   81,   90,   81,    3,   90,   90,   90,   90,   90,
-
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       90,   90,   90,   90,   90,   90,   90,   90,   90
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70
     } ;
 
-static const flex_int16_t yy_chk[230] =
+static const flex_int16_t yy_chk[119] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    5,    5,    6,   10,   13,   16,
-       16,   24,   10,   92,   18,   76,    6,   10,   74,   13,
-       18,    6,   19,   68,   19,   19,   23,   23,   10,   63,
-       10,   24,    6,   55,    6,   15,   25,   25,   27,   27,
-       15,   31,   54,   31,   31,   15,   27,   35,   35,   33,
-       15,   33,   33,   45,   48,   36,   48,   48,   50,   57,
-       57,   15,   44,   15,   20,   36,   85,   85,   50,   20,
+        1,    1,    1,    5,    5,   13,   16,   16,   18,   19,
+       23,   19,   72,   18,   26,   13,   22,   22,   24,   24,
+       60,   26,   34,   34,   51,   61,   51,   60,   67,   23,
+       58,   53,   61,   71,   50,   71,   73,   48,   73,   47,
+       42,   40,   35,   31,   29,   25,   20,   17,   14,   10,
+        9,    8,    6,    3,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
 
-       36,   38,   42,   50,   20,   49,   20,   42,   20,   20,
-       49,   36,   42,   36,   50,   49,   50,   87,   87,   32,
-       20,   30,   20,   42,   26,   42,   49,   58,   49,   58,
-       58,   59,   21,   59,   59,   61,   17,   61,   61,   70,
-       70,   71,   71,   79,   81,   14,    9,   70,   79,   71,
-        8,    3,    0,   79,   81,   86,    0,   86,   86,   81,
-        0,    0,    0,    0,   79,    0,   79,    0,    0,    0,
-       81,    0,   81,   91,    0,   91,   93,    0,   93,   94,
-        0,   94,   95,    0,   95,   96,    0,   96,   97,    0,
-       97,   98,    0,   98,   90,   90,   90,   90,   90,   90,
-
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       90,   90,   90,   90,   90,   90,   90,   90,   90,   90,
-       90,   90,   90,   90,   90,   90,   90,   90,   90
+       70,   70,   70,   70,   70,   70,   70,   70,   70,   70,
+       70,   70,   70,   70,   70,   70,   70,   70
     } ;
 
 /* Table of booleans, true if rule could match eol. */
-static const flex_int32_t yy_rule_can_match_eol[57] =
+static const flex_int32_t yy_rule_can_match_eol[55] =
     {   0,
-0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,     };
 
 static yy_state_type yy_last_accepting_state;
 static char *yy_last_accepting_cpos;
@@ -593,322 +561,322 @@ TokenRecord createToken(TokenType token){
     case NAME:
         tokenR.type = token;
         tokenR.nome = "NAME"; 
-        return tokenR;
+        break;
 
     case NUMBER:
         tokenR.type = token;
         tokenR.nome = "NUMBER"; 
-        return tokenR;
+        break;
     
     case STRING:
         tokenR.type = token;
         tokenR.nome = "STRING"; 
-        return tokenR;
+        break;
 
     case INDENT:
         tokenR.type = token;
         tokenR.lexeme = "\\t";
         tokenR.nome = "INDENT"; 
-        return tokenR;
+        break;
     
     case DEDENT:
         tokenR.type = token;
         tokenR.lexeme = "\\b";
         tokenR.nome = "DEDENT"; 
-        return tokenR;
+        break;
     
     case NEWLINE:
         tokenR.type = token;
         tokenR.lexeme = "\\n";
         tokenR.nome = "NEWLINE"; 
-        return tokenR;
+        break;
 
     case LPAR:
         tokenR.type = token;
         tokenR.lexeme = "(";
         tokenR.nome = "LPAR"; 
-        return tokenR;
+        break;
 
     case RPAR:
         tokenR.type = token;
         tokenR.lexeme = ")";
         tokenR.nome = "RPAR"; 
-        return tokenR;
+        break;
 
     case LSQB:
         tokenR.type = token;
         tokenR.lexeme = "[";
         tokenR.nome = "LSQB"; 
-        return tokenR;
+        break;
 
     case RSQB:
         tokenR.type = token;
         tokenR.lexeme = "]";
         tokenR.nome = "RSQB"; 
-        return tokenR;
+        break;
 
     case COLON:
         tokenR.type = token;
         tokenR.lexeme = ":";
         tokenR.nome = "COLON"; 
-        return tokenR;
+        break;
 
     case COMMA:
         tokenR.type = token;
         tokenR.lexeme = ",";
         tokenR.nome = "COMMA"; 
-        return tokenR;
+        break;
     
     case SEMI:
         tokenR.type = token;
         tokenR.lexeme = ";";
         tokenR.nome = "SEMI"; 
-        return tokenR;
+        break;
 
     case PLUS:
         tokenR.type = token;
         tokenR.lexeme = "+";
         tokenR.nome = "PLUS"; 
-        return tokenR;
+        break;
     
     case MINUS:
         tokenR.type = token;
         tokenR.lexeme = "-";
         tokenR.nome = "MINUS"; 
-        return tokenR;
+        break;
 
     case STAR:
         tokenR.type = token;
         tokenR.lexeme = "*";
         tokenR.nome = "STAR"; 
-        return tokenR;
+        break;
 
     case SLASH:
         tokenR.type = token;
         tokenR.lexeme = "/";
         tokenR.nome = "SLASH"; 
-        return tokenR;
+        break;
 
     case VBAR:
         tokenR.type = token;
         tokenR.lexeme = "|";
         tokenR.nome = "VBAR"; 
-        return tokenR;
+        break;
 
     case AMPER:
         tokenR.type = token;
         tokenR.lexeme = "&";
         tokenR.nome = "AMPER"; 
-        return tokenR;
+        break;
 
     case LESS:
         tokenR.type = token;
         tokenR.lexeme = "<";
         tokenR.nome = "LESS"; 
-        return tokenR;
+        break;
 
     case GREATER:
         tokenR.type = token;
         tokenR.lexeme = ">";
         tokenR.nome = "GREATER"; 
-        return tokenR;
+        break;
 
     case EQUAL:
         tokenR.type = token;
         tokenR.lexeme = "=";
         tokenR.nome = "EQUAL"; 
-        return tokenR;
+        break;
 
     case DOT:
         tokenR.type = token;
         tokenR.lexeme = ".";
         tokenR.nome = "DOT"; 
-        return tokenR;
+        break;
 
     case PERCENT:
         tokenR.type = token;
         tokenR.lexeme = "%";
         tokenR.nome = "PERCENT"; 
-        return tokenR;
+        break;
 
     case LBRACE:
         tokenR.type = token;
         tokenR.lexeme = "{";
         tokenR.nome = "LBRACE"; 
-        return tokenR;
+        break;
 
     case RBRACE:
         tokenR.type = token;
         tokenR.lexeme = "}";
         tokenR.nome = "RBRACE"; 
-        return tokenR;
+        break;
 
     case EQEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "==";
         tokenR.nome = "EQEQUAL"; 
-        return tokenR;
+        break;
 
     case NOTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "=!";
         tokenR.nome = "NOTEQUAL"; 
-        return tokenR;
+        break;
 
     case LESSEQUA:
         tokenR.type = token;
         tokenR.lexeme = "<=";
         tokenR.nome = "LESSEQUA"; 
-        return tokenR;
+        break;
 
     case GREATEREQUAL:
         tokenR.type = token;
         tokenR.lexeme = ">=";
         tokenR.nome = "GREATEREQUAL"; 
-        return tokenR;
+        break;
 
     case TILDE:
         tokenR.type = token;
         tokenR.lexeme = "~";
         tokenR.nome = "TILDE"; 
-        return tokenR;
+        break;
 
     case CIRCUMFLEX:
         tokenR.type = token;
         tokenR.lexeme = "^";
         tokenR.nome = "CIRCUMFLEX"; 
-        return tokenR;
+        break;
 
     case LEFTSHIFT:
         tokenR.type = token;
         tokenR.lexeme = "<<";
         tokenR.nome = "LEFTSHIFT"; 
-        return tokenR;
+        break;
 
     case RIGHTSHIFT:
         tokenR.type = token;
         tokenR.lexeme = ">>";
         tokenR.nome = "RIGHTSHIFT"; 
-        return tokenR;
+        break;
 
     case DOUBLESTAR:
         tokenR.type = token;
         tokenR.lexeme = "**";
         tokenR.nome = "DOUBLESTAR"; 
-        return tokenR;
+        break;
 
     case PLUSEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "+=";
         tokenR.nome = "PLUSEQUAL"; 
-        return tokenR;
+        break;
 
     case MINEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "-=";
         tokenR.nome = "MINEQUAL"; 
-        return tokenR;
+        break;
 
     case STAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "*=";
         tokenR.nome = "STAREQUAL"; 
-        return tokenR;
+        break;
 
     case SLASHEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "/=";
         tokenR.nome = "SLASHEQUAL"; 
-        return tokenR;
+        break;
 
     case PERCENTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "%=";
         tokenR.nome = "PERCENTEQUAL"; 
-        return tokenR;
+        break;
 
     case AMPEREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "&=";
         tokenR.nome = "AMPEREQUAL"; 
-        return tokenR;
+        break;
 
     case VBAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "|=";
         tokenR.nome = "VBAREQUAL"; 
-        return tokenR;
+        break;
 
     case CIRCUMFLEXEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "^=";
         tokenR.nome = "CIRCUMFLEXEQUAL"; 
-        return tokenR;
+        break;
 
     case LEFTSHIFTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "<<=";
         tokenR.nome = "LEFTSHIFTEQUAL"; 
-        return tokenR;
+        break;
 
     case RIGHTSHIFTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = ">>=";
         tokenR.nome = "RIGHTSHIFTEQUAL"; 
-        return tokenR;
+        break;
 
     case DOUBLESTAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "**=";
         tokenR.nome = "DOUBLESTAREQUAL"; 
-        return tokenR;
+        break;
 
     case DOUBLESLASH:
         tokenR.type = token;
         tokenR.lexeme = "//";
         tokenR.nome = "DOUBLESLASH"; 
-        return tokenR;
+        break;
 
     case DOUBLESLASHEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "//=";
         tokenR.nome = "DOUBLESLASHEQUAL"; 
-        return tokenR;
+        break;
 
     case AT:
         tokenR.type = token;
         tokenR.lexeme = "@";
         tokenR.nome = "AT"; 
-        return tokenR;
+        break;
 
     case ATEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "@=";
         tokenR.nome = "ATEQUAL"; 
-        return tokenR;
+        break;
 
     case RARROW:
         tokenR.type = token;
         tokenR.lexeme = "->";
         tokenR.nome = "RARROW"; 
-        return tokenR;
+        break;
 
     case ELLIPSIS:
         tokenR.type = token;
         tokenR.lexeme = "...";
         tokenR.nome = "ELLIPSIS"; 
-        return tokenR;
+        break;
 
     case COLONEQUAL:
         tokenR.type = token;
         tokenR.lexeme = ":=";
         tokenR.nome = "COLONEQUAL"; 
-        return tokenR;
+        break;
 
     case TYPE_COMMENT:
         tokenR.type = token;
         tokenR.nome = "TYPE_COMMENT"; 
-        return tokenR;
+        break;
 
             
 //===========//Finish//===============
@@ -916,9 +884,9 @@ TokenRecord createToken(TokenType token){
         tokenR.type = token;
         tokenR.lexeme = "<<EOF>>";
         tokenR.nome = "ENDMARKER"; 
-        return tokenR;
+        
     }
-
+    return tokenR;
 }
 
 TokenRecord *tokens;
@@ -929,6 +897,10 @@ void createAllTokens(){
     for(i=0; i<ENDMARKER+1; i++){
         tokens[i]=createToken(i);
     }
+}
+
+void destroyAllTokens(){
+    free(tokens);
 }
 
 //variáveis
@@ -958,7 +930,7 @@ int qtdChar(char *textTab, char my_c)
 
 void tratamentoIndentacao()
 {
-    int i, j, k;
+    int i, j;
     int cSpace = 0;
     int numTab = 0;
 
@@ -1014,7 +986,7 @@ void processToken(TokenType token){
 //INDENT DEDENT SPACE E NEW LINE
 void indentDedentSpaceNl()
 {
-    int i, j, k, qtdSpace, qtdEnter, qtdTab;
+    int i, j, qtdEnter;
     int lenTT = strlen(textTab);
     for (i = 0; i < lenTT; i++)
     {
@@ -1060,31 +1032,17 @@ void indentDedentSpaceNl()
 
 void indent()
 {
-    int i, j, k;
-    int cSpace = 0;
-    int numTab = 0;
-    int lenYY = strlen(yytext);
+
     textTab = (char *)malloc(sizeof(yytext));
 
     //funcoes principais
     tratamentoIndentacao();
     indentDedentSpaceNl();
-
-    /*
-    int lenTT = strlen(textTab);
-    printf("\n\n\n INI_TEXT_TAB \n");
-    printf("Numtab: %d\n", numTab);
-    printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
-    for(i=0; i<lenTT; i++){
-        int new_c = textTab[i];
-        printf("@%d@\n", new_c);
-    }
-    printf("END_TEXT_TAB\n");
-    */
+    free(textTab);
 }
 
-#line 1087 "lex.yy.c"
-#line 1088 "lex.yy.c"
+#line 1045 "lex.yy.c"
+#line 1046 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -1301,10 +1259,10 @@ YY_DECL
 		}
 
 	{
-#line 545 "basic_py.l"
+#line 535 "basic_py.l"
 
 
-#line 1308 "lex.yy.c"
+#line 1266 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1331,13 +1289,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 91 )
+				if ( yy_current_state >= 71 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 195 );
+		while ( yy_base[yy_current_state] != 85 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -1373,290 +1331,280 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 547 "basic_py.l"
-{ processToken(TYPE_COMMENT); }
-	YY_BREAK
-case 2:
-YY_RULE_SETUP
-#line 548 "basic_py.l"
-{ processToken(TYPE_COMMENT); }
-	YY_BREAK
-case 3:
-YY_RULE_SETUP
-#line 549 "basic_py.l"
+#line 537 "basic_py.l"
 { processToken(TYPE_COMMENT); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 551 "basic_py.l"
+#line 539 "basic_py.l"
 { processToken(ENDMARKER); yyterminate();}
+	YY_BREAK
+case 2:
+YY_RULE_SETUP
+#line 540 "basic_py.l"
+{ processToken(NAME); }
+	YY_BREAK
+case 3:
+YY_RULE_SETUP
+#line 541 "basic_py.l"
+{ processToken(NUMBER); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 552 "basic_py.l"
-{ processToken(NAME); }
+#line 542 "basic_py.l"
+{ processToken(STRING); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 553 "basic_py.l"
-{ processToken(NUMBER); }
+#line 543 "basic_py.l"
+{ processToken(STRING); }
 	YY_BREAK
 case 6:
+/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 554 "basic_py.l"
-{ processToken(STRING); }
+#line 544 "basic_py.l"
+{ indent(); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 555 "basic_py.l"
-{ processToken(STRING); }
+#line 545 "basic_py.l"
+{ processToken(LPAR); }
 	YY_BREAK
 case 8:
-/* rule 8 can match eol */
 YY_RULE_SETUP
-#line 556 "basic_py.l"
-{ indent(); }
+#line 546 "basic_py.l"
+{ processToken(RPAR); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 557 "basic_py.l"
-{ processToken(LPAR); }
+#line 547 "basic_py.l"
+{ processToken(LSQB); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 558 "basic_py.l"
-{ processToken(RPAR); }
+#line 548 "basic_py.l"
+{ processToken(RSQB); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 559 "basic_py.l"
-{ processToken(LSQB); }
+#line 549 "basic_py.l"
+{ processToken(COLON); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 560 "basic_py.l"
-{ processToken(RSQB); }
+#line 550 "basic_py.l"
+{ processToken(COMMA); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 561 "basic_py.l"
-{ processToken(COLON); }
+#line 551 "basic_py.l"
+{ processToken(SEMI); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 562 "basic_py.l"
-{ processToken(COMMA); }
+#line 552 "basic_py.l"
+{ processToken(PLUS); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 563 "basic_py.l"
-{ processToken(SEMI); }
+#line 553 "basic_py.l"
+{ processToken(MINUS); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 564 "basic_py.l"
-{ processToken(PLUS); }
+#line 554 "basic_py.l"
+{ processToken(STAR); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 565 "basic_py.l"
-{ processToken(MINUS); }
+#line 555 "basic_py.l"
+{ processToken(SLASH); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 566 "basic_py.l"
-{ processToken(STAR); }
+#line 556 "basic_py.l"
+{ processToken(VBAR); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 567 "basic_py.l"
-{ processToken(SLASH); }
+#line 557 "basic_py.l"
+{ processToken(AMPER); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 568 "basic_py.l"
-{ processToken(VBAR); }
+#line 558 "basic_py.l"
+{ processToken(LESS); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 569 "basic_py.l"
-{ processToken(AMPER); }
+#line 559 "basic_py.l"
+{ processToken(GREATER); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 570 "basic_py.l"
-{ processToken(LESS); }
+#line 560 "basic_py.l"
+{ processToken(EQUAL); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 571 "basic_py.l"
-{ processToken(GREATER); }
+#line 561 "basic_py.l"
+{ processToken(DOT); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 572 "basic_py.l"
-{ processToken(EQUAL); }
+#line 562 "basic_py.l"
+{ processToken(PERCENT); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 573 "basic_py.l"
-{ processToken(DOT); }
+#line 563 "basic_py.l"
+{ processToken(LBRACE); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 574 "basic_py.l"
-{ processToken(PERCENT); }
+#line 564 "basic_py.l"
+{ processToken(RBRACE); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 575 "basic_py.l"
-{ processToken(LBRACE); }
+#line 565 "basic_py.l"
+{ processToken(EQEQUAL); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 576 "basic_py.l"
-{ processToken(RBRACE); }
+#line 566 "basic_py.l"
+{ processToken(NOTEQUAL); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 577 "basic_py.l"
-{ processToken(EQEQUAL); }
+#line 567 "basic_py.l"
+{ processToken(LESSEQUA); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 578 "basic_py.l"
-{ processToken(NOTEQUAL); }
+#line 568 "basic_py.l"
+{ processToken(GREATEREQUAL); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 579 "basic_py.l"
-{ processToken(LESSEQUA); }
+#line 569 "basic_py.l"
+{ processToken(TILDE); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 580 "basic_py.l"
-{ processToken(GREATEREQUAL); }
+#line 570 "basic_py.l"
+{ processToken(CIRCUMFLEX); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 581 "basic_py.l"
-{ processToken(TILDE); }
+#line 571 "basic_py.l"
+{ processToken(LEFTSHIFT); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 582 "basic_py.l"
-{ processToken(CIRCUMFLEX); }
+#line 572 "basic_py.l"
+{ processToken(RIGHTSHIFT); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 583 "basic_py.l"
-{ processToken(LEFTSHIFT); }
+#line 573 "basic_py.l"
+{ processToken(DOUBLESTAR); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 584 "basic_py.l"
-{ processToken(RIGHTSHIFT); }
+#line 574 "basic_py.l"
+{ processToken(PLUSEQUAL); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 585 "basic_py.l"
-{ processToken(DOUBLESTAR); }
+#line 575 "basic_py.l"
+{ processToken(MINEQUAL); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 586 "basic_py.l"
-{ processToken(PLUSEQUAL); }
+#line 576 "basic_py.l"
+{ processToken(STAREQUAL); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 587 "basic_py.l"
-{ processToken(MINEQUAL); }
+#line 577 "basic_py.l"
+{ processToken(SLASHEQUAL); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 588 "basic_py.l"
-{ processToken(STAREQUAL); }
+#line 578 "basic_py.l"
+{ processToken(PERCENTEQUAL); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 589 "basic_py.l"
-{ processToken(SLASHEQUAL); }
+#line 579 "basic_py.l"
+{ processToken(AMPEREQUAL); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 590 "basic_py.l"
-{ processToken(PERCENTEQUAL); }
+#line 580 "basic_py.l"
+{ processToken(VBAREQUAL); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 591 "basic_py.l"
-{ processToken(AMPEREQUAL); }
+#line 581 "basic_py.l"
+{ processToken(CIRCUMFLEXEQUAL); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 592 "basic_py.l"
-{ processToken(VBAREQUAL); }
+#line 582 "basic_py.l"
+{ processToken(LEFTSHIFTEQUAL); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 593 "basic_py.l"
-{ processToken(CIRCUMFLEXEQUAL); }
+#line 583 "basic_py.l"
+{ processToken(RIGHTSHIFTEQUAL); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 594 "basic_py.l"
-{ processToken(LEFTSHIFTEQUAL); }
+#line 584 "basic_py.l"
+{ processToken(DOUBLESTAREQUAL); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 595 "basic_py.l"
-{ processToken(RIGHTSHIFTEQUAL); }
+#line 585 "basic_py.l"
+{ processToken(DOUBLESLASH); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 596 "basic_py.l"
-{ processToken(DOUBLESTAREQUAL); }
+#line 586 "basic_py.l"
+{ processToken(DOUBLESLASHEQUAL); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 597 "basic_py.l"
-{ processToken(DOUBLESLASH); }
+#line 587 "basic_py.l"
+{ processToken(AT); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 598 "basic_py.l"
-{ processToken(DOUBLESLASHEQUAL); }
+#line 588 "basic_py.l"
+{ processToken(ATEQUAL); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 599 "basic_py.l"
-{ processToken(AT); }
+#line 589 "basic_py.l"
+{ processToken(RARROW); }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 600 "basic_py.l"
-{ processToken(ATEQUAL); }
+#line 590 "basic_py.l"
+{ processToken(ELLIPSIS); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 601 "basic_py.l"
-{ processToken(RARROW); }
+#line 591 "basic_py.l"
+{ processToken(COLONEQUAL); }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 602 "basic_py.l"
-{ processToken(ELLIPSIS); }
-	YY_BREAK
-case 55:
-YY_RULE_SETUP
-#line 603 "basic_py.l"
-{ processToken(COLONEQUAL); }
-	YY_BREAK
-case 56:
-YY_RULE_SETUP
-#line 609 "basic_py.l"
+#line 597 "basic_py.l"
 ECHO;
 	YY_BREAK
-#line 1660 "lex.yy.c"
+#line 1608 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1951,7 +1899,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 91 )
+			if ( yy_current_state >= 71 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1979,11 +1927,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 91 )
+		if ( yy_current_state >= 71 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 90);
+	yy_is_jam = (yy_current_state == 70);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -2671,11 +2619,13 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 609 "basic_py.l"
+#line 597 "basic_py.l"
 
 int main() {
     createAllTokens();
     yylex();
     //printf("\n\nqtd_indent: %d.\n", qtd_indent);
+    destroyAllTokens();
+    yylex_destroy();
     return 0;
 }

@@ -50,322 +50,322 @@ TokenRecord createToken(TokenType token){
     case NAME:
         tokenR.type = token;
         tokenR.nome = "NAME"; 
-        return tokenR;
+        break;
 
     case NUMBER:
         tokenR.type = token;
         tokenR.nome = "NUMBER"; 
-        return tokenR;
+        break;
     
     case STRING:
         tokenR.type = token;
         tokenR.nome = "STRING"; 
-        return tokenR;
+        break;
 
     case INDENT:
         tokenR.type = token;
         tokenR.lexeme = "\\t";
         tokenR.nome = "INDENT"; 
-        return tokenR;
+        break;
     
     case DEDENT:
         tokenR.type = token;
         tokenR.lexeme = "\\b";
         tokenR.nome = "DEDENT"; 
-        return tokenR;
+        break;
     
     case NEWLINE:
         tokenR.type = token;
         tokenR.lexeme = "\\n";
         tokenR.nome = "NEWLINE"; 
-        return tokenR;
+        break;
 
     case LPAR:
         tokenR.type = token;
         tokenR.lexeme = "(";
         tokenR.nome = "LPAR"; 
-        return tokenR;
+        break;
 
     case RPAR:
         tokenR.type = token;
         tokenR.lexeme = ")";
         tokenR.nome = "RPAR"; 
-        return tokenR;
+        break;
 
     case LSQB:
         tokenR.type = token;
         tokenR.lexeme = "[";
         tokenR.nome = "LSQB"; 
-        return tokenR;
+        break;
 
     case RSQB:
         tokenR.type = token;
         tokenR.lexeme = "]";
         tokenR.nome = "RSQB"; 
-        return tokenR;
+        break;
 
     case COLON:
         tokenR.type = token;
         tokenR.lexeme = ":";
         tokenR.nome = "COLON"; 
-        return tokenR;
+        break;
 
     case COMMA:
         tokenR.type = token;
         tokenR.lexeme = ",";
         tokenR.nome = "COMMA"; 
-        return tokenR;
+        break;
     
     case SEMI:
         tokenR.type = token;
         tokenR.lexeme = ";";
         tokenR.nome = "SEMI"; 
-        return tokenR;
+        break;
 
     case PLUS:
         tokenR.type = token;
         tokenR.lexeme = "+";
         tokenR.nome = "PLUS"; 
-        return tokenR;
+        break;
     
     case MINUS:
         tokenR.type = token;
         tokenR.lexeme = "-";
         tokenR.nome = "MINUS"; 
-        return tokenR;
+        break;
 
     case STAR:
         tokenR.type = token;
         tokenR.lexeme = "*";
         tokenR.nome = "STAR"; 
-        return tokenR;
+        break;
 
     case SLASH:
         tokenR.type = token;
         tokenR.lexeme = "/";
         tokenR.nome = "SLASH"; 
-        return tokenR;
+        break;
 
     case VBAR:
         tokenR.type = token;
         tokenR.lexeme = "|";
         tokenR.nome = "VBAR"; 
-        return tokenR;
+        break;
 
     case AMPER:
         tokenR.type = token;
         tokenR.lexeme = "&";
         tokenR.nome = "AMPER"; 
-        return tokenR;
+        break;
 
     case LESS:
         tokenR.type = token;
         tokenR.lexeme = "<";
         tokenR.nome = "LESS"; 
-        return tokenR;
+        break;
 
     case GREATER:
         tokenR.type = token;
         tokenR.lexeme = ">";
         tokenR.nome = "GREATER"; 
-        return tokenR;
+        break;
 
     case EQUAL:
         tokenR.type = token;
         tokenR.lexeme = "=";
         tokenR.nome = "EQUAL"; 
-        return tokenR;
+        break;
 
     case DOT:
         tokenR.type = token;
         tokenR.lexeme = ".";
         tokenR.nome = "DOT"; 
-        return tokenR;
+        break;
 
     case PERCENT:
         tokenR.type = token;
         tokenR.lexeme = "%";
         tokenR.nome = "PERCENT"; 
-        return tokenR;
+        break;
 
     case LBRACE:
         tokenR.type = token;
         tokenR.lexeme = "{";
         tokenR.nome = "LBRACE"; 
-        return tokenR;
+        break;
 
     case RBRACE:
         tokenR.type = token;
         tokenR.lexeme = "}";
         tokenR.nome = "RBRACE"; 
-        return tokenR;
+        break;
 
     case EQEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "==";
         tokenR.nome = "EQEQUAL"; 
-        return tokenR;
+        break;
 
     case NOTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "=!";
         tokenR.nome = "NOTEQUAL"; 
-        return tokenR;
+        break;
 
     case LESSEQUA:
         tokenR.type = token;
         tokenR.lexeme = "<=";
         tokenR.nome = "LESSEQUA"; 
-        return tokenR;
+        break;
 
     case GREATEREQUAL:
         tokenR.type = token;
         tokenR.lexeme = ">=";
         tokenR.nome = "GREATEREQUAL"; 
-        return tokenR;
+        break;
 
     case TILDE:
         tokenR.type = token;
         tokenR.lexeme = "~";
         tokenR.nome = "TILDE"; 
-        return tokenR;
+        break;
 
     case CIRCUMFLEX:
         tokenR.type = token;
         tokenR.lexeme = "^";
         tokenR.nome = "CIRCUMFLEX"; 
-        return tokenR;
+        break;
 
     case LEFTSHIFT:
         tokenR.type = token;
         tokenR.lexeme = "<<";
         tokenR.nome = "LEFTSHIFT"; 
-        return tokenR;
+        break;
 
     case RIGHTSHIFT:
         tokenR.type = token;
         tokenR.lexeme = ">>";
         tokenR.nome = "RIGHTSHIFT"; 
-        return tokenR;
+        break;
 
     case DOUBLESTAR:
         tokenR.type = token;
         tokenR.lexeme = "**";
         tokenR.nome = "DOUBLESTAR"; 
-        return tokenR;
+        break;
 
     case PLUSEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "+=";
         tokenR.nome = "PLUSEQUAL"; 
-        return tokenR;
+        break;
 
     case MINEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "-=";
         tokenR.nome = "MINEQUAL"; 
-        return tokenR;
+        break;
 
     case STAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "*=";
         tokenR.nome = "STAREQUAL"; 
-        return tokenR;
+        break;
 
     case SLASHEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "/=";
         tokenR.nome = "SLASHEQUAL"; 
-        return tokenR;
+        break;
 
     case PERCENTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "%=";
         tokenR.nome = "PERCENTEQUAL"; 
-        return tokenR;
+        break;
 
     case AMPEREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "&=";
         tokenR.nome = "AMPEREQUAL"; 
-        return tokenR;
+        break;
 
     case VBAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "|=";
         tokenR.nome = "VBAREQUAL"; 
-        return tokenR;
+        break;
 
     case CIRCUMFLEXEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "^=";
         tokenR.nome = "CIRCUMFLEXEQUAL"; 
-        return tokenR;
+        break;
 
     case LEFTSHIFTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "<<=";
         tokenR.nome = "LEFTSHIFTEQUAL"; 
-        return tokenR;
+        break;
 
     case RIGHTSHIFTEQUAL:
         tokenR.type = token;
         tokenR.lexeme = ">>=";
         tokenR.nome = "RIGHTSHIFTEQUAL"; 
-        return tokenR;
+        break;
 
     case DOUBLESTAREQUAL:
         tokenR.type = token;
         tokenR.lexeme = "**=";
         tokenR.nome = "DOUBLESTAREQUAL"; 
-        return tokenR;
+        break;
 
     case DOUBLESLASH:
         tokenR.type = token;
         tokenR.lexeme = "//";
         tokenR.nome = "DOUBLESLASH"; 
-        return tokenR;
+        break;
 
     case DOUBLESLASHEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "//=";
         tokenR.nome = "DOUBLESLASHEQUAL"; 
-        return tokenR;
+        break;
 
     case AT:
         tokenR.type = token;
         tokenR.lexeme = "@";
         tokenR.nome = "AT"; 
-        return tokenR;
+        break;
 
     case ATEQUAL:
         tokenR.type = token;
         tokenR.lexeme = "@=";
         tokenR.nome = "ATEQUAL"; 
-        return tokenR;
+        break;
 
     case RARROW:
         tokenR.type = token;
         tokenR.lexeme = "->";
         tokenR.nome = "RARROW"; 
-        return tokenR;
+        break;
 
     case ELLIPSIS:
         tokenR.type = token;
         tokenR.lexeme = "...";
         tokenR.nome = "ELLIPSIS"; 
-        return tokenR;
+        break;
 
     case COLONEQUAL:
         tokenR.type = token;
         tokenR.lexeme = ":=";
         tokenR.nome = "COLONEQUAL"; 
-        return tokenR;
+        break;
 
     case TYPE_COMMENT:
         tokenR.type = token;
         tokenR.nome = "TYPE_COMMENT"; 
-        return tokenR;
+        break;
 
             
 //===========//Finish//===============
@@ -373,9 +373,9 @@ TokenRecord createToken(TokenType token){
         tokenR.type = token;
         tokenR.lexeme = "<<EOF>>";
         tokenR.nome = "ENDMARKER"; 
-        return tokenR;
+        
     }
-
+    return tokenR;
 }
 
 TokenRecord *tokens;
@@ -386,6 +386,10 @@ void createAllTokens(){
     for(i=0; i<ENDMARKER+1; i++){
         tokens[i]=createToken(i);
     }
+}
+
+void destroyAllTokens(){
+    free(tokens);
 }
 
 //variáveis
@@ -415,7 +419,7 @@ int qtdChar(char *textTab, char my_c)
 
 void tratamentoIndentacao()
 {
-    int i, j, k;
+    int i, j;
     int cSpace = 0;
     int numTab = 0;
 
@@ -471,7 +475,7 @@ void processToken(TokenType token){
 //INDENT DEDENT SPACE E NEW LINE
 void indentDedentSpaceNl()
 {
-    int i, j, k, qtdSpace, qtdEnter, qtdTab;
+    int i, j, qtdEnter;
     int lenTT = strlen(textTab);
     for (i = 0; i < lenTT; i++)
     {
@@ -517,35 +521,19 @@ void indentDedentSpaceNl()
 
 void indent()
 {
-    int i, j, k;
-    int cSpace = 0;
-    int numTab = 0;
-    int lenYY = strlen(yytext);
+
     textTab = (char *)malloc(sizeof(yytext));
 
     //funcoes principais
     tratamentoIndentacao();
     indentDedentSpaceNl();
-
-    /*
-    int lenTT = strlen(textTab);
-    printf("\n\n\n INI_TEXT_TAB \n");
-    printf("Numtab: %d\n", numTab);
-    printf("lenYY: %d, lenTT: %d\n", lenYY, lenTT);
-    for(i=0; i<lenTT; i++){
-        int new_c = textTab[i];
-        printf("@%d@\n", new_c);
-    }
-    printf("END_TEXT_TAB\n");
-    */
+    free(textTab);
 }
 
 %}
 
 %%
 
-["""{3,3}][^"""{3,3}\n]*["""{3,3}]      { processToken(TYPE_COMMENT); }
-['{3,3}][^'{3,3}\n]*['{3,3}]            { processToken(TYPE_COMMENT); }
 #[^\n$]*                                { processToken(TYPE_COMMENT); }
 
 <<EOF>>      { processToken(ENDMARKER); yyterminate();}
@@ -611,5 +599,7 @@ int main() {
     createAllTokens();
     yylex();
     //printf("\n\nqtd_indent: %d.\n", qtd_indent);
+    destroyAllTokens();
+    yylex_destroy();
     return 0;
 }
