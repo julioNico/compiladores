@@ -7,6 +7,7 @@
 
 //estruturas
 typedef enum {
+    NAME, NUMBER, STRING,
     INDENT, DEDENT, NEWLINE,
     LPAR, RPAR,
     LSQB, RSQB,
@@ -31,7 +32,7 @@ typedef enum {
     DOUBLESTAREQUAL, DOUBLESLASHEQUAL,
     DOUBLESLASH,
     AT, ATEQUAL, RARROW, ELLIPSIS, COLONEQUAL,
-
+    TYPE_COMMENT,
     ENDMARKER
 } TokenType;
 
@@ -46,6 +47,21 @@ TokenRecord createToken(TokenType token){
     TokenRecord tokenR;
     switch((int) token)
     {
+    case NAME:
+        tokenR.type = token;
+        tokenR.nome = "NAME"; 
+        return tokenR;
+
+    case NUMBER:
+        tokenR.type = token;
+        tokenR.nome = "NUMBER"; 
+        return tokenR;
+    
+    case STRING:
+        tokenR.type = token;
+        tokenR.nome = "STRING"; 
+        return tokenR;
+
     case INDENT:
         tokenR.type = token;
         tokenR.lexeme = "\\t";
@@ -346,6 +362,12 @@ TokenRecord createToken(TokenType token){
         tokenR.nome = "COLONEQUAL"; 
         return tokenR;
 
+    case TYPE_COMMENT:
+        tokenR.type = token;
+        tokenR.nome = "TYPE_COMMENT"; 
+        return tokenR;
+
+            
 //===========//Finish//===============
     case ENDMARKER:
         tokenR.type = token;
@@ -433,6 +455,16 @@ void tratamentoIndentacao()
 
 void processToken(TokenType token){
     TokenRecord tokenR = tokens[(int)token];
+
+    if( token == NUMBER 
+        || token == STRING 
+        || token == NAME  
+        || token == TYPE_COMMENT
+    ) 
+    {
+        tokenR.lexeme = yytext;
+    }
+
     printf("\n%d: %s -> %s\n", (yylineno), tokenR.lexeme, tokenR.nome);
 }
 
@@ -444,30 +476,11 @@ void indentDedentSpaceNl()
     for (i = 0; i < lenTT; i++)
     {
         char c = textTab[i];
-        /*
-        if (c == ' ')
-        {
-            printf(" ESPACO ");
-        }
-        */
 
         if (c == '\n')
         {   
             processToken(NEWLINE);
         } 
-        /* 
-        else
-        {   
-            /*
-            qtdSpace = qtdChar(textTab, ' ');
-            qtdTab = qtdChar(textTab, '\t');
-            if ((qtdTab + qtdSpace) == lenTT)
-            {
-                printf(" TAB ");
-            }
-            
-        }
-        */
 
         qtdEnter = qtdChar(textTab, '\n');
         if (lenTT > 1 && qtdEnter > 0)
@@ -530,58 +543,68 @@ void indent()
 %}
 
 %%
-[\n\t ]+     { indent(); }
-[(]          { processToken(LPAR); }
-[)]          { processToken(RPAR); }
-"["          { processToken(LSQB); }
-"]"          { processToken(RSQB); }
-:            { processToken(COLON); }
-,            { processToken(COMMA); }
-;            { processToken(SEMI); }
-"+"          { processToken(PLUS); }
-"-"          { processToken(MINUS); }
-"*"          { processToken(STAR); }
-"/"          { processToken(SLASH); }
-"|"          { processToken(VBAR); }
-"&"          { processToken(AMPER); }
-"<"          { processToken(LESS); }
-">"          { processToken(GREATER); }
-"="          { processToken(EQUAL); }
-"."          { processToken(DOT); }
-"%"          { processToken(PERCENT); }
-[{]          { processToken(LBRACE); }
-[}]          { processToken(RBRACE); }
-"=="         { processToken(EQEQUAL); }
-"=!"         { processToken(NOTEQUAL); }
-"<="         { processToken(LESSEQUA); }
-">="         { processToken(GREATEREQUAL); }
-"~"          { processToken(TILDE); }
-"^"          { processToken(CIRCUMFLEX); }
-"<<"         { processToken(LEFTSHIFT); }
-">>"         { processToken(RIGHTSHIFT); }
-"**"         { processToken(DOUBLESTAR); }
-"+="         { processToken(PLUSEQUAL); }
-"-="         { processToken(MINEQUAL); }
-"*="         { processToken(STAREQUAL); }
-"/="         { processToken(SLASHEQUAL); }
-"%="         { processToken(PERCENTEQUAL); }
-"&="         { processToken(AMPEREQUAL); }
-"|="         { processToken(VBAREQUAL); }
-"^="         { processToken(CIRCUMFLEXEQUAL); }
-"<<="        { processToken(LEFTSHIFTEQUAL); }
-">>="        { processToken(RIGHTSHIFTEQUAL); }
-"**="        { processToken(DOUBLESTAREQUAL); }
-"//"         { processToken(DOUBLESLASH); }
-"//="        { processToken(DOUBLESLASHEQUAL); }
-"@"          { processToken(AT); }
-"@="         { processToken(ATEQUAL); }
-"->"         { processToken(RARROW); }
-"..."        { processToken(ELLIPSIS); }
-":="         { processToken(COLONEQUAL); }
 
-
+["""{3,3}][^"""{3,3}\n]*["""{3,3}]      { processToken(TYPE_COMMENT); }
+['{3,3}][^'{3,3}\n]*['{3,3}]            { processToken(TYPE_COMMENT); }
+#[^\n$]*                                { processToken(TYPE_COMMENT); }
 
 <<EOF>>      { processToken(ENDMARKER); yyterminate();}
+[a-zA-Z_]+[a-zA-Z0-9_]*                 { processToken(NAME); }
+[0-9]+"."?[0-9]*                        { processToken(NUMBER); }
+["""][^"""\n]*["""]                     { processToken(STRING); }
+['][^'\n]*[']                           { processToken(STRING); }
+[\n\t ]+                                { indent(); }
+[(]                                     { processToken(LPAR); }
+[)]                                     { processToken(RPAR); }
+"["                                     { processToken(LSQB); }
+"]"                                     { processToken(RSQB); }
+:                                       { processToken(COLON); }
+,                                       { processToken(COMMA); }
+;                                       { processToken(SEMI); }
+"+"                                     { processToken(PLUS); }
+"-"                                     { processToken(MINUS); }
+"*"                                     { processToken(STAR); }
+"/"                                     { processToken(SLASH); }
+"|"                                     { processToken(VBAR); }
+"&"                                     { processToken(AMPER); }
+"<"                                     { processToken(LESS); }
+">"                                     { processToken(GREATER); }
+"="                                     { processToken(EQUAL); }
+"."                                     { processToken(DOT); }
+"%"                                     { processToken(PERCENT); }
+[{]                                     { processToken(LBRACE); }
+[}]                                     { processToken(RBRACE); }
+"=="                                    { processToken(EQEQUAL); }
+"=!"                                    { processToken(NOTEQUAL); }
+"<="                                    { processToken(LESSEQUA); }
+">="                                    { processToken(GREATEREQUAL); }
+"~"                                     { processToken(TILDE); }
+"^"                                     { processToken(CIRCUMFLEX); }
+"<<"                                    { processToken(LEFTSHIFT); }
+">>"                                    { processToken(RIGHTSHIFT); }
+"**"                                    { processToken(DOUBLESTAR); }
+"+="                                    { processToken(PLUSEQUAL); }
+"-="                                    { processToken(MINEQUAL); }
+"*="                                    { processToken(STAREQUAL); }
+"/="                                    { processToken(SLASHEQUAL); }
+"%="                                    { processToken(PERCENTEQUAL); }
+"&="                                    { processToken(AMPEREQUAL); }
+"|="                                    { processToken(VBAREQUAL); }
+"^="                                    { processToken(CIRCUMFLEXEQUAL); }
+"<<="                                   { processToken(LEFTSHIFTEQUAL); }
+">>="                                   { processToken(RIGHTSHIFTEQUAL); }
+"**="                                   { processToken(DOUBLESTAREQUAL); }
+"//"                                    { processToken(DOUBLESLASH); }
+"//="                                   { processToken(DOUBLESLASHEQUAL); }
+"@"                                     { processToken(AT); }
+"@="                                    { processToken(ATEQUAL); }
+"->"                                    { processToken(RARROW); }
+"..."                                   { processToken(ELLIPSIS); }
+":="                                    { processToken(COLONEQUAL); }
+
+
+
+
 
 %%
 int main() {
