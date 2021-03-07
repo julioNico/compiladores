@@ -10,5 +10,4 @@
 "/"     { return SLASH; }
 "\n"    { return ENTER; }
 " "     { /* ignore spaces */ }
-.       { printf("LEXICAL ERROR: Unknown symbol %s\n", yytext);
-          exit(EXIT_FAILURE); }
+.       { printf("LEXICAL ERROR: Unknown symbol %s\n", yytext); exit(EXIT_FAILURE); }

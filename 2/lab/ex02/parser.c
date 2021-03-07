@@ -68,13 +68,11 @@
 /* First part of user prologue.  */
 #line 1 "parser.y"
 
-#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
 int yylex(void);
 void yyerror(char const *s);
 
-#line 78 "parser.tab.c"
+#line 76 "parser.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -105,7 +103,10 @@ void yyerror(char const *s);
 # define YYERROR_VERBOSE 0
 #endif
 
-
+/* Use api.header.include to #include this header
+   instead of duplicating it here.  */
+#ifndef YY_YY_PARSER_H_INCLUDED
+# define YY_YY_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -119,7 +120,7 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    DIGIT = 258,
+    NUMBER = 258,
     PLUS = 259,
     ENTER = 260
   };
@@ -137,7 +138,7 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-
+#endif /* !YY_YY_PARSER_H_INCLUDED  */
 
 
 
@@ -500,7 +501,7 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    13,    13,    14,    14
+       0,     8,     8,     9,     9
 };
 #endif
 
@@ -509,7 +510,7 @@ static const yytype_int8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "DIGIT", "PLUS", "ENTER", "$accept",
+  "$end", "error", "$undefined", "NUMBER", "PLUS", "ENTER", "$accept",
   "line", "expr", YY_NULLPTR
 };
 #endif
@@ -1285,7 +1286,7 @@ yyreduce:
   switch (yyn)
     {
 
-#line 1289 "parser.tab.c"
+#line 1290 "parser.c"
 
       default: break;
     }
@@ -1517,26 +1518,10 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 16 "parser.y"
-
-
-int yylex(void) {
-    int c = getchar();
-    if (isdigit(c))     { return DIGIT; }
-    else if (c == '+')  { return PLUS; }
-    else if (c == '\n') { return ENTER; }
-    // EOF is not a token but a constant from stdio.
-    else if (c == EOF)  { return EOF; }
-    else { // Not a digit or plus or enter.
-        printf("LEXICAL ERROR: Unknown symbol %c\n", c);
-        exit(EXIT_FAILURE);
-    }
-}
+#line 10 "parser.y"
 
 int main(void) {
     if (yyparse() == 0) printf("PARSE SUCCESSFUL!\n");
     else                printf("PARSE FAILED!\n");
     return 0;
 }
-
-
