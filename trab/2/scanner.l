@@ -189,6 +189,9 @@ int indent()
 "del"                           { return DEL; }
 "exec"                          { return EXEC; }
 
+"<<|>>"                         { return OLHO_DE_GATO; }
+
+
 #[^\n$]*                        { values = strdup(yytext); return TYPE_COMMENT; }
 [0-9]+"."?[0-9]*                { values = strdup(yytext); return NUMBER; }
 ["""][^"""\n]*["""]             { values = strdup(yytext); return STRING; }
@@ -209,14 +212,15 @@ int indent()
 "&"                             { return AMPER; }
 "<"                             { return LESS; }
 ">"                             { return GREATER; }
+"<>"                            { return LESSGREATER; }
 "="                             { return EQUAL; }
 "."                             { return DOT; }
 "%"                             { return PERCENT; }
 [{]                             { return LBRACE; }
 [}]                             { return RBRACE; }
 "=="                            { return EQEQUAL; }
-"=!"                            { return NOTEQUAL; }
-"<="                            { return LESSEQUA; }
+"!="                            { return NOTEQUAL; }
+"<="                            { return LESSEQUAL; }
 ">="                            { return GREATEREQUAL; }
 "~"                             { return TILDE; }
 "^"                             { return CIRCUMFLEX; }

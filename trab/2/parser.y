@@ -1,4 +1,3 @@
-
 %output "parser.c"          // File name of generated parser.
 %defines "parser.h"         // Produces a 'parser.h'
 %define parse.error verbose // Give proper messages when a syntax error is found.
@@ -9,11 +8,15 @@
 int yylex(void);
 void yyerror(char const *s);
 int result = %token;
+%}
+
 %token IMPORT
 %token FROM
+%token AS
 
 %token CLASS
 %token DEF
+%token LAMBDA
 
 %token NOT
 %token AND
@@ -34,6 +37,7 @@ int result = %token;
 %token TRY
 %token EXCEPT
 %token FINALLY
+%token WITH
 
 %token RETURN
 %token RAISE
@@ -66,6 +70,7 @@ int result = %token;
 %token AMPER
 %token LESS
 %token GREATER
+%token LESSGREATER
 %token EQUAL
 %token DOT
 %token PERCENT
@@ -73,7 +78,7 @@ int result = %token;
 %token RBRACE
 %token EQEQUAL
 %token NOTEQUAL
-%token LESSEQUA
+%token LESSEQUAL
 %token GREATEREQUAL
 %token TILDE
 %token CIRCUMFLEX
@@ -99,171 +104,221 @@ int result = %token;
 %token ELLIPSIS
 %token COLONEQUAL
 
+%token OLHO_DE_GATO
+
 %left OR
 %left AND
 %left PLUS MINUS
 %left STAR SLASH
 
-%%
-
 // single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE
-file_input: (NEWLINE | stmt)* ENDMARKER;
-
 // eval_input: testlist NEWLINE* ENDMARKER
 
-// decorator: '@' dotted_name [ '(' [arglist] ')' ] NEWLINE
+// decorator: '@' dotted_name [ LPAR [arglist] RPAR ] NEWLINE
 // decorators: decorator+
 // decorated: decorators (classdef | funcdef | async_funcdef)
 
-//async_funcdef: ASYNC funcdef
-funcdef: DEF NAME parameters [RARROW test] COLON opc_TYPE_COMMENT func_body_suite;
-
-opc_TYPE_COMMENT:
-%empty
-| TYPE_COMMENT;
-
-parameters: '(' [typedargslist] ')'
-//lita de nome +" "+ ",".
+//  async_funcdef: ASYNC funcdef
 
 /*
 typedargslist: (
-  (tfpdef ['=' test] (',' [TYPE_COMMENT] tfpdef ['=' test])* ',' [TYPE_COMMENT] '/' [',' [ [TYPE_COMMENT] tfpdef ['=' test] (
-        ',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] [
-        '*' [tfpdef] (',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] ['**' tfpdef [','] [TYPE_COMMENT]]])
-      | '**' tfpdef [','] [TYPE_COMMENT]]])
-  | '*' [tfpdef] (',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] ['**' tfpdef [','] [TYPE_COMMENT]]])
-  | '**' tfpdef [','] [TYPE_COMMENT]]] )
-|  (tfpdef ['=' test] (',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] [
-   '*' [tfpdef] (',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] ['**' tfpdef [','] [TYPE_COMMENT]]])
-  | '**' tfpdef [','] [TYPE_COMMENT]]])
-  | '*' [tfpdef] (',' [TYPE_COMMENT] tfpdef ['=' test])* (TYPE_COMMENT | [',' [TYPE_COMMENT] ['**' tfpdef [','] [TYPE_COMMENT]]])
-  | '**' tfpdef [','] [TYPE_COMMENT])
+  (tfpdef [EQUAL test] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* COMMA opc_TYPE_COMMENT '/' [COMMA [ opc_TYPE_COMMENT tfpdef [EQUAL test] (
+        COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [
+        STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+      | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]] )
+|  (tfpdef [EQUAL test] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [
+   STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT)
 )
-tfpdef: NAME [':' test]
+tfpdef: NAME [COLON test]
 */
 
 /*
-varargslist: vfpdef ['=' test ](',' vfpdef ['=' test])* ',' '/' [',' [ (vfpdef ['=' test] (',' vfpdef ['=' test])* [',' [
-        '*' [vfpdef] (',' vfpdef ['=' test])* [',' ['**' vfpdef [',']]]
-      | '**' vfpdef [',']]]
-  | '*' [vfpdef] (',' vfpdef ['=' test])* [',' ['**' vfpdef [',']]]
-  | '**' vfpdef [',']) ]] | (vfpdef ['=' test] (',' vfpdef ['=' test])* [',' [
-        '*' [vfpdef] (',' vfpdef ['=' test])* [',' ['**' vfpdef [',']]]
-      | '**' vfpdef [',']]]
-  | '*' [vfpdef] (',' vfpdef ['=' test])* [',' ['**' vfpdef [',']]]
-  | '**' vfpdef [',']
+varargslist: vfpdef [EQUAL test ](COMMA vfpdef [EQUAL test])* COMMA '/' [COMMA [ (vfpdef [EQUAL test] (COMMA vfpdef [EQUAL test])* [COMMA [
+        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
+      | DOUBLESTAR vfpdef [COMMA]]]
+  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
+  | DOUBLESTAR vfpdef [COMMA]) ]] | (vfpdef [EQUAL test] (COMMA vfpdef [EQUAL test])* [COMMA [
+        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
+      | DOUBLESTAR vfpdef [COMMA]]]
+  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
+  | DOUBLESTAR vfpdef [COMMA]
 )
 vfpdef: NAME
 */
 
-stmt: simple_stmt | compound_stmt
-simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE
-small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt | /*import_stmt*/ | global_stmt | nonlocal_stmt | /*assert_stmt*/)
-expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) | [('=' (yield_expr|testlist_star_expr))+ [TYPE_COMMENT]] )
-annassign: ':' test ['=' (yield_expr|testlist_star_expr)]
-testlist_star_expr: (test|star_expr) (',' (test|star_expr))* [',']
-augassign: ('+=' | '-=' | '*=' | '@=' | '/=' | '%=' | '&=' | '|=' | '^=' | '<<=' | '>>=' | '**=' | '//=')
-# For normal and annotated assignments, additional restrictions enforced by the interpreter
-del_stmt: 'del' exprlist
-pass_stmt: 'pass'
-flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt
-break_stmt: 'break'
-continue_stmt: 'continue'
-return_stmt: 'return' [testlist_star_expr]
-yield_stmt: yield_expr
-// raise_stmt: 'raise' [test ['from' test]]
+// raise_stmt: 'raise' [test [FROM test]]
 // import_stmt: import_name | import_from
 // import_name: 'import' dotted_as_names
-// # note below: the ('.' | '...') is necessary because '...' is tokenized as ELLIPSIS
-// import_from: ('from' (('.' | '...')* dotted_name | ('.' | '...')+)
-//               'import' ('*' | '(' import_as_names ')' | import_as_names))
-// import_as_name: NAME ['as' NAME]
-// dotted_as_name: dotted_name ['as' NAME]
-// import_as_names: import_as_name (',' import_as_name)* [',']
-// dotted_as_names: dotted_as_name (',' dotted_as_name)*
-// dotted_name: NAME ('.' NAME)*
-global_stmt: 'global' NAME (',' NAME)*
-nonlocal_stmt: 'nonlocal' NAME (',' NAME)*
-// assert_stmt: 'assert' test [',' test]
+// # note below: the (DOT | ELLIPSIS) is necessary because ELLIPSIS is tokenized as ELLIPSIS
+// import_from: (FROM ((DOT | ELLIPSIS)* dotted_name | (DOT | ELLIPSIS)+)
+//               'import' (STAR | LPAR import_as_names RPAR | import_as_names))
+// import_as_name: NAME opc_AS_NAME
+// dotted_as_name: dotted_name opc_AS_NAME
+// import_as_names: import_as_name (COMMA import_as_name)* [COMMA]
+// dotted_as_names: dotted_as_name (COMMA dotted_as_name)*
+// dotted_name: NAME (DOT NAME)*
+// assert_stmt: 'assert' test [COMMA test]
 
-compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | /*decorated | async_stmt*/
-//async_stmt: ASYNC (funcdef | with_stmt | for_stmt)
-if_stmt: 'if' namedexpr_test ':' suite ('elif' namedexpr_test ':' suite)* ['else' ':' suite]
-while_stmt: 'while' namedexpr_test ':' suite ['else' ':' suite]
-for_stmt: 'for' exprlist 'in' testlist ':' [TYPE_COMMENT] suite ['else' ':' suite]
+// async_stmt: ASYNC (funcdef | with_stmt | for_stmt)
+
+// try_stmt: ('try' COLON suite((except_clause COLON suite) + opc_ELSE_COLON_suite['finally' COLON suite] | finally' COLON suite))
+
 /*
-try_stmt: ('try' ':' suite((except_clause ':' suite) + ['else' ':' suite]['finally' ':' suite] | finally' ':' suite))
-*/
-with_stmt: 'with' with_item (',' with_item)*  ':' [TYPE_COMMENT] suite
-with_item: test ['as' expr]
-# NB compile.c makes sure that the default except clause is last
-except_clause: 'except' [test ['as' NAME]]
-suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT
-
-namedexpr_test: test [':=' test]
-test: or_test ['if' or_test 'else' test] | lambdef
-test_nocond: or_test | lambdef_nocond
-lambdef: 'lambda' [varargslist] ':' test
-lambdef_nocond: 'lambda' [varargslist] ':' test_nocond
-or_test: and_test ('or' and_test)*
-and_test: not_test ('and' not_test)*
-not_test: 'not' not_test | comparison
-comparison: expr (comp_op expr)*
-comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'
-star_expr: '*' expr
-expr: xor_expr ('|' xor_expr)*
-xor_expr: and_expr ('^' and_expr)*
-and_expr: shift_expr ('&' shift_expr)*
-shift_expr: arith_expr (('<<'|'>>') arith_expr)*
-arith_expr: term (('+'|'-') term)*
-term: factor (('*'|'@'|'/'|'%'|'//') factor)*
-factor: ('+'|'-'|'~') factor | power
-power: atom_expr ['**' factor]
-atom_expr: atom trailer*
-|   AWAIT atom trailer*;
-
-atom: ('(' [yield_expr|testlist_comp] ')' | '[' [testlist_comp] ']' | /*'{' [dictorsetmaker] '}' |*/ NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False')
-testlist_comp: (namedexpr_test|star_expr) ( comp_for | (',' (namedexpr_test|star_expr))* [','] )
-trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
-subscriptlist: subscript (',' subscript)* [',']
-subscript: test | [test] ':' [test] [sliceop]
-sliceop: ':' [test]
-exprlist: (expr|star_expr) (',' (expr|star_expr))* [',']
-testlist: test (',' test)* [',']
-/*
-dictorsetmaker: ( ((test ':' test | '**' expr)
-                   (comp_for | (',' (test ':' test | '**' expr))* [','])) |
+dictorsetmaker: ( ((test COLON test | DOUBLESTAR expr)
+                   (comp_for | (COMMA (test COLON test | DOUBLESTAR expr))* [COMMA])) |
                   ((test | star_expr)
-                   (comp_for | (',' (test | star_expr))* [','])) )
+                   (comp_for | (COMMA (test | star_expr))* [COMMA])) )
 */
-classdef: 'class' NAME ['(' [arglist] ')'] ':' suite
 
-arglist: argument (',' argument)*  [',']
-
-//SIMPLIFICAR
-argument: ( test [comp_for] | test ':=' test | test '=' test | '**' test | '*' test )
-
-comp_iter: comp_for | comp_if
-sync_comp_for: 'for' exprlist 'in' or_test [comp_iter]
-comp_for: [ASYNC] sync_comp_for
-comp_if: 'if' test_nocond [comp_iter]
-
-//encoding_decl: NAME
-
-yield_expr: 'yield' [yield_arg]
-yield_arg: 'from' test | testlist_star_expr
-
-func_body_suite: simple_stmt | NEWLINE [TYPE_COMMENT NEWLINE] INDENT stmt+ DEDENT
+// encoding_decl: NAME
 
 /*
 func_type_input: func_type NEWLINE* ENDMARKER
-func_type: '(' [typelist] ')' '->' test
+func_type: LPAR [typelist] RPAR '->' test
 # typelist is a modified typedargslist (see above)
-typelist: (test (',' test)* [','
-       ['*' [test] (',' test)* [',' '**' test] | '**' test]]
-     |  '*' [test] (',' test)* [',' '**' test] | '**' test)
+typelist: (test (COMMA test)* [COMMA
+       [STAR opc_test (COMMA test)* [COMMA DOUBLESTAR test] | DOUBLESTAR test]]
+     |  STAR opc_test (COMMA test)* [COMMA DOUBLESTAR test] | DOUBLESTAR test)
 */
 
+// compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | /*decorated | async_stmt*/
+// small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt | /*import_stmt*/ | global_stmt | nonlocal_stmt | /*assert_stmt*/);
+
+%%
+
+{ignore}    { }
+{comments}  { }
+
+
+file_input: (NEWLINE | stmt)* ENDMARKER;
+
+funcdef: DEF NAME parameters opc_RARROW_test COLON opc_TYPE_COMMENT func_body_suite;
+opc_RARROW_test:
+%empty
+|   RARROW test;
+opc_TYPE_COMMENT:
+%empty
+|   TYPE_COMMENT;
+
+parameters: LPAR opc_typedargslist RPAR;
+opc_typedargslist:
+%empty
+|   NAME COMMA opc_typedargslist
+|   NAME COMMA;
+
+stmt: simple_stmt | compound_stmt;
+simple_stmt: small_stmt (SEMI small_stmt)* opc_SEMI NEWLINE;
+small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt | global_stmt | nonlocal_stmt);
+expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) | [(EQUAL (yield_expr|testlist_star_expr))+ opc_TYPE_COMMENT] );
+annassign: COLON test opc_COLON_test;
+testlist_star_expr: (test|star_expr) (COMMA (test|star_expr))* opc_COMMA;
+augassign: (PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL);
+opc_SEMI:
+%empty
+|   SEMI;
+opc_COLON_test:
+%empty
+|   EQUAL yield_expr
+|   EQUAL testlist_star_expr;
+opc_COMMA:
+%empty
+|   COMMA;
+
+del_stmt: DEL exprlist;
+pass_stmt: PASS;
+flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
+break_stmt: BREAK;
+continue_stmt: CONTINUE;
+return_stmt: RETURN opc_testlist_star_expr;
+yield_stmt: yield_expr;
+opc_testlist_star_expr:
+%empty
+|   testlist_star_expr;
+
+global_stmt: GLOBAL NAME (COMMA NAME)*;
+nonlocal_stmt: NONLOCAL NAME (COMMA NAME)*;
+
+compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef;
+
+if_stmt: IF namedexpr_test COLON suite (ELSE_IF namedexpr_test COLON suite)* opc_ELSE_COLON_suite;
+while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite;
+for_stmt: FOR exprlist IN testlist COLON opc_TYPE_COMMENT suite opc_ELSE_COLON_suite;
+opc_ELSE_COLON_suite:
+%empty
+|   ELSE COLON suite;
+opc_TYPE_COMMENT:
+%empty
+|   TYPE_COMMENT;
+
+with_stmt: WITH with_item (COMMA with_item)*  COLON opc_TYPE_COMMENT suite;
+with_item: test opc_AS_expr;
+opc_AS_expr:
+%empty
+|   AS expr;
+
+except_clause: EXCEPT opc_test opc_AS_NAME;
+suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
+opc_test:
+%empty
+|   test;
+opc_AS_NAME:
+%empty
+|   AS NAME;
+
+namedexpr_test: test [COLONEQUAL test];
+test: or_test [IF or_test ELSE test] | lambdef;
+test_nocond: or_test | lambdef_nocond;
+lambdef: LAMBDA [varargslist] COLON test;
+lambdef_nocond: LAMBDA [varargslist] COLON test_nocond;
+or_test: and_test (OR and_test)*;
+and_test: not_test (AND not_test)*;
+not_test: NOT not_test | comparison;
+comparison: expr (comp_op expr)*;
+comp_op: LESS | GREATER | EQEQUAL | GREATEREQUAL | LESSEQUAL | LESSGREATER | NOTEQUAL | IN| NOT IN | IS | IS NOT;
+star_expr: STAR expr;
+expr: xor_expr (VBAR xor_expr)*;
+xor_expr: and_expr (CIRCUMFLEX and_expr)*;
+and_expr: shift_expr (AMPER shift_expr)*;
+shift_expr: arith_expr ((OLHO_DE_GATO) arith_expr)*;
+arith_expr: term (('+VBAR-') term)*;
+term: factor ((STAR|'@VBAR/VBAR%VBAR//') factor)*;
+factor: ('+VBAR-VBAR~') factor | power;
+power: atom_expr [DOUBLESTAR factor];
+atom_expr: atom trailer*
+|   AWAIT atom trailer*;
+
+atom: (LPAR [yield_expr|testlist_comp] RPAR | LSQB [testlist_comp] RSQB | NAME | NUMBER | STRING+ | ELLIPSIS | NONE | TRUE | FALSE);
+testlist_comp: (namedexpr_test|star_expr) ( comp_for | (COMMA (namedexpr_test|star_expr))* [COMMA] );
+trailer: LPAR [arglist] RPAR | LSQB subscriptlist RSQB | DOT NAME;
+subscriptlist: subscript (COMMA subscript)* [COMMA];
+subscript: test | opc_test COLON opc_test [sliceop];
+sliceop: COLON opc_test;
+exprlist: (expr|star_expr) (COMMA (expr|star_expr))* [COMMA];
+testlist: test (COMMA test)* [COMMA];
+
+classdef: CLASS NAME [LPAR [arglist] RPAR] COLON suite;
+
+arglist: argument (COMMA argument)*  [COMMA];
+
+//SIMPLIFICAR
+argument: ( test [comp_for] | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test );
+
+comp_iter: comp_for | comp_if;
+sync_comp_for: FOR exprlist IN or_test [comp_iter];
+comp_for: [ASYNC] sync_comp_for;
+comp_if: IF test_nocond [comp_iter];
+
+
+
+yield_expr: YIELD [yield_arg];
+yield_arg: FROM test | testlist_star_expr;
+
+func_body_suite: simple_stmt | NEWLINE [TYPE_COMMENT NEWLINE] INDENT stmt+ DEDENT;
 
 %%
 
