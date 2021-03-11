@@ -104,8 +104,6 @@ int result = %token;
 %token ELLIPSIS
 %token COLONEQUAL
 
-%token OLHO_DE_GATO
-
 %left OR
 %left AND
 %left PLUS MINUS
@@ -124,29 +122,29 @@ int result = %token;
 typedargslist: (
   (tfpdef [EQUAL test] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* COMMA opc_TYPE_COMMENT '/' [COMMA [ opc_TYPE_COMMENT tfpdef [EQUAL test] (
         COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [
-        STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-      | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]] )
+        STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+      | DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]] )
 |  (tfpdef [EQUAL test] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [
-   STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT]])
-  | DOUBLESTAR tfpdef [COMMA] opc_TYPE_COMMENT)
+   STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+  | STAR [tfpdef] (COMMA opc_TYPE_COMMENT tfpdef [EQUAL test])* (TYPE_COMMENT | [COMMA opc_TYPE_COMMENT [DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT]])
+  | DOUBLESTAR tfpdef opc_COMMA opc_TYPE_COMMENT)
 )
 tfpdef: NAME [COLON test]
 */
 
 /*
 varargslist: vfpdef [EQUAL test ](COMMA vfpdef [EQUAL test])* COMMA '/' [COMMA [ (vfpdef [EQUAL test] (COMMA vfpdef [EQUAL test])* [COMMA [
-        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
-      | DOUBLESTAR vfpdef [COMMA]]]
-  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
-  | DOUBLESTAR vfpdef [COMMA]) ]] | (vfpdef [EQUAL test] (COMMA vfpdef [EQUAL test])* [COMMA [
-        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
-      | DOUBLESTAR vfpdef [COMMA]]]
-  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef [COMMA]]]
-  | DOUBLESTAR vfpdef [COMMA]
+        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef opc_COMMA]]
+      | DOUBLESTAR vfpdef opc_COMMA]]
+  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef opc_COMMA]]
+  | DOUBLESTAR vfpdef opc_COMMA) ]] | (vfpdef [EQUAL test] (COMMA vfpdef [EQUAL test])* [COMMA [
+        STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef opc_COMMA]]
+      | DOUBLESTAR vfpdef opc_COMMA]]
+  | STAR [vfpdef] (COMMA vfpdef [EQUAL test])* [COMMA [DOUBLESTAR vfpdef opc_COMMA]]
+  | DOUBLESTAR vfpdef opc_COMMA
 )
 vfpdef: NAME
 */
@@ -159,7 +157,7 @@ vfpdef: NAME
 //               'import' (STAR | LPAR import_as_names RPAR | import_as_names))
 // import_as_name: NAME opc_AS_NAME
 // dotted_as_name: dotted_name opc_AS_NAME
-// import_as_names: import_as_name (COMMA import_as_name)* [COMMA]
+// import_as_names: import_as_name (COMMA import_as_name)* opc_COMMA
 // dotted_as_names: dotted_as_name (COMMA dotted_as_name)*
 // dotted_name: NAME (DOT NAME)*
 // assert_stmt: 'assert' test [COMMA test]
@@ -170,9 +168,9 @@ vfpdef: NAME
 
 /*
 dictorsetmaker: ( ((test COLON test | DOUBLESTAR expr)
-                   (comp_for | (COMMA (test COLON test | DOUBLESTAR expr))* [COMMA])) |
+                   (comp_for | (COMMA (test COLON test | DOUBLESTAR expr))* opc_COMMA)) |
                   ((test | star_expr)
-                   (comp_for | (COMMA (test | star_expr))* [COMMA])) )
+                   (comp_for | (COMMA (test | star_expr))* opc_COMMA)) )
 */
 
 // encoding_decl: NAME
@@ -261,14 +259,12 @@ opc_AS_expr:
 %empty
 |   AS expr;
 
-except_clause: EXCEPT opc_test opc_AS_NAME;
+except_clause: EXCEPT opc_test_AS_NAME;
 suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT;
-opc_test:
+opc_test_AS_NAME:
 %empty
-|   test;
-opc_AS_NAME:
-%empty
-|   AS NAME;
+|   test
+|   test AS NAME;
 
 namedexpr_test: test [COLONEQUAL test];
 test: or_test [IF or_test ELSE test] | lambdef;
@@ -284,26 +280,33 @@ star_expr: STAR expr;
 expr: xor_expr (VBAR xor_expr)*;
 xor_expr: and_expr (CIRCUMFLEX and_expr)*;
 and_expr: shift_expr (AMPER shift_expr)*;
-shift_expr: arith_expr ((OLHO_DE_GATO) arith_expr)*;
-arith_expr: term (('+VBAR-') term)*;
-term: factor ((STAR|'@VBAR/VBAR%VBAR//') factor)*;
-factor: ('+VBAR-VBAR~') factor | power;
+shift_expr: arith_expr ((LEFTSHIFT | RIGHTSHIFT) arith_expr)*; 
+arith_expr: term ((PLUS | MINUS) term)*; 
+term: factor ((STAR| AT | SLASH | PERCENT | DOUBLESLASH) factor)*;
+factor: (PLUS | MINUS | TILDE) factor | power;
 power: atom_expr [DOUBLESTAR factor];
 atom_expr: atom trailer*
 |   AWAIT atom trailer*;
 
 atom: (LPAR [yield_expr|testlist_comp] RPAR | LSQB [testlist_comp] RSQB | NAME | NUMBER | STRING+ | ELLIPSIS | NONE | TRUE | FALSE);
-testlist_comp: (namedexpr_test|star_expr) ( comp_for | (COMMA (namedexpr_test|star_expr))* [COMMA] );
+testlist_comp: (namedexpr_test|star_expr) ( comp_for | (COMMA (namedexpr_test|star_expr))* opc_COMMA );
 trailer: LPAR [arglist] RPAR | LSQB subscriptlist RSQB | DOT NAME;
-subscriptlist: subscript (COMMA subscript)* [COMMA];
+subscriptlist: subscript (COMMA subscript)* opc_COMMA;
 subscript: test | opc_test COLON opc_test [sliceop];
 sliceop: COLON opc_test;
-exprlist: (expr|star_expr) (COMMA (expr|star_expr))* [COMMA];
-testlist: test (COMMA test)* [COMMA];
+exprlist: (expr|star_expr) (COMMA (expr|star_expr))* opc_COMMA;
+testlist: test (COMMA test)* opc_COMMA;
+opc_COMMA:
+%empty
+|   COMMA;
 
-classdef: CLASS NAME [LPAR [arglist] RPAR] COLON suite;
+classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite;
+opc_LPAR_arglist_RPAR:
+%empty
+|   LPAR RPAR
+|   LPAR arglist RPAR;
 
-arglist: argument (COMMA argument)*  [COMMA];
+arglist: argument (COMMA argument)*  opc_COMMA;
 
 //SIMPLIFICAR
 argument: ( test [comp_for] | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test );

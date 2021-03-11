@@ -189,8 +189,6 @@ int indent()
 "del"                           { return DEL; }
 "exec"                          { return EXEC; }
 
-"<<|>>"                         { return OLHO_DE_GATO; }
-
 
 #[^\n$]*                        { values = strdup(yytext); return TYPE_COMMENT; }
 [0-9]+"."?[0-9]*                { values = strdup(yytext); return NUMBER; }
