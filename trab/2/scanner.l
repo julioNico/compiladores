@@ -141,6 +141,54 @@ int indent()
 
 %%
 
+{ignore}    { }
+{comments}  { }
+
+ // Palavras reservadas
+
+"import"                        { return IMPORT; } 
+"from"                          { return FROM; } 
+"as"                            { return AS; }
+
+"class"                         { return CLASS; }
+"def"                           { return DEF; }
+"lambda"                        { return LAMBDA; }
+
+"not"                           { return NOT; }
+"and"                           { return AND; }
+"or"                            { return OR; }
+
+"if"                            { return IF; }
+"elif"                          { return ELSE_IF; }
+"else"                          { return ELSE; }
+"is"                            { return IS; }   
+"True"                          { return TRUE; } 
+"False"                         { return FALSE; } 
+"assert"                        { return ASSERT; }    
+
+"for"                           { return FOR; }   
+"in"                            { return IN; }   
+"while"                         { return WHILE; } 
+"pass"                          { return PASS; } 
+"break"                         { return BREAK; } 
+"continue"                      { return CONTINUE; } 
+
+"try"                           { return TRY; } 
+"except"                        { return EXCEPT; } 
+"finally"                       { return FINALLY; } 
+"with"                          { return WITH; }
+
+"return"                        { return RETURN; }
+"raise"                         { return RAISE; }
+"yield"                         { return YIELD; }
+
+"global"                        { return GLOBAL; }
+"nonlocal"                      { return NONLOCAL; }
+
+"None"                          { return NONE; }
+"del"                           { return DEL; }
+"exec"                          { return EXEC; }
+
 #[^\n$]*                        { values = strdup(yytext); return TYPE_COMMENT; }
 [0-9]+"."?[0-9]*                { values = strdup(yytext); return NUMBER; }
 ["""][^"""\n]*["""]             { values = strdup(yytext); return STRING; }
@@ -193,14 +241,6 @@ int indent()
 "->"                            { return RARROW; }
 "..."                           { return ELLIPSIS; }
 ":="                            { return COLONEQUAL; }
-"True"                          { values = strdup(yytext); return BOOL; }
-"False"                         { values = strdup(yytext); return BOOL; }
-"and"                           { return AND; }
-"or"                            { return OR; }
-"not"                           { return NOT; }
-"if"                            { return IF; }
-"elif"                          { return ELSE_IF; }
-"else"                          { return ELSE; }
 [a-zA-Z_]+[a-zA-Z0-9_]*         { values = strdup(yytext); return NAME; }
 <<EOF>>                         { return EOF; }
 
