@@ -20,6 +20,7 @@ int result = %token;
 
 %token NOT
 %token AND
+%token OR
 
 %token IF
 %token ELSE_IF
@@ -27,12 +28,14 @@ int result = %token;
 %token IS
 %token TRUE
 %token FALSE
+%token ASSERT   
 
 %token FOR
 %token IN
 %token WHILE
 %token PASS
 %token BREAK
+%token CONTINUE 
 
 %token TRY
 %token EXCEPT
@@ -41,12 +44,17 @@ int result = %token;
 
 %token RETURN
 %token RAISE
+%token YIELD
 
 %token GLOBAL
+%token NONLOCAL
 
 %token NONE
 %token DEL
 %token EXEC
+
+%token ASYNC
+%token AWAIT
 
 %token TYPE_COMMENT
 %token NAME
@@ -103,6 +111,7 @@ int result = %token;
 %token RARROW
 %token ELLIPSIS
 %token COLONEQUAL
+%token ENDMARKER
 
 %left OR
 %left AND
@@ -190,10 +199,13 @@ typelist: (test (COMMA test)* [COMMA
 %%
 
 file_input: fk_NEWLINE_stmt ENDMARKER;
+
 fk_NEWLINE_stmt:
 %empty
-|   (NEWLINE | stmt) fk_NEWLINE_stmt;
-|   (NEWLINE | stmt) ;
+|   NL_stmt fk_NEWLINE_stmt;
+|   NL_stmt ;
+
+NL_stmt: NEWLINE | stmt;
 
 funcdef: DEF NAME parameters opc_RARROW_test COLON opc_TYPE_COMMENT func_body_suite;
 opc_RARROW_test:
@@ -213,29 +225,36 @@ stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE;
 fk_SEMI_small_stmt:
 %empty
-|   (SEMI small_stmt) fk_NEWLINE_stmt;
-|   (SEMI small_stmt) ;
+|   SEMI small_stmt fk_NEWLINE_stmt;
+|   SEMI small_stmt;
 
-small_stmt: (expr_stmt | del_stmt | pass_stmt | flow_stmt | global_stmt | nonlocal_stmt);
-expr_stmt: testlist_star_expr (annassign | augassign (yield_expr|testlist) | opc_fk_EQ_YE_TSE_TC);
+small_stmt: expr_stmt | del_stmt | pass_stmt | flow_stmt | global_stmt | nonlocal_stmt;
+expr_stmt: testlist_star_expr expr_stmt_1;
+expr_stmt_1: annassign | augassign expr_stmt_2 | opc_fk_EQ_YE_TSE_TC;
+expr_stmt_2: yield_expr|testlist;
+
 opc_fk_EQ_YE_TSE_TC:
 %empty
 |   fk_EQ_YE_TSE TYPE_COMMENT
-|   fk_EQ_YE_TSE;
+|   expr_stmt_3 fk_EQ_YE_TSE;
 fk_EQ_YE_TSE:
-|   (EQUAL (yield_expr|testlist_star_expr)) fk_EQ_YE_TSE
-|   (EQUAL (yield_expr|testlist_star_expr));
-
+%empty
+|   expr_stmt_3 fk_EQ_YE_TSE
+|   expr_stmt_3;
+expr_stmt_3: EQUAL expr_stmt_4;
+expr_stmt_4: yield_expr|testlist_star_expr;
 
 annassign: COLON test opc_COLON_test;
-testlist_star_expr: (test|star_expr) fk_COMMA_T_SE opc_COMMA;
+testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA;
+TSE_stmt: test | star_expr;
 fk_COMMA_T_SE:
 %empty
-|   (COMMA (test|star_expr)) fk_COMMA_T_SE;
-|   (COMMA (test|star_expr));
+|   TSE_stmt_1 fk_COMMA_T_SE;
+|   TSE_stmt_1;
+TSE_stmt_1: COMMA TSE_stmt_2;
+TSE_stmt_2: test | star_expr;
 
-
-augassign: (PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL);
+augassign: PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL;
 opc_SEMI:
 %empty
 |   SEMI;
@@ -249,7 +268,7 @@ opc_COMMA:
 
 del_stmt: DEL exprlist;
 pass_stmt: PASS;
-flow_stmt: break_stmt | continue_stmt | return_stmt | raise_stmt | yield_stmt;
+flow_stmt: break_stmt | continue_stmt | return_stmt | yield_stmt;
 break_stmt: BREAK;
 continue_stmt: CONTINUE;
 return_stmt: RETURN opc_testlist_star_expr;
@@ -262,16 +281,16 @@ global_stmt: GLOBAL NAME fk_COMMA_NAME;
 nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME;
 fk_COMMA_NAME:
 %empty
-|   (COMMA NAME) fk_COMMA_NAME;
-|   (COMMA NAME);
+|   COMMA NAME fk_COMMA_NAME;
+|   COMMA NAME;
 
-compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef;
+compound_stmt: if_stmt | while_stmt | for_stmt | with_stmt | funcdef | classdef;
 
 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite;
 fk_ELIF_NT_COLON_SUITE:
 %empty
-|   (ELSE_IF namedexpr_test COLON suite) fk_ELIF_NT_COLON_SUITE
-|   (ELSE_IF namedexpr_test COLON suite);
+|   ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
+|   ELSE_IF namedexpr_test COLON suite;
 
 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite;
 for_stmt: FOR exprlist IN testlist COLON opc_TYPE_COMMENT suite opc_ELSE_COLON_suite;
@@ -285,8 +304,8 @@ opc_TYPE_COMMENT:
 with_stmt: WITH with_item fk_COMMA_WI  COLON opc_TYPE_COMMENT suite;
 fk_COMMA_WI:
 %empty
-|   (COMMA with_item) fk_COMMA_WI
-|   (COMMA with_item);
+|   COMMA with_item fk_COMMA_WI
+|   COMMA with_item;
 
 with_item: test opc_AS_expr;
 opc_AS_expr:
@@ -294,7 +313,7 @@ opc_AS_expr:
 |   AS expr;
 
 except_clause: EXCEPT opc_test_AS_NAME;
-suite: simple_stmt | NEWLINE INDENT fk_stmt DEDENT;
+suite: simple_stmt | NEWLINE INDENT stmt fk_stmt DEDENT;
 opc_test_AS_NAME:
 %empty
 |   test
@@ -316,61 +335,66 @@ lambdef_nocond: LAMBDA opc_argslist COLON test_nocond;
 or_test: and_test fk_OR_AT;
 fk_OR_AT:
 %empty
-|   (OR and_test) fk_OR_AT
-|   (OR and_test);
+|   OR and_test fk_OR_AT
+|   OR and_test;
 
 and_test: not_test fk_AND_NT;
 fk_AND_NT:
 %empty
-|   (AND not_test) fk_AND_NT
-|   (AND not_test);
+|   AND not_test fk_AND_NT
+|   AND not_test;
 
 not_test: NOT not_test | comparison;
 comparison: expr fk_CO_EXPR;
 fk_CO_EXPR:
 %empty
-|   (comp_op expr) fk_CO_EXPR
-|   (comp_op expr);
+|   comp_op expr fk_CO_EXPR
+|   comp_op expr;
 
 comp_op: LESS | GREATER | EQEQUAL | GREATEREQUAL | LESSEQUAL | LESSGREATER | NOTEQUAL | IN | NOT IN | IS | IS NOT;
 star_expr: STAR expr;
 expr: xor_expr fk_VBAR_XE;
 fk_VBAR_XE:
 %empty
-|   (VBAR xor_expr) fk_VBAR_XE
-|   (VBAR xor_expr);
+|   VBAR xor_expr fk_VBAR_XE
+|   VBAR xor_expr;
 
 xor_expr: and_expr fk_CIRCUMFLEX_EXPR;
 fk_CIRCUMFLEX_EXPR:
 %empty
-|   (CIRCUMFLEX and_expr) fk_CIRCUMFLEX_EXPR
-|   (CIRCUMFLEX and_expr);
+|   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR
+|   CIRCUMFLEX and_expr;
 
 and_expr: shift_expr fk_AMPER_SE;
 fk_AMPER_SE:
 %empty
-|   (AMPER shift_expr) fk_AMPER_SE
-|   (AMPER shift_expr);
+|   AMPER shift_expr fk_AMPER_SE
+|   AMPER shift_expr;
 
 shift_expr: arith_expr fk_LS_RS_AE; 
 fk_LS_RS_AE:
 %empty
-|   ((LEFTSHIFT | RIGHTSHIFT) arith_expr) fk_LS_RS_AE
-|   ((LEFTSHIFT | RIGHTSHIFT) arith_expr);
+|   SE_stmt arith_expr fk_LS_RS_AE
+|   SE_stmt arith_expr;
+SE_stmt: LEFTSHIFT | RIGHTSHIFT;
 
 arith_expr: term fk_T_PLUS_MINUS;
 fk_T_PLUS_MINUS:
 %empty
-|   ((PLUS | MINUS) term) fk_T_PLUS_MINUS
-|   ((PLUS | MINUS) term);
+|   AE_stmt term fk_T_PLUS_MINUS
+|   AE_stmt term;
+AE_stmt: PLUS | MINUS;
 
 term: factor fk_MATH;
 fk_MATH:
 %empty
-|   ((STAR| AT | SLASH | PERCENT | DOUBLESLASH) factor) fk_MATH
-|   ((STAR| AT | SLASH | PERCENT | DOUBLESLASH) factor);
+|   term_stmt factor fk_MATH
+|   term_stmt factor;
+term_stmt: STAR| AT | SLASH | PERCENT | DOUBLESLASH;
 
-factor: (PLUS | MINUS | TILDE) factor | power;
+factor: factor_stmt factor | power;
+factor_stmt: PLUS | MINUS | TILDE;
+
 power: atom_expr opc_DOUBLESTAR_factor;
 opc_DOUBLESTAR_factor:
 %empty
@@ -384,7 +408,8 @@ fk_trailer:
 |   trailer fk_trailer
 |   trailer;
 
-atom: (LPAR (opc_yield_expr | opc_testlist_comp) RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | fk_STRING | ELLIPSIS | NONE | TRUE | FALSE);
+atom: LPAR atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
+atom_stmt: opc_yield_expr | opc_testlist_comp;
 opc_yield_expr:
 %empty
 |   yield_expr;
@@ -392,38 +417,51 @@ opc_testlist_comp:
 %empty
 |   testlist_comp;
 fk_STRING:
+%empty
 |   STRING fk_STRING
 |   STRING;
 
-testlist_comp: (namedexpr_test | star_expr) (comp_for | fk_COMMA_NT_SE opc_COMMA);
+testlist_comp: trailer_stmt trailer_stmt_1;
 trailer: LPAR opc_arglist RPAR | LSQB subscriptlist RSQB | DOT NAME;
 opc_arglist:
 %empty
 |   arglist;
 fk_COMMA_NT_SE:
 %empty
-|   (COMMA (namedexpr_test | star_expr)) fk_COMMA_NT_SE
-|   (COMMA (namedexpr_test | star_expr));
+|   COMMA trailer_stmt fk_COMMA_NT_SE
+|   COMMA trailer_stmt;
+
+trailer_stmt: namedexpr_test | star_expr;
+trailer_stmt_1: comp_for | fk_COMMA_NT_SE opc_COMMA;
 
 subscriptlist: subscript fk_COMMA_S opc_COMMA;
 fk_COMMA_S:
 %empty
-|   (COMMA subscript) fk_COMMA_S
-|   (COMMA subscript);
+|   COMMA subscript fk_COMMA_S
+|   COMMA subscript;
 
-subscript: test | opc_test COLON opc_test opc_testlist_comp;
+subscript: test | opc_test COLON opc_test opc_sliceop;
+opc_test:
+%empty
+|   test;
 opc_sliceop:
 %empty
 |   sliceop;
 
 sliceop: COLON opc_test;
-exprlist: (expr|star_expr) fk_COMMA_E_SE opc_COMMA;
+exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA;
 fk_COMMA_E_SE:
 %empty
-|   (COMMA (expr|star_expr)) fk_COMMA_E_SE
-|   (COMMA (expr|star_expr));
+|   COMMA exprlist_stmt fk_COMMA_E_SE
+|   COMMA exprlist_stmt;
 
-testlist: test (COMMA test)* opc_COMMA;
+exprlist_stmt: expr | star_expr;
+
+testlist: test fk_COMMA_test opc_COMMA;
+fk_COMMA_test:
+%empty
+|   COMMA test fk_COMMA_test
+|   COMMA test;
 opc_COMMA:
 %empty
 |   COMMA;
@@ -437,11 +475,11 @@ opc_LPAR_arglist_RPAR:
 arglist: argument fk_COMMA_A opc_COMMA;
 fk_COMMA_A:
 %empty
-|   (COMMA argument) fk_COMMA_A
-|   (COMMA argument);
+|   COMMA argument fk_COMMA_A
+|   COMMA argument;
 
 //SIMPLIFICAR
-argument: ( test opc_comp_for | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test );
+argument: test opc_comp_for | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test;
 opc_comp_for:
 %empty
 |   comp_for;
@@ -465,8 +503,9 @@ opc_yield_arg:
 
 yield_arg: FROM test | testlist_star_expr;
 
-func_body_suite: simple_stmt | NEWLINE opc_TYPE_COMMENT_NEWLINE INDENT fk_stmt DEDENT;
+func_body_suite: simple_stmt | NEWLINE opc_TYPE_COMMENT_NEWLINE INDENT stmt fk_stmt DEDENT;
 fk_stmt:
+%empty
 |   stmt fk_stmt
 |   stmt;
 
