@@ -480,8 +480,8 @@ fk_stmt:
 %%
 
 int main(void) {
-    if (yyparse() == 0) printf("PARSE SUCCESSFUL!\n");
-    else                printf("PARSE FAILED!\n");
-    printf("    LINHA: %d\n", yylineno);
+    if (yyparse() == 0) printf("\n\nPARSE SUCCESSFUL!");
+    else                printf("\n\nPARSE FAILED!");
+    printf("\nLINHA: %d\n", yylineno);
     return 0;
 }
