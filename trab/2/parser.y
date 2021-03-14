@@ -202,7 +202,6 @@ file_input: fk_NEWLINE_stmt ENDMARKER;
 fk_NEWLINE_stmt:
 %empty %prec LOW // Fala para o bison sempre dar prioridade para a regra de baixo.
 |   NL_stmt fk_NEWLINE_stmt; // Com isso, o parser funciona de forma gulosa ao consumir essa parte.
-// |   NL_stmt ; // Essa regra já está contemplada nos casos de cima. Isso causa ZILHÕES de conflitos de R/R. Vocês fizeram isso direto...
 
 NL_stmt: NEWLINE | stmt;
 
@@ -230,7 +229,7 @@ expr_stmt_2: yield_expr|testlist;
 
 opc_fk_EQ_YE_TSE_TC:
 %empty
-|   fk_EQ_YE_TSE TYPE_COMMENT
+|   expr_stmt_3 fk_EQ_YE_TSE TYPE_COMMENT
 |   expr_stmt_3 fk_EQ_YE_TSE;
 fk_EQ_YE_TSE:
 %empty

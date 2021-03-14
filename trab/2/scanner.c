@@ -640,8 +640,10 @@ char *yytext;
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include<stdbool.h>
 
 extern char* values;
+bool done = false;
 
 //variáveis
 int qtd_tokens = 0;
@@ -1164,8 +1166,8 @@ int process_token(int token) {
     return token;
 }
 
-#line 1168 "scanner.c"
-#line 1169 "scanner.c"
+#line 1170 "scanner.c"
+#line 1171 "scanner.c"
 
 #define INITIAL 0
 
@@ -1380,11 +1382,11 @@ YY_DECL
 		}
 
 	{
-#line 538 "scanner.l"
+#line 542 "scanner.l"
 
 
 
-#line 1388 "scanner.c"
+#line 1390 "scanner.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1453,462 +1455,462 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 541 "scanner.l"
+#line 545 "scanner.l"
 { process_token(IMPORT); } 
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 542 "scanner.l"
+#line 546 "scanner.l"
 { process_token(FROM); } 
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 543 "scanner.l"
+#line 547 "scanner.l"
 { process_token(AS); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 545 "scanner.l"
+#line 549 "scanner.l"
 { process_token(CLASS); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 546 "scanner.l"
+#line 550 "scanner.l"
 { process_token(DEF); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 547 "scanner.l"
+#line 551 "scanner.l"
 { process_token(LAMBDA); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 549 "scanner.l"
+#line 553 "scanner.l"
 { process_token(NOT); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 550 "scanner.l"
+#line 554 "scanner.l"
 { process_token(AND); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 551 "scanner.l"
+#line 555 "scanner.l"
 { process_token(OR); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 553 "scanner.l"
+#line 557 "scanner.l"
 { process_token(IF); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 554 "scanner.l"
+#line 558 "scanner.l"
 { process_token(ELSE_IF); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 555 "scanner.l"
+#line 559 "scanner.l"
 { process_token(ELSE); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 556 "scanner.l"
+#line 560 "scanner.l"
 { process_token(IS); }   
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 557 "scanner.l"
+#line 561 "scanner.l"
 { process_token(TRUE); } 
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 558 "scanner.l"
+#line 562 "scanner.l"
 { process_token(FALSE); } 
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 559 "scanner.l"
+#line 563 "scanner.l"
 { process_token(ASSERT); }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 561 "scanner.l"
+#line 565 "scanner.l"
 { process_token(FOR); }   
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 562 "scanner.l"
+#line 566 "scanner.l"
 { process_token(IN); }   
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 563 "scanner.l"
+#line 567 "scanner.l"
 { process_token(WHILE); } 
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 564 "scanner.l"
+#line 568 "scanner.l"
 { process_token(PASS); } 
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 565 "scanner.l"
+#line 569 "scanner.l"
 { process_token(BREAK); } 
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 566 "scanner.l"
+#line 570 "scanner.l"
 { process_token(CONTINUE); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 568 "scanner.l"
+#line 572 "scanner.l"
 { process_token(TRY); } 
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 569 "scanner.l"
+#line 573 "scanner.l"
 { process_token(EXCEPT); } 
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 570 "scanner.l"
+#line 574 "scanner.l"
 { process_token(FINALLY); } 
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 571 "scanner.l"
+#line 575 "scanner.l"
 { process_token(WITH); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 573 "scanner.l"
+#line 577 "scanner.l"
 { process_token(RETURN); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 574 "scanner.l"
+#line 578 "scanner.l"
 { process_token(RAISE); }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 575 "scanner.l"
+#line 579 "scanner.l"
 { process_token(YIELD); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 577 "scanner.l"
+#line 581 "scanner.l"
 { process_token(GLOBAL); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 578 "scanner.l"
+#line 582 "scanner.l"
 { process_token(NONLOCAL); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 580 "scanner.l"
+#line 584 "scanner.l"
 { process_token(NONE); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 581 "scanner.l"
+#line 585 "scanner.l"
 { process_token(DEL); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 582 "scanner.l"
+#line 586 "scanner.l"
 { process_token(EXEC); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 584 "scanner.l"
+#line 588 "scanner.l"
 { process_token(ASYNC); }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 585 "scanner.l"
+#line 589 "scanner.l"
 { process_token(AWAIT); }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 587 "scanner.l"
+#line 591 "scanner.l"
 { process_token(NAME); }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 588 "scanner.l"
+#line 592 "scanner.l"
 { process_token(TYPE_COMMENT); }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 589 "scanner.l"
+#line 593 "scanner.l"
 { process_token(NUMBER); }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 590 "scanner.l"
+#line 594 "scanner.l"
 { process_token(STRING); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 591 "scanner.l"
+#line 595 "scanner.l"
 { process_token(STRING); }
 	YY_BREAK
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 592 "scanner.l"
+#line 596 "scanner.l"
 { indent(); for(int z=0; z<tamLT; z++){process_token(lisTks[z]);}; cleanlisTks(); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 593 "scanner.l"
+#line 597 "scanner.l"
 { process_token(LPAR); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 594 "scanner.l"
+#line 598 "scanner.l"
 { process_token(RPAR); }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 595 "scanner.l"
+#line 599 "scanner.l"
 { process_token(LSQB); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 596 "scanner.l"
+#line 600 "scanner.l"
 { process_token(RSQB); }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 597 "scanner.l"
+#line 601 "scanner.l"
 { process_token(COLON); }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 598 "scanner.l"
+#line 602 "scanner.l"
 { process_token(COMMA); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 599 "scanner.l"
+#line 603 "scanner.l"
 { process_token(SEMI); }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 600 "scanner.l"
+#line 604 "scanner.l"
 { process_token(PLUS); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 601 "scanner.l"
+#line 605 "scanner.l"
 { process_token(MINUS); }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 602 "scanner.l"
+#line 606 "scanner.l"
 { process_token(STAR); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 603 "scanner.l"
+#line 607 "scanner.l"
 { process_token(SLASH); }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 604 "scanner.l"
+#line 608 "scanner.l"
 { process_token(VBAR); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 605 "scanner.l"
+#line 609 "scanner.l"
 { process_token(AMPER); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 606 "scanner.l"
+#line 610 "scanner.l"
 { process_token(LESS); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 607 "scanner.l"
+#line 611 "scanner.l"
 { process_token(GREATER); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 608 "scanner.l"
+#line 612 "scanner.l"
 { process_token(LESSGREATER); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 609 "scanner.l"
+#line 613 "scanner.l"
 { process_token(EQUAL); }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 610 "scanner.l"
+#line 614 "scanner.l"
 { process_token(DOT); }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 611 "scanner.l"
+#line 615 "scanner.l"
 { process_token(PERCENT); }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 612 "scanner.l"
+#line 616 "scanner.l"
 { process_token(LBRACE); }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 613 "scanner.l"
+#line 617 "scanner.l"
 { process_token(RBRACE); }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 614 "scanner.l"
+#line 618 "scanner.l"
 { process_token(EQEQUAL); }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 615 "scanner.l"
+#line 619 "scanner.l"
 { process_token(NOTEQUAL); }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 616 "scanner.l"
+#line 620 "scanner.l"
 { process_token(LESSEQUAL); }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 617 "scanner.l"
+#line 621 "scanner.l"
 { process_token(GREATEREQUAL); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 618 "scanner.l"
+#line 622 "scanner.l"
 { process_token(TILDE); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 619 "scanner.l"
+#line 623 "scanner.l"
 { process_token(CIRCUMFLEX); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 620 "scanner.l"
+#line 624 "scanner.l"
 { process_token(LEFTSHIFT); }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 621 "scanner.l"
+#line 625 "scanner.l"
 { process_token(RIGHTSHIFT); }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 622 "scanner.l"
+#line 626 "scanner.l"
 { process_token(DOUBLESTAR); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 623 "scanner.l"
+#line 627 "scanner.l"
 { process_token(PLUSEQUAL); }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 624 "scanner.l"
+#line 628 "scanner.l"
 { process_token(MINEQUAL); }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 625 "scanner.l"
+#line 629 "scanner.l"
 { process_token(STAREQUAL); }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 626 "scanner.l"
+#line 630 "scanner.l"
 { process_token(SLASHEQUAL); }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 627 "scanner.l"
+#line 631 "scanner.l"
 { process_token(PERCENTEQUAL); }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 628 "scanner.l"
+#line 632 "scanner.l"
 { process_token(AMPEREQUAL); }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 629 "scanner.l"
+#line 633 "scanner.l"
 { process_token(VBAREQUAL); }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 630 "scanner.l"
+#line 634 "scanner.l"
 { process_token(CIRCUMFLEXEQUAL); }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 631 "scanner.l"
+#line 635 "scanner.l"
 { process_token(LEFTSHIFTEQUAL); }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 632 "scanner.l"
+#line 636 "scanner.l"
 { process_token(RIGHTSHIFTEQUAL); }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 633 "scanner.l"
+#line 637 "scanner.l"
 { process_token(DOUBLESTAREQUAL); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 634 "scanner.l"
+#line 638 "scanner.l"
 { process_token(DOUBLESLASH); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 635 "scanner.l"
+#line 639 "scanner.l"
 { process_token(DOUBLESLASHEQUAL); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 636 "scanner.l"
+#line 640 "scanner.l"
 { process_token(AT); }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 637 "scanner.l"
+#line 641 "scanner.l"
 { process_token(ATEQUAL); }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 638 "scanner.l"
+#line 642 "scanner.l"
 { process_token(RARROW); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 639 "scanner.l"
+#line 643 "scanner.l"
 { process_token(ELLIPSIS); }
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 640 "scanner.l"
+#line 644 "scanner.l"
 { process_token(COLONEQUAL); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 641 "scanner.l"
-{ process_token(ENDMARKER); yyterminate(); }
+#line 645 "scanner.l"
+{ if (done) return EOF; else { done = true; return process_token(ENDMARKER); } }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 644 "scanner.l"
+#line 648 "scanner.l"
 {   
         printf("LEXICAL ERROR (%d): Unknown symbol %s\n", yylineno, yytext);
         exit(EXIT_FAILURE); 
@@ -1916,10 +1918,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 649 "scanner.l"
+#line 653 "scanner.l"
 ECHO;
 	YY_BREAK
-#line 1923 "scanner.c"
+#line 1925 "scanner.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2893,5 +2895,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 649 "scanner.l"
+#line 653 "scanner.l"
 

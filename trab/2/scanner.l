@@ -9,8 +9,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include<stdbool.h>
 
 extern char* values;
+bool done = false;
 
 //variáveis
 int qtd_tokens = 0;
@@ -535,6 +537,8 @@ int process_token(int token) {
 
 %}
 
+
+
 %%
 
 
@@ -638,7 +642,7 @@ int process_token(int token) {
 "->"                            { process_token(RARROW); }
 "..."                           { process_token(ELLIPSIS); }
 ":="                            { process_token(COLONEQUAL); }
-<<EOF>>                         { process_token(ENDMARKER); yyterminate(); }
+<<EOF>>                         { if (done) return EOF; else { done = true; return process_token(ENDMARKER); } }
 
 
 .   {   
