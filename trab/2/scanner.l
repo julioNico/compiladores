@@ -190,7 +190,9 @@ int indent()
 "await"                          { return AWAIT; }
 
 
+<<EOF>>                         { return ENDMARKER; }
 #[^\n$]*                        { values = strdup(yytext); return TYPE_COMMENT; }
+
 [0-9]+"."?[0-9]*                { values = strdup(yytext); return NUMBER; }
 ["""][^"""\n]*["""]             { values = strdup(yytext); return STRING; }
 ['][^'\n]*[']                   { values = strdup(yytext); return STRING; }
@@ -244,7 +246,6 @@ int indent()
 "..."                           { return ELLIPSIS; }
 ":="                            { return COLONEQUAL; }
 [a-zA-Z_]+[a-zA-Z0-9_]*         { values = strdup(yytext); return NAME; }
-<<EOF>>                         { return ENDMARKER; }
 
 .   {   printf("LEXICAL ERROR (%d): Unknown symbol %s\n", 
         yylineno, yytext);
