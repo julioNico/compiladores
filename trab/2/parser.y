@@ -7,7 +7,8 @@
 #include <stdio.h>
 int yylex(void);
 void yyerror(char const *s);
-int result = %token;
+char* values;
+extern int yylineno;
 %}
 
 %token IMPORT
@@ -28,14 +29,14 @@ int result = %token;
 %token IS
 %token TRUE
 %token FALSE
-%token ASSERT   
+%token ASSERT
 
 %token FOR
 %token IN
 %token WHILE
 %token PASS
 %token BREAK
-%token CONTINUE 
+%token CONTINUE
 
 %token TRY
 %token EXCEPT
@@ -113,10 +114,14 @@ int result = %token;
 %token COLONEQUAL
 %token ENDMARKER
 
-%left OR
-%left AND
-%left PLUS MINUS
-%left STAR SLASH
+// Não precisa dessas regras porque a gramática já determina as prioridades.
+// %left OR
+// %left AND
+// %left PLUS MINUS
+// %left STAR SLASH
+
+%precedence LOW // Prioridade artificial para resolver conflitos de S/R. Todos os tokens conflitantes entram na prioridade maior abaixo.
+%precedence LAMBDA NOT TRUE FALSE NONE AWAIT NAME NUMBER STRING LPAR LSQB PLUS MINUS STAR TILDE ELLIPSIS NEWLINE SEMI COMMA IF
 
 // single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE
 // eval_input: testlist NEWLINE* ENDMARKER
@@ -201,19 +206,19 @@ typelist: (test (COMMA test)* [COMMA
 file_input: fk_NEWLINE_stmt ENDMARKER;
 
 fk_NEWLINE_stmt:
-%empty
-|   NL_stmt fk_NEWLINE_stmt;
-|   NL_stmt ;
+%empty %prec LOW // Fala para o bison sempre dar prioridade para a regra de baixo.
+|   NL_stmt fk_NEWLINE_stmt; // Com isso, o parser funciona de forma gulosa ao consumir essa parte.
+// |   NL_stmt ; // Essa regra já está contemplada nos casos de cima. Isso causa ZILHÕES de conflitos de R/R. Vocês fizeram isso direto...
 
 NL_stmt: NEWLINE | stmt;
 
-funcdef: DEF NAME parameters opc_RARROW_test COLON opc_TYPE_COMMENT func_body_suite;
+funcdef: DEF NAME parameters opc_RARROW_test COLON /*opc_TYPE_COMMENT*/ func_body_suite;
 opc_RARROW_test:
 %empty
 |   RARROW test;
-opc_TYPE_COMMENT:
-%empty
-|   TYPE_COMMENT;
+// opc_TYPE_COMMENT: // REGRA DUPLICADA ABAIXO! Não precisa disso.
+// %empty
+// |   TYPE_COMMENT;
 
 parameters: LPAR opc_argslist RPAR;
 opc_argslist:
@@ -224,9 +229,9 @@ opc_argslist:
 stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE;
 fk_SEMI_small_stmt:
-%empty
+%empty %prec LOW
 |   SEMI small_stmt fk_NEWLINE_stmt;
-|   SEMI small_stmt;
+// |   SEMI small_stmt; // Vide comentário da linha 210.
 
 small_stmt: expr_stmt | del_stmt | pass_stmt | flow_stmt | global_stmt | nonlocal_stmt;
 expr_stmt: testlist_star_expr expr_stmt_1;
@@ -239,8 +244,8 @@ opc_fk_EQ_YE_TSE_TC:
 |   expr_stmt_3 fk_EQ_YE_TSE;
 fk_EQ_YE_TSE:
 %empty
-|   expr_stmt_3 fk_EQ_YE_TSE
-|   expr_stmt_3;
+|   expr_stmt_3 fk_EQ_YE_TSE;
+// |   expr_stmt_3; // Vide comentário da linha 210.
 expr_stmt_3: EQUAL expr_stmt_4;
 expr_stmt_4: yield_expr|testlist_star_expr;
 
@@ -248,11 +253,11 @@ annassign: COLON test opc_COLON_test;
 testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA;
 TSE_stmt: test | star_expr;
 fk_COMMA_T_SE:
-%empty
-|   TSE_stmt_1 fk_COMMA_T_SE;
-|   TSE_stmt_1;
-TSE_stmt_1: COMMA TSE_stmt_2;
-TSE_stmt_2: test | star_expr;
+%empty %prec LOW
+|   COMMA TSE_stmt fk_COMMA_T_SE;
+// |   TSE_stmt_1; // Fiz algumas simplificações aqui.
+// TSE_stmt_1: COMMA TSE_stmt_2;
+// TSE_stmt_2: test | star_expr;
 
 augassign: PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL;
 opc_SEMI:
@@ -274,7 +279,7 @@ continue_stmt: CONTINUE;
 return_stmt: RETURN opc_testlist_star_expr;
 yield_stmt: yield_expr;
 opc_testlist_star_expr:
-%empty
+%empty %prec LOW
 |   testlist_star_expr;
 
 global_stmt: GLOBAL NAME fk_COMMA_NAME;
@@ -282,42 +287,42 @@ nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME;
 fk_COMMA_NAME:
 %empty
 |   COMMA NAME fk_COMMA_NAME;
-|   COMMA NAME;
+// |   COMMA NAME; // Vide comentário da linha 210.
 
 compound_stmt: if_stmt | while_stmt | for_stmt | with_stmt | funcdef | classdef;
 
 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite;
 fk_ELIF_NT_COLON_SUITE:
 %empty
-|   ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
-|   ELSE_IF namedexpr_test COLON suite;
+|   ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE;
+// |   ELSE_IF namedexpr_test COLON suite; // Vide comentário da linha 210.
 
 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite;
-for_stmt: FOR exprlist IN testlist COLON opc_TYPE_COMMENT suite opc_ELSE_COLON_suite;
+for_stmt: FOR exprlist IN testlist COLON /*opc_TYPE_COMMENT*/ suite opc_ELSE_COLON_suite;
 opc_ELSE_COLON_suite:
 %empty
 |   ELSE COLON suite;
-opc_TYPE_COMMENT:
-%empty
-|   TYPE_COMMENT;
+// opc_TYPE_COMMENT: // DUPLICADA!
+// %empty
+// |   TYPE_COMMENT;
 
-with_stmt: WITH with_item fk_COMMA_WI  COLON opc_TYPE_COMMENT suite;
+with_stmt: WITH with_item fk_COMMA_WI  COLON /*opc_TYPE_COMMENT*/ suite;
 fk_COMMA_WI:
 %empty
-|   COMMA with_item fk_COMMA_WI
-|   COMMA with_item;
+|   COMMA with_item fk_COMMA_WI;
+// |   COMMA with_item; // Vide comentário da linha 210.
 
 with_item: test opc_AS_expr;
 opc_AS_expr:
 %empty
 |   AS expr;
 
-except_clause: EXCEPT opc_test_AS_NAME;
+// except_clause: EXCEPT opc_test_AS_NAME; // Regras inúteis (sem uso)
 suite: simple_stmt | NEWLINE INDENT stmt fk_stmt DEDENT;
-opc_test_AS_NAME:
-%empty
-|   test
-|   test AS NAME;
+// opc_test_AS_NAME: // Regras inúteis (sem uso)
+// %empty
+// |   test
+// |   test AS NAME;
 
 namedexpr_test: test opc_COLONEQUAL_test;
 opc_COLONEQUAL_test:
@@ -326,7 +331,7 @@ opc_COLONEQUAL_test:
 
 test: or_test opc_IF_or_test_ELSE_test | lambdef;
 opc_IF_or_test_ELSE_test:
-%empty
+%empty %prec LOW
 |   IF or_test ELSE test;
 
 test_nocond: or_test | lambdef_nocond;
@@ -335,61 +340,61 @@ lambdef_nocond: LAMBDA opc_argslist COLON test_nocond;
 or_test: and_test fk_OR_AT;
 fk_OR_AT:
 %empty
-|   OR and_test fk_OR_AT
-|   OR and_test;
+|   OR and_test fk_OR_AT;
+// |   OR and_test; // Vide comentário da linha 210.
 
 and_test: not_test fk_AND_NT;
 fk_AND_NT:
 %empty
-|   AND not_test fk_AND_NT
-|   AND not_test;
+|   AND not_test fk_AND_NT;
+// |   AND not_test; // Vide comentário da linha 210.
 
 not_test: NOT not_test | comparison;
 comparison: expr fk_CO_EXPR;
 fk_CO_EXPR:
-%empty
-|   comp_op expr fk_CO_EXPR
-|   comp_op expr;
+%empty %prec LOW
+|   comp_op expr fk_CO_EXPR;
+// |   comp_op expr; // Vide comentário da linha 210.
 
 comp_op: LESS | GREATER | EQEQUAL | GREATEREQUAL | LESSEQUAL | LESSGREATER | NOTEQUAL | IN | NOT IN | IS | IS NOT;
 star_expr: STAR expr;
 expr: xor_expr fk_VBAR_XE;
 fk_VBAR_XE:
 %empty
-|   VBAR xor_expr fk_VBAR_XE
-|   VBAR xor_expr;
+|   VBAR xor_expr fk_VBAR_XE;
+// |   VBAR xor_expr; // Vide comentário da linha 210.
 
 xor_expr: and_expr fk_CIRCUMFLEX_EXPR;
 fk_CIRCUMFLEX_EXPR:
 %empty
-|   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR
-|   CIRCUMFLEX and_expr;
+|   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR;
+// |   CIRCUMFLEX and_expr; // Vide comentário da linha 210.
 
 and_expr: shift_expr fk_AMPER_SE;
 fk_AMPER_SE:
 %empty
-|   AMPER shift_expr fk_AMPER_SE
-|   AMPER shift_expr;
+|   AMPER shift_expr fk_AMPER_SE;
+// |   AMPER shift_expr; // Vide comentário da linha 210.
 
-shift_expr: arith_expr fk_LS_RS_AE; 
+shift_expr: arith_expr fk_LS_RS_AE;
 fk_LS_RS_AE:
 %empty
-|   SE_stmt arith_expr fk_LS_RS_AE
-|   SE_stmt arith_expr;
+|   SE_stmt arith_expr fk_LS_RS_AE;
+// |   SE_stmt arith_expr; // Vide comentário da linha 210.
 SE_stmt: LEFTSHIFT | RIGHTSHIFT;
 
 arith_expr: term fk_T_PLUS_MINUS;
 fk_T_PLUS_MINUS:
-%empty
-|   AE_stmt term fk_T_PLUS_MINUS
-|   AE_stmt term;
+%empty %prec LOW
+|   AE_stmt term fk_T_PLUS_MINUS;
+// |   AE_stmt term; // Vide comentário da linha 210.
 AE_stmt: PLUS | MINUS;
 
 term: factor fk_MATH;
 fk_MATH:
-%empty
-|   term_stmt factor fk_MATH
-|   term_stmt factor;
+%empty %prec LOW
+|   term_stmt factor fk_MATH;
+// |   term_stmt factor; // Vide comentário da linha 210.
 term_stmt: STAR| AT | SLASH | PERCENT | DOUBLESLASH;
 
 factor: factor_stmt factor | power;
@@ -398,28 +403,34 @@ factor_stmt: PLUS | MINUS | TILDE;
 power: atom_expr opc_DOUBLESTAR_factor;
 opc_DOUBLESTAR_factor:
 %empty
-|   opc_DOUBLESTAR_factor;
+//|   opc_DOUBLESTAR_factor; // Aqui foi um erro de copy-paste
+| DOUBLESTAR factor;
 
 atom_expr: atom fk_trailer
 |   AWAIT atom fk_trailer;
 
 fk_trailer:
-%empty
-|   trailer fk_trailer
-|   trailer;
+%empty %prec LOW
+|   trailer fk_trailer;
+// |   trailer; // Vide comentário da linha 210.
 
-atom: LPAR atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
-atom_stmt: opc_yield_expr | opc_testlist_comp;
-opc_yield_expr:
-%empty
-|   yield_expr;
+atom: /*LPAR atom_stmt RPAR*/ LPAR opc_atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
+opc_atom_stmt:
+  %empty
+| yield_expr
+| testlist_comp
+;
+// atom_stmt: opc_yield_expr | opc_testlist_comp; // Simplifiquei com a regra de cima.
+// opc_yield_expr:
+// %empty
+// |   yield_expr;
 opc_testlist_comp:
 %empty
 |   testlist_comp;
 fk_STRING:
-%empty
-|   STRING fk_STRING
-|   STRING;
+%empty %prec LOW;
+|   STRING fk_STRING;
+// |   STRING; // Vide comentário da linha 210.
 
 testlist_comp: trailer_stmt trailer_stmt_1;
 trailer: LPAR opc_arglist RPAR | LSQB subscriptlist RSQB | DOT NAME;
@@ -427,18 +438,18 @@ opc_arglist:
 %empty
 |   arglist;
 fk_COMMA_NT_SE:
-%empty
-|   COMMA trailer_stmt fk_COMMA_NT_SE
-|   COMMA trailer_stmt;
+%empty %prec LOW
+|   COMMA trailer_stmt fk_COMMA_NT_SE;
+// |   COMMA trailer_stmt; // Vide comentário da linha 210.
 
 trailer_stmt: namedexpr_test | star_expr;
 trailer_stmt_1: comp_for | fk_COMMA_NT_SE opc_COMMA;
 
 subscriptlist: subscript fk_COMMA_S opc_COMMA;
 fk_COMMA_S:
-%empty
-|   COMMA subscript fk_COMMA_S
-|   COMMA subscript;
+%empty %prec LOW
+|   COMMA subscript fk_COMMA_S;
+// |   COMMA subscript; // Vide comentário da linha 210.
 
 subscript: test | opc_test COLON opc_test opc_sliceop;
 opc_test:
@@ -451,20 +462,20 @@ opc_sliceop:
 sliceop: COLON opc_test;
 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA;
 fk_COMMA_E_SE:
-%empty
-|   COMMA exprlist_stmt fk_COMMA_E_SE
-|   COMMA exprlist_stmt;
+%empty %prec LOW
+|   COMMA exprlist_stmt fk_COMMA_E_SE;
+// |   COMMA exprlist_stmt; // Vide comentário da linha 210.
 
 exprlist_stmt: expr | star_expr;
 
 testlist: test fk_COMMA_test opc_COMMA;
 fk_COMMA_test:
-%empty
-|   COMMA test fk_COMMA_test
-|   COMMA test;
-opc_COMMA:
-%empty
-|   COMMA;
+%empty %prec LOW
+|   COMMA test fk_COMMA_test;
+// |   COMMA test; // Vide comentário da linha 210.
+// opc_COMMA: // Regra duplicada!
+// %empty
+// |   COMMA;
 
 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite;
 opc_LPAR_arglist_RPAR:
@@ -474,9 +485,9 @@ opc_LPAR_arglist_RPAR:
 
 arglist: argument fk_COMMA_A opc_COMMA;
 fk_COMMA_A:
-%empty
-|   COMMA argument fk_COMMA_A
-|   COMMA argument;
+%empty %prec LOW
+|   COMMA argument fk_COMMA_A;
+// |   COMMA argument; // Vide comentário da linha 210.
 
 //SIMPLIFICAR
 argument: test opc_comp_for | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test;
@@ -498,20 +509,20 @@ opc_ASYNC:
 comp_if: IF test_nocond opc_comp_iter;
 yield_expr: YIELD opc_yield_arg;
 opc_yield_arg:
-%empty
+%empty %prec LOW
 |   yield_arg;
 
 yield_arg: FROM test | testlist_star_expr;
 
-func_body_suite: simple_stmt | NEWLINE opc_TYPE_COMMENT_NEWLINE INDENT stmt fk_stmt DEDENT;
+func_body_suite: simple_stmt | NEWLINE /*opc_TYPE_COMMENT_NEWLINE*/ INDENT stmt fk_stmt DEDENT;
 fk_stmt:
 %empty
-|   stmt fk_stmt
-|   stmt;
+|   stmt fk_stmt;
+// |   stmt; // Vide comentário da linha 210.
 
-opc_TYPE_COMMENT_NEWLINE:
-%empty
-|   TYPE_COMMENT NEWLINE;
+// opc_TYPE_COMMENT_NEWLINE: // Não precisa.
+// %empty
+// |   TYPE_COMMENT NEWLINE;
 
 %%
 

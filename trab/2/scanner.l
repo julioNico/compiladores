@@ -139,12 +139,9 @@ int indent()
 
 %}
 
+
 %%
 
-{ignore}    { }
-{comments}  { }
-
- // Palavras reservadas
 
 "import"                        { return IMPORT; } 
 "from"                          { return FROM; } 
