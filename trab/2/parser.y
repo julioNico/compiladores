@@ -213,8 +213,7 @@ opc_RARROW_test:
 parameters: LPAR opc_argslist RPAR;
 opc_argslist:
 %empty
-|   NAME COMMA opc_argslist
-|   NAME;
+|   NAME COMMA opc_argslist;
 
 stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE;
