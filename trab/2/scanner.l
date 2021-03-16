@@ -303,11 +303,6 @@ int process_token(int token) {
             printf("AWAIT    ");
             break;
 
-        case TYPE_COMMENT:
-            values = strdup(yytext);
-            printf("TYPE_COMMENT    ");
-            break;
-
         case NAME:
             values = strdup(yytext); 
             printf("NAME    ");
@@ -542,106 +537,105 @@ int process_token(int token) {
 %%
 
 
-"import"                        { process_token(IMPORT); } 
-"from"                          { process_token(FROM); } 
-"as"                            { process_token(AS); }
+"import"                        { return process_token(IMPORT); } 
+"from"                          { return process_token(FROM); } 
+"as"                            { return process_token(AS); }
 
-"class"                         { process_token(CLASS); }
-"def"                           { process_token(DEF); }
-"lambda"                        { process_token(LAMBDA); }
+"class"                         { return process_token(CLASS); }
+"def"                           { return process_token(DEF); }
+"lambda"                        { return process_token(LAMBDA); }
 
-"not"                           { process_token(NOT); }
-"and"                           { process_token(AND); }
-"or"                            { process_token(OR); }
+"not"                           { return process_token(NOT); }
+"and"                           { return process_token(AND); }
+"or"                            { return process_token(OR); }
 
-"if"                            { process_token(IF); }
-"elif"                          { process_token(ELSE_IF); }
-"else"                          { process_token(ELSE); }
-"is"                            { process_token(IS); }   
-"True"                          { process_token(TRUE); } 
-"False"                         { process_token(FALSE); } 
-"assert"                        { process_token(ASSERT); }
+"if"                            { return process_token(IF); }
+"elif"                          { return process_token(ELSE_IF); }
+"else"                          { return process_token(ELSE); }
+"is"                            { return process_token(IS); }   
+"True"                          { return process_token(TRUE); } 
+"False"                         { return process_token(FALSE); } 
+"assert"                        { return process_token(ASSERT); }
 
-"for"                           { process_token(FOR); }   
-"in"                            { process_token(IN); }   
-"while"                         { process_token(WHILE); } 
-"pass"                          { process_token(PASS); } 
-"break"                         { process_token(BREAK); } 
-"continue"                      { process_token(CONTINUE); }
+"for"                           { return process_token(FOR); }   
+"in"                            { return process_token(IN); }   
+"while"                         { return process_token(WHILE); } 
+"pass"                          { return process_token(PASS); } 
+"break"                         { return process_token(BREAK); } 
+"continue"                      { return process_token(CONTINUE); }
 
-"try"                           { process_token(TRY); } 
-"except"                        { process_token(EXCEPT); } 
-"finally"                       { process_token(FINALLY); } 
-"with"                          { process_token(WITH); }
+"try"                           { return process_token(TRY); } 
+"except"                        { return process_token(EXCEPT); } 
+"finally"                       { return process_token(FINALLY); } 
+"with"                          { return process_token(WITH); }
 
-"return"                        { process_token(RETURN); }
-"raise"                         { process_token(RAISE); }
-"yield"                         { process_token(YIELD); }
+"return"                        { return process_token(RETURN); }
+"raise"                         { return process_token(RAISE); }
+"yield"                         { return process_token(YIELD); }
 
-"global"                        { process_token(GLOBAL); }
-"nonlocal"                      { process_token(NONLOCAL); }
+"global"                        { return process_token(GLOBAL); }
+"nonlocal"                      { return process_token(NONLOCAL); }
 
-"None"                          { process_token(NONE); }
-"del"                           { process_token(DEL); }
-"exec"                          { process_token(EXEC); }
+"None"                          { return process_token(NONE); }
+"del"                           { return process_token(DEL); }
+"exec"                          { return process_token(EXEC); }
 
-"async"                         { process_token(ASYNC); }
-"await"                         { process_token(AWAIT); }
+"async"                         { return process_token(ASYNC); }
+"await"                         { return process_token(AWAIT); }
 
-[a-zA-Z_]+[a-zA-Z0-9_]*         { process_token(NAME); }
-#[^\n$]*                        { process_token(TYPE_COMMENT); }
-[0-9]+"."?[0-9]*                { process_token(NUMBER); }
-["""][^"""\n]*["""]             { process_token(STRING); }
-['][^'\n]*[']                   { process_token(STRING); }
-[\n\t ]+                        { indent(); for(int z=0; z<tamLT; z++){process_token(lisTks[z]);}; cleanlisTks(); }
-[(]                             { process_token(LPAR); }
-[)]                             { process_token(RPAR); }
-"["                             { process_token(LSQB); }
-"]"                             { process_token(RSQB); }
-:                               { process_token(COLON); }
-,                               { process_token(COMMA); }
-;                               { process_token(SEMI); }
-"+"                             { process_token(PLUS); }
-"-"                             { process_token(MINUS); }
-"*"                             { process_token(STAR); }
-"/"                             { process_token(SLASH); }
-"|"                             { process_token(VBAR); }
-"&"                             { process_token(AMPER); }
-"<"                             { process_token(LESS); }
-">"                             { process_token(GREATER); }
-"<>"                            { process_token(LESSGREATER); }
-"="                             { process_token(EQUAL); }
-"."                             { process_token(DOT); }
-"%"                             { process_token(PERCENT); }
-[{]                             { process_token(LBRACE); }
-[}]                             { process_token(RBRACE); }
-"=="                            { process_token(EQEQUAL); }
-"!="                            { process_token(NOTEQUAL); }
-"<="                            { process_token(LESSEQUAL); }
-">="                            { process_token(GREATEREQUAL); }
-"~"                             { process_token(TILDE); }
-"^"                             { process_token(CIRCUMFLEX); }
-"<<"                            { process_token(LEFTSHIFT); }
-">>"                            { process_token(RIGHTSHIFT); }
-"**"                            { process_token(DOUBLESTAR); }
-"+="                            { process_token(PLUSEQUAL); }
-"-="                            { process_token(MINEQUAL); }
-"*="                            { process_token(STAREQUAL); }
-"/="                            { process_token(SLASHEQUAL); }
-"%="                            { process_token(PERCENTEQUAL); }
-"&="                            { process_token(AMPEREQUAL); }
-"|="                            { process_token(VBAREQUAL); }
-"^="                            { process_token(CIRCUMFLEXEQUAL); }
-"<<="                           { process_token(LEFTSHIFTEQUAL); }
-">>="                           { process_token(RIGHTSHIFTEQUAL); }
-"**="                           { process_token(DOUBLESTAREQUAL); }
-"//"                            { process_token(DOUBLESLASH); }
-"//="                           { process_token(DOUBLESLASHEQUAL); }
-"@"                             { process_token(AT); }
-"@="                            { process_token(ATEQUAL); }
-"->"                            { process_token(RARROW); }
-"..."                           { process_token(ELLIPSIS); }
-":="                            { process_token(COLONEQUAL); }
+[a-zA-Z_]+[a-zA-Z0-9_]*         { return process_token(NAME); }
+[0-9]+"."?[0-9]*                { return process_token(NUMBER); }
+["""][^"""\n]*["""]             { return process_token(STRING); }
+['][^'\n]*[']                   { return process_token(STRING); }
+[\n\t ]+                        { indent(); for(int z=0; z<tamLT; z++){ process_token(lisTks[z]);}; cleanlisTks(); }
+[(]                             { return process_token(LPAR); }
+[)]                             { return process_token(RPAR); }
+"["                             { return process_token(LSQB); }
+"]"                             { return process_token(RSQB); }
+":"                             { return process_token(COLON); }
+,                               { return process_token(COMMA); }
+;                               { return process_token(SEMI); }
+"+"                             { return process_token(PLUS); }
+"-"                             { return process_token(MINUS); }
+"*"                             { return process_token(STAR); }
+"/"                             { return process_token(SLASH); }
+"|"                             { return process_token(VBAR); }
+"&"                             { return process_token(AMPER); }
+"<"                             { return process_token(LESS); }
+">"                             { return process_token(GREATER); }
+"<>"                            { return process_token(LESSGREATER); }
+"="                             { return process_token(EQUAL); }
+"."                             { return process_token(DOT); }
+"%"                             { return process_token(PERCENT); }
+[{]                             { return process_token(LBRACE); }
+[}]                             { return process_token(RBRACE); }
+"=="                            { return process_token(EQEQUAL); }
+"!="                            { return process_token(NOTEQUAL); }
+"<="                            { return process_token(LESSEQUAL); }
+">="                            { return process_token(GREATEREQUAL); }
+"~"                             { return process_token(TILDE); }
+"^"                             { return process_token(CIRCUMFLEX); }
+"<<"                            { return process_token(LEFTSHIFT); }
+">>"                            { return process_token(RIGHTSHIFT); }
+"**"                            { return process_token(DOUBLESTAR); }
+"+="                            { return process_token(PLUSEQUAL); }
+"-="                            { return process_token(MINEQUAL); }
+"*="                            { return process_token(STAREQUAL); }
+"/="                            { return process_token(SLASHEQUAL); }
+"%="                            { return process_token(PERCENTEQUAL); }
+"&="                            { return process_token(AMPEREQUAL); }
+"|="                            { return process_token(VBAREQUAL); }
+"^="                            { return process_token(CIRCUMFLEXEQUAL); }
+"<<="                           { return process_token(LEFTSHIFTEQUAL); }
+">>="                           { return process_token(RIGHTSHIFTEQUAL); }
+"**="                           { return process_token(DOUBLESTAREQUAL); }
+"//"                            { return process_token(DOUBLESLASH); }
+"//="                           { return process_token(DOUBLESLASHEQUAL); }
+"@"                             { return process_token(AT); }
+"@="                            { return process_token(ATEQUAL); }
+"->"                            { return process_token(RARROW); }
+"..."                           { return process_token(ELLIPSIS); }
+":="                            { return process_token(COLONEQUAL); }
 <<EOF>>                         { if (done) return EOF; else { done = true; return process_token(ENDMARKER); } }
 
 

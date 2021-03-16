@@ -8,6 +8,7 @@
 int yylex(void);
 void yyerror(char const *s);
 char* values;
+int descobrindo_token;
 extern int yylineno;
 %}
 
@@ -57,7 +58,6 @@ extern int yylineno;
 %token ASYNC
 %token AWAIT
 
-%token TYPE_COMMENT
 %token NAME
 %token NUMBER
 %token STRING
@@ -203,9 +203,10 @@ fk_NEWLINE_stmt:
 %empty %prec LOW // Fala para o bison sempre dar prioridade para a regra de baixo.
 |   NL_stmt fk_NEWLINE_stmt; // Com isso, o parser funciona de forma gulosa ao consumir essa parte.
 
-NL_stmt: NEWLINE | stmt;
+NL_stmt: NEWLINE | stmt  {printf("(%d)", descobrindo_token);};
 
 funcdef: DEF NAME parameters opc_RARROW_test COLON func_body_suite;
+
 opc_RARROW_test:
 %empty
 |   RARROW test;
@@ -213,7 +214,8 @@ opc_RARROW_test:
 parameters: LPAR opc_argslist RPAR;
 opc_argslist:
 %empty
-|   NAME COMMA opc_argslist;
+|   NAME COMMA opc_argslist
+|   NAME;
 
 stmt: simple_stmt | compound_stmt;
 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE;
@@ -228,8 +230,8 @@ expr_stmt_2: yield_expr|testlist;
 
 opc_fk_EQ_YE_TSE_TC:
 %empty
-|   expr_stmt_3 fk_EQ_YE_TSE TYPE_COMMENT
 |   expr_stmt_3 fk_EQ_YE_TSE;
+
 fk_EQ_YE_TSE:
 %empty
 |   expr_stmt_3 fk_EQ_YE_TSE;
