@@ -758,7 +758,7 @@ char *yytext;
 
 // Explicações destas funções estão abaixo.
 void process_token_real(int type);
-void indent();
+void process_indent(int length);
 
 #line 764 "scanner.c"
 /* Fragmentos de expressões regulares, etc. */
@@ -1527,7 +1527,7 @@ YY_RULE_SETUP
 #line 190 "scanner.l"
 {
                 process_token(NEWLINE);
-                indent();
+                process_indent(yyleng-1);
             }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -2522,400 +2522,82 @@ void yyfree (void * ptr )
 #line 203 "scanner.l"
 
 
-
-void imprime_token(int type) {
-
-    switch(type) {
-        case IMPORT:
-            printf("IMPORT    ");
-            break;
-
-        case FROM:
-            printf("FROM    ");
-            break;
-
-        case AS:
-            printf("AS    ");
-            break;
-
-        case CLASS:
-            printf("CLASS    ");
-            break;
-
-        case DEF:
-            printf("DEF    ");
-            break;
-
-        case LAMBDA:
-            printf("LAMBDA    ");
-            break;
-
-        case NOT:
-            printf("NOT    ");
-            break;
-
-        case AND:
-            printf("AND    ");
-            break;
-
-        case OR:
-            printf("OR    ");
-            break;
-
-        case IF:
-            printf("IF    ");
-            break;
-
-        case ELSE_IF:
-            printf("ELSE_IF    ");
-            break;
-
-        case ELSE:
-            printf("ELSE    ");
-            break;
-
-        case IS:
-            printf("IS    ");
-            break;
-
-        case TRUE:
-            printf("TRUE    ");
-            break;
-
-        case FALSE:
-            printf("FALSE    ");
-            break;
-
-        case ASSERT:
-            printf("ASSERT    ");
-            break;
-
-        case FOR:
-            printf("FOR    ");
-            break;
-
-        case IN:
-            printf("IN    ");
-            break;
-
-        case WHILE:
-            printf("WHILE    ");
-            break;
-
-        case PASS:
-            printf("PASS    ");
-            break;
-
-        case BREAK:
-            printf("BREAK    ");
-            break;
-
-        case CONTINUE:
-            printf("CONTINUE    ");
-            break;
-
-        case TRY:
-            printf("TRY    ");
-            break;
-
-        case EXCEPT:
-            printf("EXCEPT    ");
-            break;
-
-        case FINALLY:
-            printf("FINALLY    ");
-            break;
-
-        case WITH:
-            printf("WITH    ");
-            break;
-
-        case RETURN:
-            printf("RETURN    ");
-            break;
-
-        case RAISE:
-            printf("RAISE    ");
-            break;
-
-        case YIELD:
-            printf("YIELD    ");
-            break;
-
-        case GLOBAL:
-            printf("GLOBAL    ");
-            break;
-
-        case NONLOCAL:
-            printf("NONLOCAL    ");
-            break;
-
-        case NONE:
-            printf("NONE    ");
-            break;
-
-        case DEL:
-            printf("DEL    ");
-            break;
-
-        case EXEC:
-            printf("EXEC    ");
-            break;
-
-        case ASYNC:
-            printf("ASYNC    ");
-            break;
-
-        case AWAIT:
-            printf("AWAIT    ");
-            break;
-
-        case NAME:
-            printf("NAME    ");
-            break;
-
-        case NUMBER:
-            printf("NUMBER    ");
-            break;
-
-        case STRING:
-            printf("STRING    ");
-            break;
-
-        case INDENT:
-            printf("INDENT    ");
-            break;
-
-        case DEDENT:
-            printf("DEDENT    ");
-            break;
-
-        case NEWLINE:
-            printf("NEWLINE\n");
-            break;
-
-        case LPAR:
-            printf("LPAR    ");
-            break;
-
-        case RPAR:
-            printf("RPAR    ");
-            break;
-
-        case LSQB:
-            printf("LSQB    ");
-            break;
-
-        case RSQB:
-            printf("RSQB    ");
-            break;
-
-        case COLON:
-            printf("COLON    ");
-            break;
-
-        case COMMA:
-            printf("COMMA    ");
-            break;
-
-        case SEMI:
-            printf("SEMI    ");
-            break;
-
-        case PLUS:
-            printf("PLUS    ");
-            break;
-
-        case MINUS:
-            printf("MINUS    ");
-            break;
-
-        case STAR:
-            printf("STAR    ");
-            break;
-
-        case SLASH:
-            printf("SLASH    ");
-            break;
-
-        case VBAR:
-            printf("VBAR    ");
-            break;
-
-        case AMPER:
-            printf("AMPER    ");
-            break;
-
-        case LESS:
-            printf("LESS    ");
-            break;
-
-        case GREATER:
-            printf("GREATER    ");
-            break;
-
-        case LESSGREATER:
-            printf("LESSGREATER    ");
-            break;
-
-        case EQUAL:
-            printf("EQUAL    ");
-            break;
-
-        case DOT:
-            printf("DOT    ");
-            break;
-
-        case PERCENT:
-            printf("PERCENT    ");
-            break;
-
-        case LBRACE:
-            printf("LBRACE    ");
-            break;
-
-        case RBRACE:
-            printf("RBRACE    ");
-            break;
-
-        case EQEQUAL:
-            printf("EQEQUAL    ");
-            break;
-
-        case NOTEQUAL:
-            printf("NOTEQUAL    ");
-            break;
-
-        case LESSEQUAL:
-            printf("LESSEQUAL    ");
-            break;
-
-        case GREATEREQUAL:
-            printf("GREATEREQUAL    ");
-            break;
-
-        case TILDE:
-            printf("TILDE    ");
-            break;
-
-        case CIRCUMFLEX:
-            printf("CIRCUMFLEX    ");
-            break;
-
-        case LEFTSHIFT:
-            printf("LEFTSHIFT    ");
-            break;
-
-        case RIGHTSHIFT:
-            printf("RIGHTSHIFT    ");
-            break;
-
-        case DOUBLESTAR:
-            printf("DOUBLESTAR    ");
-            break;
-
-        case PLUSEQUAL:
-            printf("PLUSEQUAL    ");
-            break;
-
-        case MINEQUAL:
-            printf("MINEQUAL    ");
-            break;
-
-        case STAREQUAL:
-            printf("STAREQUAL    ");
-            break;
-
-        case SLASHEQUAL:
-            printf("SLASHEQUAL    ");
-            break;
-
-        case PERCENTEQUAL:
-            printf("PERCENTEQUAL    ");
-            break;
-
-        case AMPEREQUAL:
-            printf("AMPEREQUAL    ");
-            break;
-
-        case VBAREQUAL:
-            printf("VBAREQUAL    ");
-            break;
-
-        case CIRCUMFLEXEQUAL:
-            printf("CIRCUMFLEXEQUAL    ");
-            break;
-
-        case LEFTSHIFTEQUAL:
-            printf("LEFTSHIFTEQUAL    ");
-            break;
-
-        case RIGHTSHIFTEQUAL:
-            printf("RIGHTSHIFTEQUAL    ");
-            break;
-
-        case DOUBLESTAREQUAL:
-            printf("DOUBLESTAREQUAL    ");
-            break;
-
-        case DOUBLESLASH:
-            printf("DOUBLESLASH    ");
-            break;
-
-        case DOUBLESLASHEQUAL:
-            printf("DOUBLESLASHEQUAL    ");
-            break;
-
-        case AT:
-            printf("AT    ");
-            break;
-
-        case ATEQUAL:
-            printf("ATEQUAL    ");
-            break;
-
-        case RARROW:
-            printf("RARROW    ");
-            break;
-
-        case ELLIPSIS:
-            printf("ELLIPSIS    ");
-            break;
-
-        case COLONEQUAL:
-            printf("COLONEQUAL    ");
-            break;
-
-        case ENDMARKER:
-            printf("ENDMARKER    ");
-            break;
+/*
+   O código abaixo modifica totalmente o funcionamento do scanner. Nos códigos
+   do labs, o scanner era ativado por demanda do parser. Aqui, vamos fazer o
+   scanner ler toda a entrada e armazenar os tokens todos em uma estrutura.
+   A implementação abaixo é bem miserável, com um vetor hard-coded como
+   armazenamento. Fique à vontade para melhorar como preferir.
+*/
+
+// Pilha de identação
+
+int stack[100] = {[0] = 0};
+int sp = -1;
+
+bool is_empty() {
+    return sp == -1;
+}
+
+void push(int x) {
+    stack[++sp] = x;
+}
+
+int pop() {
+    if (is_empty())
+        return INT_MIN;
+    return stack[sp--];
+}
+
+int peek() {
+    if (is_empty())
+        return INT_MIN;
+    return stack[sp];
+}
+
+// Função que analisa a identação sempre que uma nova linha começa.
+void process_indent(int length) {
+    // Analisa a indentação e chama process_token(INDENT) e process_token(DEDENT) conforme for necessário.
+    if (is_empty()) {
+        push(0);
+        //printf("Pilha estava vazia ... adicioando 0 na pilha\n");
     }
+    if (length > peek()) {
+        push(length);
+        // Adiciona token INDENT
+        process_token(INDENT);
+        //printf("Token INDENT emitido\n");
+    } else if (length < peek()) {
+        while(!is_empty() && length < peek()) {
+            //printf("Length: %d é menor que Topo da Pilha: %d ... Fazendo pop(root)\n", length, peek(*root));
+            pop();
+            process_token(DEDENT);
+            //printf("Token DEDENT emitido\n");
+        }
+        if (is_empty() || peek() != length) {
+            printf("Erro de Indentação\nEncerrando o scanner...\n");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        //printf("Indentação igual anterior\n");
+    }
+    //printf("    Topo da Pilha: %d\n", peek(*root));
 }
 
+// Vetor de tokens já lidos.
+#define MAX_TOKEN_COUNT 1000
+Token tokens[MAX_TOKEN_COUNT];
 
+// Número de tokens já armazenados no vetor.
+int token_count = 0;
 
+// Contador que indica o próximo token que deve ser retornado para o parser.
+int next_token = 0;
 
-
-
-Token *vTokens=NULL;
-int tamVT=0;
-int indexVT=0;
-
-void addListaTokens(int type){
-    vTokens = (Token*) realloc(vTokens, (tamVT+1)*sizeof(Token));
-    vTokens[tamVT].type=type;
-    vTokens[tamVT].lexeme = strdup(yytext);
-    vTokens[tamVT].lineno = yylineno;
-    tamVT++;
-}
-
-void cleanTokens(){
-    free(vTokens);
-    vTokens=NULL;
-    tamVT=0;
-}
-
-
+// Função pré-definida do flex que é executada uma única vez quando o scanner
+// é inicializado. Chamamos a função orig_yylex() porque é ela que de fato
+// implementa o scanner. Assim, lemos a entrada toda neste ponto pelas regras
+// do scanner acima.
 void lex_init(void) {
     orig_yylex();
 }
@@ -2924,150 +2606,24 @@ void lex_init(void) {
 // Armazena o tipo do token passado no vetor de tokens para que
 // ele seja retornado depois quando o parser pedir.
 void process_token_real(int type) {
-    //imprime_token(type);
-    addListaTokens(type);
+    // Adiciona 'type' no vetor de tokens e incrementa o contador token_count.
+    int pos = token_count++;
+    tokens[pos].type = type;
+    tokens[pos].lexeme = strdup(yytext);
+    tokens[pos].lineno = yylineno;
 }
 
 // Função que é chamada pelo parser. Retorna os tokens por demanda, um por um,
 // conforme a ordem que eles forem armazenados.
 int yylex(void) {
-    if (indexVT < tamVT) {
-        return vTokens[indexVT++].type;
+    if (next_token < token_count) {
+        return tokens[next_token++].type;
     } else {
-        cleanTokens();
         return EOF;
     }
 }
 
 Token get_last_token() {
-    return vTokens[indexVT-1];
+    return tokens[next_token-1];
 }
 
-///
-
-
-/* INDENT */
-char *textTab;
-int qtd_indent = 0;
-int qtd_tab_l = 0;
-int qtd_tab_l_ant = 0;
-
-//Contando tabs da string tratada(textTab).
-int qtdChar(char *textTab, char my_c)
-{
-    int lenTT = strlen(textTab);
-    int i, count = 0;
-    for (i = 0; i < lenTT; i++)
-    {
-        char c = textTab[i];
-        if (c == my_c)
-        {
-            count++;
-        }
-    }
-    return count;
-}
-
-void tratamentoIndentacao()
-{
-    int i, j;
-    int cSpace = 0;
-    int numTab = 0;
-
-    // TROCA SEQUENCIA DE 4 ESPACOS POR TAB E
-    // REMOVE TUDO QUE VEM ANTES DE ENTER.
-    int lenYY = strlen(yytext);
-    for (i = 0; i < lenYY; i++)
-    {
-        char c = yytext[i];
-        if (c == ' ')
-        {
-            cSpace++;
-            if (cSpace == 4)
-            {
-                numTab++;
-                cSpace = 0;
-                strcat(textTab, "\t");
-            }
-        }
-        else //EH ENTER!
-        {
-            cSpace = 0;
-            strcpy(textTab, "\n");
-        }
-    }
-
-    //TRATAMENTO PARA yytext
-    //SOMENTE COM ESPACOS(SEM ENTER)
-    if (cSpace > 0)
-    {
-        for (j = 0; j < cSpace; j++)
-        {
-            strcat(textTab, " ");
-        }
-    }
-}
-
-//INDENT DEDENT SPACE E NEW LINE
-void indentDedentSpaceNl()
-{
-    int i, j, qtdEnter;
-    int lenTT = strlen(textTab);
-    bool notNL=false;
-
-    for (i = 0; i < lenTT; i++)
-    {
-        char c = textTab[i];
-
-        qtdEnter = qtdChar(textTab, '\n');
-        if (qtdEnter > 0)
-        {
-            qtd_tab_l = qtdChar(textTab, '\t');
-            int diff;
-            if (qtd_tab_l > qtd_tab_l_ant) //INDENT
-            {
-                notNL=true;
-                diff = qtd_tab_l - qtd_tab_l_ant;
-                
-                for(j=0; j<diff; j++){
-                    process_token(INDENT);
-                }
-
-                qtd_indent += diff;
-            }
-            else if (qtd_tab_l < qtd_tab_l_ant) //DEDENT
-            {   
-                notNL=true;
-                diff = qtd_tab_l_ant - qtd_tab_l;
-                
-                for(j=0; j<diff; j++){
-                    process_token(DEDENT);
-                }
-
-                qtd_indent -= diff;
-            }
-        }
-
-        if (c == '\n' && !notNL)
-        {   
-            process_token(NEWLINE);
-        } 
-
-        if (c == '\n')
-        {   
-            qtd_tab_l_ant = qtd_tab_l;
-            qtd_tab_l = 0;
-        }
-    }
-}
-
-void indent()
-{
-    textTab = (char *)malloc(sizeof(yytext));
-
-    //funcoes principais
-    tratamentoIndentacao();
-    indentDedentSpaceNl();
-
-    free(textTab);
-}
