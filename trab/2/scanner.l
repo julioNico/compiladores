@@ -19,6 +19,7 @@ int qtd_tokens = 0;
 
 int *lisTks=NULL;
 int tamLT=0;
+int indexLT=0;
 
 void addListaTokens(int token){
     //printf(" --TOKEN: %d, tamLT: %d-- ", token, tamLT);
@@ -157,7 +158,16 @@ void indent()
 }
 
 int process_token(int token) {
-    //printf("(TOKEN: %d)", token);
+
+    if(tamLT>0){
+        tamLT--;
+        indexLT++;
+        return lisTks[indexLT-1];
+    } else if (indexLT>0) {
+        indexLT=0;
+        cleanlisTks();
+    }
+
     switch(token) {
         case IMPORT:
             printf("IMPORT    ");
@@ -525,8 +535,8 @@ int process_token(int token) {
         case ENDMARKER:
             printf("ENDMARKER    ");
             break;
-
     }
+
     return token;
 }
 
@@ -587,7 +597,8 @@ int process_token(int token) {
 [0-9]+"."?[0-9]*                { return process_token(NUMBER); }
 ["""][^"""\n]*["""]             { return process_token(STRING); }
 ['][^'\n]*[']                   { return process_token(STRING); }
-[\n\t ]+                        { indent(); for(int z=0; z<tamLT; z++){ process_token(lisTks[z]);}; cleanlisTks(); }
+[ ]*                            {                               }
+[\n\t ]+                        { indent(); return process_token(INDENT); }
 [(]                             { return process_token(LPAR); }
 [)]                             { return process_token(RPAR); }
 "["                             { return process_token(LSQB); }
