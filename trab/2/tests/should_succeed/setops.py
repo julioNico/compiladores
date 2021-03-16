@@ -15,3 +15,5 @@ print("Difference of E and N is",E - N)
 
 # set symmetric difference
 print("Symmetric difference of E and N is",E ^ N)
+
+#OBS: Esse teste falha pq não foi implementado dict.

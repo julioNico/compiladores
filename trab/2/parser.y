@@ -5,10 +5,14 @@
 
 %{
 #include <stdio.h>
+#include <stdlib.h>
+#include "token.h"
+
 int yylex(void);
+int orig_yylex(void);
+Token get_last_token();
+
 void yyerror(char const *s);
-char* values;
-int descobrindo_token;
 extern int yylineno;
 %}
 
@@ -479,9 +483,16 @@ fk_stmt:
 
 %%
 
+// Primitive error handling.
+void yyerror (char const *s) {
+    Token token = get_last_token();
+    printf("SYNTAX ERROR (%d): %s\nCurrent token is '%s'\n", token.lineno, s, token.lexeme);
+    exit(EXIT_FAILURE);
+}
+
 int main(void) {
-    if (yyparse() == 0) printf("\n\nPARSE SUCCESSFUL!");
-    else                printf("\n\nPARSE FAILED!");
-    printf("\nLINHA: %d\n", yylineno);
+    orig_yylex(); // Chama o scanner para acumular todos os tokens.
+    if (yyparse() == 0) printf("PARSE SUCCESSFUL!\n");
+    else                printf("PARSE FAILED!\n");
     return 0;
 }
