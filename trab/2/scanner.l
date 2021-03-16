@@ -546,7 +546,6 @@ int process_token(int token) {
 
 %%
 
-
 "import"                        { return process_token(IMPORT); } 
 "from"                          { return process_token(FROM); } 
 "as"                            { return process_token(AS); }
@@ -592,6 +591,9 @@ int process_token(int token) {
 
 "async"                         { return process_token(ASYNC); }
 "await"                         { return process_token(AWAIT); }
+
+[\"]{3}[^\"{3}]*[\"]{3}         { }
+#[^\n$]*                        { }
 
 [a-zA-Z_]+[a-zA-Z0-9_]*         { return process_token(NAME); }
 [0-9]+"."?[0-9]*                { return process_token(NUMBER); }

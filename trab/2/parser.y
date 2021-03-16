@@ -203,7 +203,7 @@ fk_NEWLINE_stmt:
 %empty %prec LOW // Fala para o bison sempre dar prioridade para a regra de baixo.
 |   NL_stmt fk_NEWLINE_stmt; // Com isso, o parser funciona de forma gulosa ao consumir essa parte.
 
-NL_stmt: NEWLINE | stmt  {printf("(%d)", descobrindo_token);};
+NL_stmt: NEWLINE | stmt;
 
 funcdef: DEF NAME parameters opc_RARROW_test COLON func_body_suite;
 

@@ -2043,14 +2043,8 @@ yyreduce:
     int yychar_backup = yychar;
     switch (yyn)
       {
-  case 6:
-#line 206 "parser.y"
-                         {printf("(%d)", descobrindo_token);}
-#line 2050 "parser.c"
-    break;
 
-
-#line 2054 "parser.c"
+#line 2048 "parser.c"
 
         default: break;
       }
