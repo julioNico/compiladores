@@ -1,4 +1,3 @@
-
 %output "parser.c"          // File name of generated parser.
 %defines "parser.h"         // Produces a 'parser.h'
 %define parse.error verbose // Give proper messages when a syntax error is found.

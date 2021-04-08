@@ -104,7 +104,7 @@ Type get_type(VarTable* vt, int i) {
 void print_var_table(VarTable* vt) {
     printf("Variables table:\n");
     for (int i = 0; i < vt->size; i++) {
-         printf("Entry %d -- name: %s, line: %d, type: %s\n", i,
+        printf("Entry %d -- name: %s, line: %d, type: %s\n", i,
                 get_name(vt, i), get_line(vt, i), get_text(get_type(vt, i)));
     }
 }
