@@ -2074,14 +2074,20 @@ yyreduce:
 #line 2075 "parser.c"
     break;
 
-  case 6:
+  case 5:
 #line 145 "parser.y"
-                        { yyval = new_subtree(NL_NODE, 0); }
+                 { yyval = new_subtree(NL_NODE, 0); }
 #line 2081 "parser.c"
     break;
 
+  case 6:
+#line 145 "parser.y"
+                                                          { yyval = new_subtree(NL_NODE, 0); }
+#line 2087 "parser.c"
+    break;
 
-#line 2085 "parser.c"
+
+#line 2091 "parser.c"
 
         default: break;
       }

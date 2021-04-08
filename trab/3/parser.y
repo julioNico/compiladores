@@ -142,7 +142,7 @@ fk_NEWLINE_stmt:
 |   NL_stmt fk_NEWLINE_stmt { $1 = new_subtree(BLOCK_NODE, 1, $1); add_child($1, $2); $$ = $1; }
 ; 
 
-NL_stmt: NEWLINE | stmt { $$ = new_subtree(NL_NODE, 0); } 
+NL_stmt: NEWLINE { $$ = new_subtree(NL_NODE, 0); } | stmt { $$ = new_subtree(NL_NODE, 0); } 
 ;
 
 // $$ = $1;

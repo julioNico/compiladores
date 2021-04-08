@@ -2,9 +2,13 @@ digraph {
 graph [ordering="out"];
 node0[label="program"];
 node1[label="block"];
-node2[label="ERROR!!"];
+node2[label="NEWLINE"];
 node1 -> node2;
-node3[label="ERROR!!"];
+node3[label="block"];
+node4[label="NEWLINE"];
+node3 -> node4;
+node5[label="LOW"];
+node3 -> node5;
 node1 -> node3;
 node0 -> node1;
 }

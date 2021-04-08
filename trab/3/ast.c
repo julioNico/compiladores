@@ -97,6 +97,8 @@ char* kind2str(NodeKind kind) {
         case VAR_DECL_NODE: return "var_decl";
         case VAR_LIST_NODE: return "var_list";
         case VAR_USE_NODE:  return "var_use";
+        case LOW_NODE:      return "LOW";
+        case NL_NODE:       return "NEWLINE";
         default:            return "ERROR!!";
     }
 }
@@ -134,7 +136,6 @@ int print_node_dot(AST *node, FILE *arq_dot) {
 
 void print_dot(AST *tree, FILE *arq_dot) {
     nr = 0;
-    printf("AAA");
     fprintf(arq_dot, "digraph {\ngraph [ordering=\"out\"];\n");
     print_node_dot(tree, arq_dot);
     fprintf(arq_dot, "}\n");
