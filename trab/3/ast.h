@@ -32,6 +32,9 @@ typedef enum {
 
     LOW_NODE,
     NL_NODE,
+    SUB_NODE,
+    SIMPLE_STMT,
+    SMALL_STMT,
 } NodeKind;
 
 struct node; // Opaque structure to ensure encapsulation.

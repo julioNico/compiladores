@@ -99,6 +99,9 @@ char* kind2str(NodeKind kind) {
         case VAR_USE_NODE:  return "var_use";
         case LOW_NODE:      return "LOW";
         case NL_NODE:       return "NEWLINE";
+        case SUB_NODE:      return "NOT DEFINED!";
+        case SIMPLE_STMT:   return "SIMPLE_STMT";
+        case SMALL_STMT:    return "SMALL_STMT";
         default:            return "ERROR!!";
     }
 }

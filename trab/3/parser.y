@@ -6,6 +6,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include<stdbool.h>
 #include "token.h"
 #include "tables.h"
 #include "ast.h"
@@ -138,14 +139,40 @@ file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1);
 ;
 
 fk_NEWLINE_stmt:
-%empty %prec LOW            { $$ = new_subtree(LOW_NODE, 0); }
-|   NL_stmt fk_NEWLINE_stmt { $1 = new_subtree(BLOCK_NODE, 1, $1); add_child($1, $2); $$ = $1; }
+%empty %prec LOW            { $$ = new_subtree(LOW_NODE, 0); }         
+| NL_stmt fk_NEWLINE_stmt   { if(get_child_count($2) == 0){$2 = new_subtree(BLOCK_NODE, 1, $2); }; add_child($2, $1); $$ = $2; }
 ; 
 
-NL_stmt: NEWLINE { $$ = new_subtree(NL_NODE, 0); } | stmt { $$ = new_subtree(NL_NODE, 0); } 
+NL_stmt: NEWLINE | stmt { $$ = $1; }
 ;
 
-// $$ = $1;
+stmt: simple_stmt { $$ == $1; } | compound_stmt  { $$ == $1; };
+simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { if(get_child_count($2) == 0){$2 = new_subtree(SIMPLE_STMT, 1, $2); }; add_child($2, $1); $$ = $2; }
+;
+
+fk_SEMI_small_stmt:
+%empty %prec LOW                      { $$ = new_subtree(LOW_NODE, 0); }
+|   SEMI small_stmt fk_NEWLINE_stmt   { if(get_child_count($3) == 0){$3 = new_subtree(SMALL_STMT, 1, $3); }; add_child($3, $2); $$ = $3; }
+;
+
+small_stmt: 
+  expr_stmt       { $$ = new_subtree(SUB_NODE, 0); }
+| del_stmt        { $$ = new_subtree(SUB_NODE, 0); }
+| pass_stmt       { $$ = new_subtree(SUB_NODE, 0); }
+| flow_stmt       { $$ = new_subtree(SUB_NODE, 0); }
+| global_stmt     { $$ = new_subtree(SUB_NODE, 0); }
+| nonlocal_stmt   { $$ = new_subtree(SUB_NODE, 0); }
+;
+
+compound_stmt: 
+  if_stmt     { $$ = new_subtree(SUB_NODE, 0); }
+| while_stmt  { $$ = new_subtree(SUB_NODE, 0); }
+| for_stmt    { $$ = new_subtree(SUB_NODE, 0); }
+| with_stmt   { $$ = new_subtree(SUB_NODE, 0); }
+| funcdef     { $$ = new_subtree(SUB_NODE, 0); }
+| classdef    { $$ = new_subtree(SUB_NODE, 0); }
+;
+
 
 funcdef: DEF NAME parameters opc_RARROW_test COLON func_body_suite;
 
@@ -159,13 +186,6 @@ opc_argslist:
 |   NAME COMMA opc_argslist
 |   NAME;
 
-stmt: simple_stmt | compound_stmt;
-simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE;
-fk_SEMI_small_stmt:
-%empty %prec LOW
-|   SEMI small_stmt fk_NEWLINE_stmt;
-
-small_stmt: expr_stmt | del_stmt | pass_stmt | flow_stmt | global_stmt | nonlocal_stmt;
 expr_stmt: testlist_star_expr expr_stmt_1;
 expr_stmt_1: annassign | augassign expr_stmt_2 | opc_fk_EQ_YE_TSE_TC;
 expr_stmt_2: yield_expr|testlist;
@@ -215,8 +235,6 @@ nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME;
 fk_COMMA_NAME:
 %empty
 |   COMMA NAME fk_COMMA_NAME;
-
-compound_stmt: if_stmt | while_stmt | for_stmt | with_stmt | funcdef | classdef;
 
 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite;
 fk_ELIF_NT_COLON_SUITE:

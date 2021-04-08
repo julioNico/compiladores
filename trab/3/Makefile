@@ -1,4 +1,4 @@
-all: bison flex gcc
+all: bison flex gcc exec dot
 	@echo "Done."
 
 bison: parser.y
@@ -9,6 +9,12 @@ flex: scanner.l
 
 gcc: scanner.c parser.c
 	gcc -Wall -o trab scanner.c parser.c tables.c ast.c
+
+exec: test.py
+	./trab < test.py
+
+dot: test.dot
+	dot -Tpdf test.dot -o test.pdf
 
 test: trab
 	@for name in tests/should_succeed/*; do\
