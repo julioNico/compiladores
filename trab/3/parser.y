@@ -139,24 +139,39 @@ file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1);
 ;
 
 fk_NEWLINE_stmt:
-%empty %prec LOW            { $$ = new_subtree(LOW_NODE, 0); }         
-| NL_stmt fk_NEWLINE_stmt   { if(get_child_count($2) == 0){$2 = new_subtree(BLOCK_NODE, 1, $2); }; add_child($2, $1); $$ = $2; }
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }         
+| NL_stmt fk_NEWLINE_stmt   { 
+  if(get_child_count($2) == 0){
+    $2 = new_subtree(BLOCK_NODE, 1, $2); 
+  }; 
+  add_child($2, $1); $$ = $2; 
+}
 ; 
 
 NL_stmt: NEWLINE | stmt { $$ = $1; }
 ;
 
 stmt: simple_stmt { $$ == $1; } | compound_stmt  { $$ == $1; };
-simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { if(get_child_count($2) == 0){$2 = new_subtree(SIMPLE_STMT, 1, $2); }; add_child($2, $1); $$ = $2; }
+simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { 
+    if(get_child_count($2) == 0){
+      $2 = new_subtree(SIMPLE_STMT_NODE, 1, $2); 
+    }; 
+    add_child($2, $1); $$ = $2; 
+}
 ;
 
 fk_SEMI_small_stmt:
-%empty %prec LOW                      { $$ = new_subtree(LOW_NODE, 0); }
-|   SEMI small_stmt fk_NEWLINE_stmt   { if(get_child_count($3) == 0){$3 = new_subtree(SMALL_STMT, 1, $3); }; add_child($3, $2); $$ = $3; }
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
+|   SEMI small_stmt fk_NEWLINE_stmt   { 
+  if (get_child_count($3) == 0) {
+    $3 = new_subtree(SMALL_STMT_NODE, 1, $3); 
+  }; 
+  add_child($3, $2); $$ = $3; 
+}
 ;
 
 small_stmt: 
-  expr_stmt       { $$ = new_subtree(SUB_NODE, 0); }
+  expr_stmt       { $$ = $1; }
 | del_stmt        { $$ = new_subtree(SUB_NODE, 0); }
 | pass_stmt       { $$ = new_subtree(SUB_NODE, 0); }
 | flow_stmt       { $$ = new_subtree(SUB_NODE, 0); }
@@ -186,9 +201,10 @@ opc_argslist:
 |   NAME COMMA opc_argslist
 |   NAME;
 
-expr_stmt: testlist_star_expr expr_stmt_1;
+expr_stmt: testlist_star_expr expr_stmt_1 { $$ = new_subtree(SUB_NODE, 0); }
+;
 expr_stmt_1: annassign | augassign expr_stmt_2 | opc_fk_EQ_YE_TSE_TC;
-expr_stmt_2: yield_expr|testlist;
+expr_stmt_2: yield_expr { $$ = $1; } | testlist { $$ = $1; };
 
 opc_fk_EQ_YE_TSE_TC:
 %empty
@@ -201,25 +217,32 @@ expr_stmt_3: EQUAL expr_stmt_4;
 expr_stmt_4: yield_expr|testlist_star_expr;
 
 annassign: COLON test opc_COLON_test;
-testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA;
+
+testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA { $$ = new_subtree(SUB_NODE, 0); }
+; 
+
 TSE_stmt: test | star_expr;
+
 fk_COMMA_T_SE:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA TSE_stmt fk_COMMA_T_SE;
 
 augassign: PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL;
 opc_SEMI:
 %empty
 |   SEMI;
+
 opc_COLON_test:
 %empty
 |   EQUAL yield_expr
 |   EQUAL testlist_star_expr;
+
 opc_COMMA:
 %empty
 |   COMMA;
 
 del_stmt: DEL exprlist;
+
 pass_stmt: PASS;
 flow_stmt: break_stmt | continue_stmt | return_stmt | yield_stmt;
 break_stmt: BREAK;
@@ -227,11 +250,12 @@ continue_stmt: CONTINUE;
 return_stmt: RETURN opc_testlist_star_expr;
 yield_stmt: yield_expr;
 opc_testlist_star_expr:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   testlist_star_expr;
 
 global_stmt: GLOBAL NAME fk_COMMA_NAME;
 nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME;
+
 fk_COMMA_NAME:
 %empty
 |   COMMA NAME fk_COMMA_NAME;
@@ -265,14 +289,19 @@ opc_COLONEQUAL_test:
 |   COLONEQUAL test;
 
 test: or_test opc_IF_or_test_ELSE_test | lambdef;
+
 opc_IF_or_test_ELSE_test:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   IF or_test ELSE test;
 
 test_nocond: or_test | lambdef_nocond;
+
 lambdef: LAMBDA opc_argslist COLON test;
+
 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond;
+
 or_test: and_test fk_OR_AT;
+
 fk_OR_AT:
 %empty
 |   OR and_test fk_OR_AT;
@@ -285,17 +314,19 @@ fk_AND_NT:
 not_test: NOT not_test | comparison;
 comparison: expr fk_CO_EXPR;
 fk_CO_EXPR:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   comp_op expr fk_CO_EXPR;
 
 comp_op: LESS | GREATER | EQEQUAL | GREATEREQUAL | LESSEQUAL | LESSGREATER | NOTEQUAL | IN | NOT IN | IS | IS NOT;
-star_expr: STAR expr;
+star_expr: STAR expr { $$ = $1; };
+
 expr: xor_expr fk_VBAR_XE;
 fk_VBAR_XE:
 %empty
 |   VBAR xor_expr fk_VBAR_XE;
 
 xor_expr: and_expr fk_CIRCUMFLEX_EXPR;
+
 fk_CIRCUMFLEX_EXPR:
 %empty
 |   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR;
@@ -313,15 +344,16 @@ fk_LS_RS_AE:
 SE_stmt: LEFTSHIFT | RIGHTSHIFT;
 
 arith_expr: term fk_T_PLUS_MINUS;
+
 fk_T_PLUS_MINUS:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   AE_stmt term fk_T_PLUS_MINUS;
 
 AE_stmt: PLUS | MINUS;
 
 term: factor fk_MATH;
 fk_MATH:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   term_stmt factor fk_MATH;
 
 term_stmt: STAR| AT | SLASH | PERCENT | DOUBLESLASH;
@@ -338,7 +370,7 @@ atom_expr: atom fk_trailer
 |   AWAIT atom fk_trailer;
 
 fk_trailer:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   trailer fk_trailer;
 
 atom: LPAR opc_atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
@@ -351,8 +383,9 @@ opc_atom_stmt:
 opc_testlist_comp:
 %empty
 |   testlist_comp;
+
 fk_STRING:
-%empty %prec LOW;
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); };
 |   STRING fk_STRING;
 
 testlist_comp: trailer_stmt trailer_stmt_1;
@@ -361,7 +394,7 @@ opc_arglist:
 %empty
 |   arglist;
 fk_COMMA_NT_SE:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA trailer_stmt fk_COMMA_NT_SE;
 
 
@@ -370,11 +403,12 @@ trailer_stmt_1: comp_for | fk_COMMA_NT_SE opc_COMMA;
 
 subscriptlist: subscript fk_COMMA_S opc_COMMA;
 fk_COMMA_S:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA subscript fk_COMMA_S;
 
 
 subscript: test | opc_test COLON opc_test opc_sliceop;
+
 opc_test:
 %empty
 |   test;
@@ -383,17 +417,20 @@ opc_sliceop:
 |   sliceop;
 
 sliceop: COLON opc_test;
+
 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA;
+
 fk_COMMA_E_SE:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA exprlist_stmt fk_COMMA_E_SE;
 
 
 exprlist_stmt: expr | star_expr;
 
-testlist: test fk_COMMA_test opc_COMMA;
+testlist: test fk_COMMA_test opc_COMMA  { $$ = new_subtree(SUB_NODE, 0); }
+;
 fk_COMMA_test:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA test fk_COMMA_test;
 
 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite;
@@ -404,7 +441,7 @@ opc_LPAR_arglist_RPAR:
 
 arglist: argument fk_COMMA_A opc_COMMA;
 fk_COMMA_A:
-%empty %prec LOW
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA argument fk_COMMA_A;
 
                                           // ***SIMPLIFICAR*** //
@@ -425,12 +462,20 @@ opc_ASYNC:
 |   ASYNC;
 
 comp_if: IF test_nocond opc_comp_iter;
-yield_expr: YIELD opc_yield_arg;
+yield_expr: YIELD opc_yield_arg { 
+  $1 = new_subtree(YIELD_EXPR_NODE, 1, $2); 
+  $$ = $1; 
+}
+;
 opc_yield_arg:
-%empty %prec LOW
-|   yield_arg;
+%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
+|   yield_arg { $$ = $1; };
 
-yield_arg: FROM test | testlist_star_expr;
+yield_arg: FROM test { 
+  $1 = new_subtree(FROM_NODE, 1, $2); 
+  $$ = $1; 
+} | testlist_star_expr { $$ = $1; }
+;
 
 func_body_suite: simple_stmt | NEWLINE INDENT stmt fk_stmt DEDENT;
 fk_stmt:
