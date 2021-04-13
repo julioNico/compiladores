@@ -86,39 +86,37 @@ char* kind2str(NodeKind kind) {
         case EQ_NODE:                   return "=";
         case BLOCK_NODE:                return "block";
         case IF_NODE:                   return "if";
-        case MINUS_NODE:                return "-";
-        case OVER_NODE:                 return "/";
-        case PLUS_NODE:                 return "+";
+        case OP_MATH_NODE:              return "OP_MATH_NODE";
         case PROGRAM_NODE:              return "program";
-        case TIMES_NODE:                return "*";
         case NAME_NODE:                 return "name";
+        case NUMBER_NODE:               return "NUMBER = ";
+        case ARG_LIST_NODE:             return "ARG_LIST_NODE";
         case LOW_NODE:                  return "LOW";
         case NL_NODE:                   return "NEWLINE";
         case SUB_NODE:                  return "NOT DEFINED!";
-        case SIMPLE_STMT_NODE:          return "SIMPLE_STMT";
-        case SMALL_STMT_NODE:           return "SMALL_STMT";
         case EXPR_NODE:                 return "EXPR_NODE";
         case EXPR_STMT_NODE:            return "EXPR_STMT_NODE";
-        case EXPR_STMT_LIST_NODE:      return "EXPR_STMT_LIST_NODE";
+        case EXPR_STMT_LIST_NODE:       return "EXPR_STMT_LIST_NODE";
         case STAR_NODE:                 return "EXPR_NODE";
-        case TSE_NODE_LIST:             return "TSE_NODE_LIST";
-        case TSE_NODE:                  return "TSE_NODE";
         case FLOW_NODE:                 return "FLOW_NODE";
         case OP_EQUAL_NODE:             return "OP_EQUAL_NODE";
-        case COMPARACAO_NODE:           return "COMPARACAO_NODE";
-        case CURTO_CIRCUITO_NODE:       return "CURTO_CIRCUITO_NODE";
-        case OR_TEST_NODE:              return "OR_TEST_NODE";
-        case AND_TEST_NODE:             return "AND_TEST_NODE";
         case IF_ELSE_NODE:              return "IF_ELSE_NODE";
         case LAMBDA_NODE:               return "LAMBDA_NODE";
-        case LIST_NODE:                 return "LIST_NODE";
-        case ANNASSIGN_NODE:            return "ANNASSIGN_NODE";
+        case TEST_LIST_NODE:            return "TEST_LIST_NODE";
+        case OP_BIT_A_BIT_NODE:         return "OP_BIT_A_BIT_NODE";
+        case OP_SINC_NODE:              return "OP_SINC_NODE";
+        case COLON_NODE:                return "COLON_NODE";
         default:                        return "ERROR!!";
     }
 }
 
 int has_data(NodeKind kind) {
     switch(kind) {
+        case NUMBER_NODE:
+        case COLON_NODE:
+        case OP_SINC_NODE:
+        case OP_MATH_NODE:
+        case OP_BIT_A_BIT_NODE:
         case COMP_NODE:
         case NAME_NODE:
             return 1;

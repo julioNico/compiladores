@@ -29,13 +29,15 @@ typedef enum {
 
     //  VARIAVEL
     NAME_NODE,
-    NAME_NODE_LIST,
+    NUMBER_NODE,
+    STRING_NODE,
+    ARG_LIST_NODE,
 
     //  OPERADORES MATEMATICOS
-    MINUS_NODE,
-    PLUS_NODE,
-    OVER_NODE,
-    TIMES_NODE,
+    OP_MATH_NODE,
+
+    // OPERADORES DE SINCRONIA
+    OP_SINC_NODE,
 
     //  OPERADORES BOLEANOS
     AND_NODE,
@@ -45,15 +47,18 @@ typedef enum {
     //  OPERADORES CONDICIONAIS
     IF_NODE,
 
-    //  COMPARADORES
-    CURTO_CIRCUITO_NODE,
-    COMP_NODE,
+    //  OPERADORES BIT_A_BIT
+    OP_BIT_A_BIT_NODE,
 
     //  OPERADORES MALUCOS
     YIELD_EXPR_NODE,
     WITH_NODE,
 
-    //  EXPRESSORES
+    //  COMPARADORES
+    CURTO_CIRCUITO_NODE,
+    COMP_NODE,
+
+    //  EXPRESSOES
     EXPR_STMT_LIST_NODE,
     EXPR_STMT_NODE,
     EXPR_NODE,
@@ -62,20 +67,13 @@ typedef enum {
     LOW_NODE,
     NL_NODE,
     SUB_NODE,
-    SIMPLE_STMT_NODE,
-    SMALL_STMT_NODE,
     STAR_NODE,
-    TSE_NODE_LIST,
-    TSE_NODE,
-    TEST_NODE_LIST,
-    COMPARACAO_NODE,
-    OR_TEST_NODE,
-    AND_TEST_NODE,
+
     IF_ELSE_NODE,
     LAMBDA_NODE,
-    LIST_NODE,
+    TEST_LIST_NODE,
     VBAR_NODE,
-    ANNASSIGN_NODE,
+    COLON_NODE, 
 } NodeKind;
 
 struct node; // Opaque structure to ensure encapsulation.

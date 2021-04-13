@@ -18,7 +18,7 @@ int yylex_destroy(void);
 int orig_yylex(void);
 Token get_last_token();
 
-AST* new_name();
+AST* tokenToAST(int kind);
 
 void yyerror(char const *s);
 
@@ -142,11 +142,12 @@ file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1);
 
 fk_NEWLINE_stmt:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }         
-| NL_stmt fk_NEWLINE_stmt   { 
+| NL_stmt fk_NEWLINE_stmt   {
   if(get_child_count($2) == 0){
     $2 = new_subtree(BLOCK_NODE, 1, $2); 
   }; 
-  add_child($2, $1); $$ = $2; 
+  add_child($2, $1);
+  $$ = $2; 
 }
 ; 
 
@@ -154,19 +155,13 @@ NL_stmt: NEWLINE | stmt { $$ = $1; }
 ;
 
 stmt: simple_stmt { $$ == $1; } | compound_stmt  { $$ == $1; };
-simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { 
-    add_child($1, $2); $$ = $1; 
+simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { add_child($1, $2); $$ = $1; 
 }
 ;
 
 fk_SEMI_small_stmt:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   SEMI small_stmt fk_NEWLINE_stmt   { 
-  if (get_child_count($3) == 0) {
-    $3 = new_subtree(SMALL_STMT_NODE, 1, $3); 
-  }; 
-  add_child($3, $2); $$ = $3; 
-}
+%empty %prec LOW                      { $$ = new_subtree(LOW_NODE, 0); }
+|   SEMI small_stmt fk_NEWLINE_stmt   { add_child($2, $3); $$ = $2; }
 ;
 
 small_stmt: 
@@ -199,14 +194,14 @@ parameters: LPAR opc_argslist RPAR;
 
 opc_argslist:
 %empty    { $$ = new_node(LOW_NODE, ""); }
-|   NAME { $1 = new_name(); } COMMA opc_argslist {
+|   NAME { $1 = tokenToAST(NAME_NODE); } COMMA opc_argslist {
     if(get_child_count($4) == 0){
-      $4 = new_subtree(NAME_NODE_LIST, 1, $4); 
+      $4 = new_subtree(ARG_LIST_NODE, 1, $4); 
     }; 
     add_child($4, $1);
     $$ = $4;
 }
-|   NAME { $$ = new_name(); }
+|   NAME { $$ = tokenToAST(NAME_NODE); }
 ;
 
 
@@ -226,7 +221,7 @@ expr_stmt_2:
 ;
 
 fk_EQ_YE_TSE:
-%empty  { $$ = new_node(LOW_NODE, ""); }
+%empty                        { $$ = new_node(LOW_NODE, ""); }
 |   expr_stmt_3 fk_EQ_YE_TSE  { add_child($1, $2); $$ = $1; }
 ;
 
@@ -239,7 +234,7 @@ expr_stmt_4:
 | testlist_star_expr  { $$ = $1; }
 ;
 
-annassign: COLON test opc_EQUAL_MALUCO  { $$ = new_subtree(ANNASSIGN_NODE, 2, $2, $3); }
+annassign: COLON test opc_EQUAL_MALUCO  { add_child($3, $2); $$ = $3; }
 ;
 
 opc_EQUAL_MALUCO:
@@ -258,7 +253,7 @@ TSE_stmt:
 
 fk_COMMA_T_SE:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA TSE_stmt fk_COMMA_T_SE  { $$ = new_subtree(TSE_NODE, 2, $2, $3); }
+|   COMMA TSE_stmt fk_COMMA_T_SE  { add_child($2, $3); $$ = $2; }
 ;
 
 augassign: 
@@ -305,14 +300,14 @@ continue_stmt: CONTINUE { Token token = get_last_token(); $$ = new_node(FLOW_NOD
 ;
 
 
-return_stmt: RETURN opc_testlist_star_expr  { $$ = new_subtree(RETURN_NODE, 1, $1); }
+return_stmt: RETURN opc_testlist_star_expr  { $$ = new_subtree(RETURN_NODE, 1, $2); }
 ;
 
 yield_stmt: yield_expr  { $$ = $1; }
 ;
 
 opc_testlist_star_expr:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
+%empty %prec LOW        { $$ = new_subtree(LOW_NODE, 0); }
 |   testlist_star_expr  {$$ = $1; }
 ;
 
@@ -361,13 +356,12 @@ opc_COLONEQUAL_test:
 |   COLONEQUAL test;
 
 test: 
-  or_test opc_IF_or_test_ELSE_test  { $$ = $1; }
+  or_test opc_IF_or_test_ELSE_test  { add_child($1, $2); $$ = $1; }
 | lambdef                           { $$ = $1; }
 ;
 
-
 opc_IF_or_test_ELSE_test:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
+%empty %prec LOW          { $$ = new_subtree(LOW_NODE, 0); }
 |   IF or_test ELSE test  { $$ = new_subtree(IF_ELSE_NODE, 2, $2, $4); }
 ;
 
@@ -440,111 +434,201 @@ fk_VBAR_XE:
 }
 ;
 
-xor_expr: and_expr fk_CIRCUMFLEX_EXPR { $$ = new_subtree(SUB_NODE, 0); }
-;
+xor_expr: and_expr fk_CIRCUMFLEX_EXPR { add_child($1, $2); $$ = $1; }
 
 fk_CIRCUMFLEX_EXPR:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR;
+%empty                         { $$ = new_node(LOW_NODE, ""); }
+| CIRCUMFLEX                   { Token token = get_last_token(); $1 = new_node(OP_BIT_A_BIT_NODE, token.lexeme); } 
+  and_expr fk_CIRCUMFLEX_EXPR  { add_child($1, $3); add_child($1, $4); $$ = $1; }
+;
 
-and_expr: shift_expr fk_AMPER_SE;
+and_expr: shift_expr fk_AMPER_SE  { add_child($1, $2); $$ = $1; }
+;
 fk_AMPER_SE:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   AMPER shift_expr fk_AMPER_SE;
+%empty                    { $$ = new_node(LOW_NODE, ""); }
+| AMPER                   { Token token = get_last_token(); $1 = new_node(OP_BIT_A_BIT_NODE, token.lexeme); } 
+  shift_expr fk_AMPER_SE  { add_child($1, $3); add_child($1, $4); $$ = $1; }
+;
 
-shift_expr: arith_expr fk_LS_RS_AE;
+shift_expr: arith_expr fk_LS_RS_AE  { add_child($1, $2); $$ = $1; }
+;
+
 fk_LS_RS_AE:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   SE_stmt arith_expr fk_LS_RS_AE;
+%empty                                { $$ = new_node(LOW_NODE, ""); }
+|   SE_stmt arith_expr fk_LS_RS_AE    { add_child($1, $2); add_child($1, $3); $$ = $1; }
+; 
 
-SE_stmt: LEFTSHIFT | RIGHTSHIFT;
+SE_stmt: 
+  LEFTSHIFT   { Token token = get_last_token(); $$ = new_node(OP_BIT_A_BIT_NODE, token.lexeme); }
+| RIGHTSHIFT  { Token token = get_last_token(); $$ = new_node(OP_BIT_A_BIT_NODE, token.lexeme); }
+;
 
-arith_expr: term fk_T_PLUS_MINUS;
+arith_expr: term fk_T_PLUS_MINUS  { add_child($1, $2); $$ = $1; }
+;
 
 fk_T_PLUS_MINUS:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   AE_stmt term fk_T_PLUS_MINUS;
+%empty %prec LOW                  { $$ = new_subtree(LOW_NODE, 0); }
+|   AE_stmt term fk_T_PLUS_MINUS  { add_child($1, $2); add_child($1, $3); $$ = $1; }
+;
 
-AE_stmt: PLUS | MINUS;
+AE_stmt: 
+  PLUS    { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| MINUS   { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+;
 
-term: factor fk_MATH;
+term: factor fk_MATH  { add_child($1, $2); $$ = $1; }
+;
+
 fk_MATH:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   term_stmt factor fk_MATH;
+%empty %prec LOW              { $$ = new_subtree(LOW_NODE, 0); }
+|   term_stmt factor fk_MATH  { add_child($1, $2); add_child($1, $3); $$ = $1; }
+;
 
-term_stmt: STAR | AT | SLASH | PERCENT | DOUBLESLASH;
+term_stmt: 
+  STAR          { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| AT            { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| SLASH         { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| PERCENT       { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| DOUBLESLASH   { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+;
 
-factor: factor_stmt factor | power;
-factor_stmt: PLUS | MINUS | TILDE;
+factor: 
+  factor_stmt factor  { add_child($1, $2); $$ = $1; }
+| power               { $$ = $1; }
+;
 
-power: atom_expr opc_DOUBLESTAR_factor;
+factor_stmt: 
+  PLUS    { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| MINUS   { Token token = get_last_token(); $$ = new_node(OP_MATH_NODE, token.lexeme); }
+| TILDE   { Token token = get_last_token(); $$ = new_node(OP_BIT_A_BIT_NODE, token.lexeme); }
+;
+
+power:  atom_expr opc_DOUBLESTAR_factor { add_child($1, $2); $$ = $1; }
+;
+
+
 opc_DOUBLESTAR_factor:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-| DOUBLESTAR factor;
+%empty        { $$ = new_node(LOW_NODE, ""); }
+| DOUBLESTAR  { Token token = get_last_token(); $1 = new_node(OP_MATH_NODE, token.lexeme); }
+  factor      { add_child($1, $3); $$ = $1; }
+;
 
-atom_expr: atom fk_trailer
-|   AWAIT atom fk_trailer;
+atom_expr: 
+atom fk_trailer     { add_child($1, $2); $$ = $1; }
+| AWAIT             { Token token = get_last_token(); $1 = new_node(OP_SINC_NODE, token.lexeme); }
+  atom fk_trailer   { add_child($1, $3); add_child($1, $4); $$ = $1; }
+;  
 
 fk_trailer:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   trailer fk_trailer;
+%empty %prec LOW            { $$ = new_subtree(LOW_NODE, 0); }
+|   trailer fk_trailer      { add_child($1, $2); $$ = $1; }
+;
 
-atom: LPAR opc_atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
+atom: 
+  LPAR opc_atom_stmt RPAR         { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| LSQB opc_testlist_comp RSQB     { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| NAME                            { $$ = tokenToAST(NAME_NODE); }
+| NUMBER                          { $$ = tokenToAST(NUMBER_NODE); }
+| STRING fk_STRING                { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| ELLIPSIS                        { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| NONE                            { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| TRUE                            { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| FALSE                           { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+;
+
 opc_atom_stmt:
-  %empty  { $$ = new_node(LOW_NODE, ""); }
-| yield_expr
-| testlist_comp;
+  %empty          { $$ = new_node(LOW_NODE, ""); }
+| yield_expr      { $$ = $1; }
+| testlist_comp   { $$ = $1; }
+;  
 
 
 opc_testlist_comp:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   testlist_comp;
+%empty              { $$ = new_node(LOW_NODE, ""); }
+|   testlist_comp   { $$ = $1; }
+;
 
 fk_STRING:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); };
-|   STRING fk_STRING;
+%empty %prec LOW    { $$ = new_subtree(LOW_NODE, 0); };
+| STRING            { $1 = tokenToAST(STRING_NODE); }
+  fk_STRING         { 
+    if(get_child_count($3) == 0){
+      $3 = new_subtree(STRING_NODE, 1, $3); 
+    };
+    add_child($3, $1); $$ = $3; }
+;
 
-testlist_comp: trailer_stmt trailer_stmt_1;
-trailer: LPAR opc_arglist RPAR | LSQB subscriptlist RSQB | DOT NAME;
+testlist_comp: trailer_stmt trailer_stmt_1  { add_child($1, $2); $$ = $1; }
+;
+
+trailer: 
+  LPAR opc_arglist RPAR     { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| LSQB subscriptlist RSQB   { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+| DOT NAME                  { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+;
 
 opc_arglist:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   arglist;
+%empty          { $$ = new_node(LOW_NODE, ""); }
+|   arglist     { $$ = $1; }
+;
 
 fk_COMMA_NT_SE:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA trailer_stmt fk_COMMA_NT_SE;
+%empty %prec LOW                        { $$ = new_subtree(LOW_NODE, 0); }
+|   COMMA trailer_stmt fk_COMMA_NT_SE   { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+;
 
 
-trailer_stmt: namedexpr_test | star_expr;
-trailer_stmt_1: comp_for | fk_COMMA_NT_SE opc_COMMA;
+trailer_stmt: 
+  namedexpr_test  { $$ = $1; }
+| star_expr       { $$ = $1; }
+;
 
-subscriptlist: subscript fk_COMMA_S opc_COMMA;
+
+trailer_stmt_1: 
+  comp_for                    { $$ = $1; }
+| fk_COMMA_NT_SE opc_COMMA    { $$ = $1; }
+;
+
+subscriptlist: 
+  subscript fk_COMMA_S opc_COMMA  { add_child($1, $2); $$ = $1; }
+;
+
 fk_COMMA_S:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA subscript fk_COMMA_S;
+%empty %prec LOW                  { $$ = new_subtree(LOW_NODE, 0); }
+|   COMMA subscript fk_COMMA_S    { $$ = new_subtree(LOW_NODE, 0); } // ALTERAR
+;
 
 
-subscript: test | opc_test COLON opc_test opc_sliceop;
+subscript: 
+  test                                  { $$ = $1; }
+| opc_test COLON opc_test opc_sliceop   { 
+  $2 = new_node(COLON_NODE, ":"); 
+  add_child($2, $1); add_child($2, $3); 
+  add_child($2, $4); $$ = $2; 
+}
+;
 
 opc_test:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   test;
+%empty      { $$ = new_node(LOW_NODE, ""); }
+|   test    { $$ = $1; }
+;
 
 opc_sliceop:
-%empty  { $$ = new_node(LOW_NODE, ""); }
-|   sliceop;
+%empty        { $$ = new_node(LOW_NODE, ""); }
+|   sliceop   { $$ = $1; }
+;
 
-sliceop: COLON opc_test;
+sliceop: COLON opc_test   { $1 = new_node(COLON_NODE, ":"), add_child($1, $2); $$ = $1; }
+;
 
-exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA  { $$ = new_subtree(EXPR_STMT_LIST_NODE, 2, $1, $2); }
+exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA  { add_child($1, $2); $$ = $1; }
 ;
 
 fk_COMMA_E_SE:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA exprlist_stmt fk_COMMA_E_SE { 
   if (get_child_count($3) == 0) {
-    $3 = new_subtree(LIST_NODE, 1, $3); 
+    $3 = new_subtree(EXPR_STMT_LIST_NODE, 1, $3); 
   }; 
   add_child($3, $2); $$ = $3; 
 }
@@ -556,28 +640,30 @@ exprlist_stmt:
 | star_expr   { $$ = $1; }
 ;
 
-testlist: test fk_COMMA_test opc_COMMA  { $$ = new_subtree(TEST_NODE_LIST, 2, $1, $2); }
+testlist: test fk_COMMA_test opc_COMMA  { add_child($1, $2); $$ = $1; }
 ;
 
 fk_COMMA_test:
 %empty %prec LOW              { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA test fk_COMMA_test  { 
   if (get_child_count($3) == 0) {
-    $3 = new_subtree(LIST_NODE, 1, $3); 
+    $3 = new_subtree(TEST_LIST_NODE, 1, $3); 
   }; 
   add_child($3, $2); $$ = $3; 
 }
 ;
 
 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite;
+
 opc_LPAR_arglist_RPAR:
 %empty  { $$ = new_node(LOW_NODE, ""); }
 |   LPAR RPAR
 |   LPAR arglist RPAR;
 
 arglist: argument fk_COMMA_A opc_COMMA;
+
 fk_COMMA_A:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
+%empty %prec LOW                  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA argument fk_COMMA_A;
 
                                           // ***SIMPLIFICAR*** //
@@ -625,9 +711,9 @@ fk_stmt:
 
 %%
 
-AST* new_name() {
-    Token token = get_last_token();
-    return new_node(NAME_NODE, token.lexeme);
+AST* tokenToAST(int kind) {
+  Token token = get_last_token();
+  return new_node(kind, token.lexeme);
 }
 
 // Primitive error handling.
