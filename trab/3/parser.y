@@ -18,6 +18,8 @@ int yylex_destroy(void);
 int orig_yylex(void);
 Token get_last_token();
 
+AST* new_name();
+
 void yyerror(char const *s);
 
 StrTable *st;
@@ -153,10 +155,7 @@ NL_stmt: NEWLINE | stmt { $$ = $1; }
 
 stmt: simple_stmt { $$ == $1; } | compound_stmt  { $$ == $1; };
 simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { 
-    if(get_child_count($2) == 0){
-      $2 = new_subtree(SIMPLE_STMT_NODE, 1, $2); 
-    }; 
-    add_child($2, $1); $$ = $2; 
+    add_child($1, $2); $$ = $1; 
 }
 ;
 
@@ -172,8 +171,8 @@ fk_SEMI_small_stmt:
 
 small_stmt: 
   expr_stmt       { $$ = $1; }
-| del_stmt        { $$ = new_subtree(SUB_NODE, 0); }
-| pass_stmt       { $$ = new_subtree(SUB_NODE, 0); }
+| del_stmt        { $$ = $1; }
+| pass_stmt       { $$ = $1; }
 | flow_stmt       { $$ = new_subtree(SUB_NODE, 0); }
 | global_stmt     { $$ = new_subtree(SUB_NODE, 0); }
 | nonlocal_stmt   { $$ = new_subtree(SUB_NODE, 0); }
@@ -189,53 +188,99 @@ compound_stmt:
 ;
 
 
-funcdef: DEF NAME parameters opc_RARROW_test COLON func_body_suite;
+funcdef: DEF NAME parameters opc_RARROW_test COLON func_body_suite
+;
 
 opc_RARROW_test:
 %empty
 |   RARROW test;
 
 parameters: LPAR opc_argslist RPAR;
+
 opc_argslist:
-%empty
-|   NAME COMMA opc_argslist
-|   NAME;
-
-expr_stmt: testlist_star_expr expr_stmt_1 { $$ = new_subtree(SUB_NODE, 0); }
+%empty    { $$ = new_node(LOW_NODE, ""); }
+|   NAME { $1 = new_name(); } COMMA opc_argslist {
+    if(get_child_count($4) == 0){
+      $4 = new_subtree(NAME_NODE_LIST, 1, $4); 
+    }; 
+    add_child($4, $1);
+    $$ = $4;
+}
+|   NAME { $$ = new_name(); }
 ;
-expr_stmt_1: annassign | augassign expr_stmt_2 | opc_fk_EQ_YE_TSE_TC;
-expr_stmt_2: yield_expr { $$ = $1; } | testlist { $$ = $1; };
 
-opc_fk_EQ_YE_TSE_TC:
-%empty
-|   expr_stmt_3 fk_EQ_YE_TSE;
+
+
+expr_stmt: testlist_star_expr expr_stmt_1 { add_child($2, $1); $$ = $2; }
+;
+
+expr_stmt_1: 
+  annassign               { $$ = $1; }
+| augassign expr_stmt_2   { add_child($2, $1); $$ = $2; }
+| fk_EQ_YE_TSE     { $$ = $1; }
+;
+
+expr_stmt_2: 
+  yield_expr  { $$ = $1; } 
+| testlist    { $$ = $1; }
+;
 
 fk_EQ_YE_TSE:
-%empty
-|   expr_stmt_3 fk_EQ_YE_TSE;
-expr_stmt_3: EQUAL expr_stmt_4;
-expr_stmt_4: yield_expr|testlist_star_expr;
+%empty  { $$ = new_node(LOW_NODE, ""); }
+|   expr_stmt_3 fk_EQ_YE_TSE  { add_child($1, $2); $$ = $1; }
+;
 
-annassign: COLON test opc_COLON_test;
 
-testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA { $$ = new_subtree(SUB_NODE, 0); }
+expr_stmt_3: EQUAL expr_stmt_4  { $$ = new_subtree(EQ_NODE, 1, $2); }
+;
+
+expr_stmt_4: 
+  yield_expr          { $$ = $1; }
+| testlist_star_expr  { $$ = $1; }
+;
+
+annassign: COLON test opc_EQUAL_MALUCO  { $$ = new_subtree(ANNASSIGN_NODE, 2, $2, $3); }
+;
+
+opc_EQUAL_MALUCO:
+%empty                        { $$ = new_node(LOW_NODE, ""); }
+|   EQUAL yield_expr          { $$ = new_subtree(EQ_NODE, 1, $2); }
+|   EQUAL testlist_star_expr  { $$ = new_subtree(EQ_NODE, 1, $2); }
+;
+
+testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA { add_child($1, $2); $$ = $1; }
 ; 
 
-TSE_stmt: test | star_expr;
+TSE_stmt: 
+  test      { $$ = $1; }
+| star_expr { $$ = $1; }
+;
 
 fk_COMMA_T_SE:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA TSE_stmt fk_COMMA_T_SE;
+|   COMMA TSE_stmt fk_COMMA_T_SE  { $$ = new_subtree(TSE_NODE, 2, $2, $3); }
+;
 
-augassign: PLUSEQUAL | MINEQUAL | STAREQUAL | ATEQUAL | SLASHEQUAL | PERCENTEQUAL | AMPEREQUAL | VBAREQUAL | CIRCUMFLEXEQUAL | LEFTSHIFTEQUAL | RIGHTSHIFTEQUAL | DOUBLESTAREQUAL | DOUBLESLASHEQUAL;
+augassign: 
+  PLUSEQUAL           { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| MINEQUAL            { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| STAREQUAL           { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| ATEQUAL             { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| SLASHEQUAL          { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| PERCENTEQUAL        { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| AMPEREQUAL          { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| VBAREQUAL           { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| CIRCUMFLEXEQUAL     { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| LEFTSHIFTEQUAL      { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| RIGHTSHIFTEQUAL     { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| DOUBLESTAREQUAL     { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+| DOUBLESLASHEQUAL    { Token token = get_last_token(); $$ = new_node(OP_EQUAL_NODE, token.lexeme); }
+;
+
 opc_SEMI:
 %empty
-|   SEMI;
-
-opc_COLON_test:
-%empty
-|   EQUAL yield_expr
-|   EQUAL testlist_star_expr;
+|   SEMI
+;
 
 opc_COMMA:
 %empty
@@ -243,102 +288,173 @@ opc_COMMA:
 
 del_stmt: DEL exprlist;
 
-pass_stmt: PASS;
-flow_stmt: break_stmt | continue_stmt | return_stmt | yield_stmt;
-break_stmt: BREAK;
-continue_stmt: CONTINUE;
-return_stmt: RETURN opc_testlist_star_expr;
-yield_stmt: yield_expr;
+flow_stmt: 
+  break_stmt      { $$ = $1; }
+| continue_stmt   { $$ = $1; }
+| return_stmt     { $$ = $1; }
+| yield_stmt      { $$ = $1; }
+;
+
+pass_stmt: PASS { Token token = get_last_token(); $$ = new_node(FLOW_NODE, token.lexeme); }
+;
+
+break_stmt: BREAK { Token token = get_last_token(); $$ = new_node(FLOW_NODE, token.lexeme); }
+;
+
+continue_stmt: CONTINUE { Token token = get_last_token(); $$ = new_node(FLOW_NODE, token.lexeme); }
+;
+
+
+return_stmt: RETURN opc_testlist_star_expr  { $$ = new_subtree(RETURN_NODE, 1, $1); }
+;
+
+yield_stmt: yield_expr  { $$ = $1; }
+;
+
 opc_testlist_star_expr:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   testlist_star_expr;
+|   testlist_star_expr  {$$ = $1; }
+;
 
-global_stmt: GLOBAL NAME fk_COMMA_NAME;
-nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME;
+global_stmt: GLOBAL NAME fk_COMMA_NAME
+;
+
+nonlocal_stmt: NONLOCAL NAME fk_COMMA_NAME
+;
 
 fk_COMMA_NAME:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   COMMA NAME fk_COMMA_NAME;
 
 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite;
+
 fk_ELIF_NT_COLON_SUITE:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE;
 
 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite;
+
 for_stmt: FOR exprlist IN testlist COLON suite opc_ELSE_COLON_suite;
+
 opc_ELSE_COLON_suite:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   ELSE COLON suite;
 
 with_stmt: WITH with_item fk_COMMA_WI  COLON suite;
+
 fk_COMMA_WI:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   COMMA with_item fk_COMMA_WI;
 
 with_item: test opc_AS_expr;
+
 opc_AS_expr:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   AS expr;
 
 suite: simple_stmt | NEWLINE INDENT stmt fk_stmt DEDENT;
 
 namedexpr_test: test opc_COLONEQUAL_test;
+
 opc_COLONEQUAL_test:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   COLONEQUAL test;
 
-test: or_test opc_IF_or_test_ELSE_test | lambdef;
+test: 
+  or_test opc_IF_or_test_ELSE_test  { $$ = $1; }
+| lambdef                           { $$ = $1; }
+;
+
 
 opc_IF_or_test_ELSE_test:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   IF or_test ELSE test;
+|   IF or_test ELSE test  { $$ = new_subtree(IF_ELSE_NODE, 2, $2, $4); }
+;
 
-test_nocond: or_test | lambdef_nocond;
+test_nocond: 
+  or_test         { $$ = $1; }
+| lambdef_nocond  { $$ = $1; }
+;
 
-lambdef: LAMBDA opc_argslist COLON test;
+lambdef: LAMBDA opc_argslist COLON test { $$ = new_subtree(LAMBDA_NODE, 2, $2, $4); }
+;
 
-lambdef_nocond: LAMBDA opc_argslist COLON test_nocond;
+lambdef_nocond: LAMBDA opc_argslist COLON test_nocond { $$ = new_subtree(LAMBDA_NODE, 2, $2, $4); }
+;
 
-or_test: and_test fk_OR_AT;
+or_test: and_test fk_OR_AT { add_child($1, $2); $$ = $1; }
+;
 
 fk_OR_AT:
-%empty
-|   OR and_test fk_OR_AT;
+%empty  { $$ = new_node(LOW_NODE, ""); }
+|   OR and_test fk_OR_AT { $$ = new_subtree(OR_NODE, 2, $2, $3); }
+;
 
-and_test: not_test fk_AND_NT;
+and_test: not_test fk_AND_NT { add_child($1, $2); $$ = $1; }
+;
+
 fk_AND_NT:
-%empty
-|   AND not_test fk_AND_NT;
+%empty   { $$ = new_node(LOW_NODE, ""); }
+|   AND not_test fk_AND_NT { $$ = new_subtree(AND_NODE, 2, $2, $3); }
+;
 
-not_test: NOT not_test | comparison;
-comparison: expr fk_CO_EXPR;
+not_test: 
+NOT not_test    { $$ = new_subtree(NOT_NODE, 1, $2); }
+| comparison    { $$ = $1; }
+;
+
+comparison: expr fk_CO_EXPR { add_child($1, $2); $$ = $1; }
+;
+
 fk_CO_EXPR:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   comp_op expr fk_CO_EXPR;
+%empty %prec LOW              { $$ = new_subtree(LOW_NODE, 0); }
+|   comp_op expr fk_CO_EXPR   { add_child($1, $2); add_child($1, $3); $$ = $1; }
+;
 
-comp_op: LESS | GREATER | EQEQUAL | GREATEREQUAL | LESSEQUAL | LESSGREATER | NOTEQUAL | IN | NOT IN | IS | IS NOT;
-star_expr: STAR expr { $$ = $1; };
+comp_op: 
+  LESS              { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| GREATER           { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| EQEQUAL           { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| GREATEREQUAL      { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| LESSEQUAL         { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| LESSGREATER       { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| NOTEQUAL          { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| IN                { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| NOT IN            { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| IS                { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+| IS NOT            { Token token = get_last_token(); $$ = new_node(COMP_NODE, token.lexeme); }
+;
 
-expr: xor_expr fk_VBAR_XE;
+star_expr: STAR expr { $$ = new_subtree(STAR_NODE, 1, $2); };
+
+expr: xor_expr fk_VBAR_XE { add_child($1, $2); $$ = $1; }
+;
+
 fk_VBAR_XE:
-%empty
-|   VBAR xor_expr fk_VBAR_XE;
+%empty  { $$ = new_node(LOW_NODE, ""); }
+|   VBAR xor_expr fk_VBAR_XE { 
+  if (get_child_count($3) == 0) {
+    $3 = new_subtree(VBAR_NODE, 1, $3); 
+  }; 
+  add_child($3, $2); $$ = $3; 
+}
+;
 
-xor_expr: and_expr fk_CIRCUMFLEX_EXPR;
+xor_expr: and_expr fk_CIRCUMFLEX_EXPR { $$ = new_subtree(SUB_NODE, 0); }
+;
 
 fk_CIRCUMFLEX_EXPR:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   CIRCUMFLEX and_expr fk_CIRCUMFLEX_EXPR;
 
 and_expr: shift_expr fk_AMPER_SE;
 fk_AMPER_SE:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   AMPER shift_expr fk_AMPER_SE;
 
 shift_expr: arith_expr fk_LS_RS_AE;
 fk_LS_RS_AE:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   SE_stmt arith_expr fk_LS_RS_AE;
 
 SE_stmt: LEFTSHIFT | RIGHTSHIFT;
@@ -356,14 +472,14 @@ fk_MATH:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   term_stmt factor fk_MATH;
 
-term_stmt: STAR| AT | SLASH | PERCENT | DOUBLESLASH;
+term_stmt: STAR | AT | SLASH | PERCENT | DOUBLESLASH;
 
 factor: factor_stmt factor | power;
 factor_stmt: PLUS | MINUS | TILDE;
 
 power: atom_expr opc_DOUBLESTAR_factor;
 opc_DOUBLESTAR_factor:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 | DOUBLESTAR factor;
 
 atom_expr: atom fk_trailer
@@ -375,13 +491,13 @@ fk_trailer:
 
 atom: LPAR opc_atom_stmt RPAR | LSQB opc_testlist_comp RSQB | NAME | NUMBER | STRING fk_STRING | ELLIPSIS | NONE | TRUE | FALSE;
 opc_atom_stmt:
-  %empty
+  %empty  { $$ = new_node(LOW_NODE, ""); }
 | yield_expr
 | testlist_comp;
 
 
 opc_testlist_comp:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   testlist_comp;
 
 fk_STRING:
@@ -390,9 +506,11 @@ fk_STRING:
 
 testlist_comp: trailer_stmt trailer_stmt_1;
 trailer: LPAR opc_arglist RPAR | LSQB subscriptlist RSQB | DOT NAME;
+
 opc_arglist:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   arglist;
+
 fk_COMMA_NT_SE:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   COMMA trailer_stmt fk_COMMA_NT_SE;
@@ -410,32 +528,50 @@ fk_COMMA_S:
 subscript: test | opc_test COLON opc_test opc_sliceop;
 
 opc_test:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   test;
+
 opc_sliceop:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   sliceop;
 
 sliceop: COLON opc_test;
 
-exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA;
+exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA  { $$ = new_subtree(EXPR_STMT_LIST_NODE, 2, $1, $2); }
+;
 
 fk_COMMA_E_SE:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA exprlist_stmt fk_COMMA_E_SE;
-
-
-exprlist_stmt: expr | star_expr;
-
-testlist: test fk_COMMA_test opc_COMMA  { $$ = new_subtree(SUB_NODE, 0); }
+|   COMMA exprlist_stmt fk_COMMA_E_SE { 
+  if (get_child_count($3) == 0) {
+    $3 = new_subtree(LIST_NODE, 1, $3); 
+  }; 
+  add_child($3, $2); $$ = $3; 
+}
 ;
+
+
+exprlist_stmt: 
+  expr        { $$ = $1; }
+| star_expr   { $$ = $1; }
+;
+
+testlist: test fk_COMMA_test opc_COMMA  { $$ = new_subtree(TEST_NODE_LIST, 2, $1, $2); }
+;
+
 fk_COMMA_test:
-%empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
-|   COMMA test fk_COMMA_test;
+%empty %prec LOW              { $$ = new_subtree(LOW_NODE, 0); }
+|   COMMA test fk_COMMA_test  { 
+  if (get_child_count($3) == 0) {
+    $3 = new_subtree(LIST_NODE, 1, $3); 
+  }; 
+  add_child($3, $2); $$ = $3; 
+}
+;
 
 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite;
 opc_LPAR_arglist_RPAR:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   LPAR RPAR
 |   LPAR arglist RPAR;
 
@@ -446,19 +582,22 @@ fk_COMMA_A:
 
                                           // ***SIMPLIFICAR*** //
 argument: test opc_comp_for | test COLONEQUAL test | test EQUAL test | DOUBLESTAR test | STAR test;
+
 opc_comp_for:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   comp_for;
 
 comp_iter: comp_for | comp_if;
 sync_comp_for: FOR exprlist IN or_test opc_comp_iter;
+
 opc_comp_iter:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   comp_iter;
 
 comp_for: opc_ASYNC sync_comp_for;
+
 opc_ASYNC:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   ASYNC;
 
 comp_if: IF test_nocond opc_comp_iter;
@@ -471,18 +610,25 @@ opc_yield_arg:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }
 |   yield_arg { $$ = $1; };
 
-yield_arg: FROM test { 
+yield_arg: 
+  FROM test { 
   $1 = new_subtree(FROM_NODE, 1, $2); 
   $$ = $1; 
 } | testlist_star_expr { $$ = $1; }
 ;
 
 func_body_suite: simple_stmt | NEWLINE INDENT stmt fk_stmt DEDENT;
+
 fk_stmt:
-%empty
+%empty  { $$ = new_node(LOW_NODE, ""); }
 |   stmt fk_stmt;
 
 %%
+
+AST* new_name() {
+    Token token = get_last_token();
+    return new_node(NAME_NODE, token.lexeme);
+}
 
 // Primitive error handling.
 void yyerror (char const *s) {

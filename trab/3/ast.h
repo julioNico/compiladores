@@ -2,41 +2,80 @@
 #define AST_H
 
 typedef enum {
+
+    //  ESCOPO
     PROGRAM_NODE,
-    COND_NODE,
-    LOOP_NODE,
     FUNCTION_NODE,
     CLASS_NODE,
-    WITH_NODE,
-
-    EXPR_LIST_NODE,
-    EXPR_NODE,
-
-    ASSIGN_NODE,
-    EQ_NODE,
     BLOCK_NODE,
 
+    // OPERADORES
+    OP_EQUAL_NODE,
+
+    //  LOOPS
+    LOOP_NODE,
+
+    // CONTROLE DE FLUXO
+    FLOW_NODE,
+
+    // RETURN
+    RETURN_NODE,
+
+    //  ATRIBUICAO
+    EQ_NODE,
+
+    //  IMPORT
+    FROM_NODE,
+
+    //  VARIAVEL
+    NAME_NODE,
+    NAME_NODE_LIST,
+
+    //  OPERADORES MATEMATICOS
+    MINUS_NODE,
+    PLUS_NODE,
+    OVER_NODE,
+    TIMES_NODE,
+
+    //  OPERADORES BOLEANOS
+    AND_NODE,
+    OR_NODE,    
+    NOT_NODE,
+
+    //  OPERADORES CONDICIONAIS
     IF_NODE,
 
-    LT_NODE,
-    MINUS_NODE,
-    OVER_NODE,
-    PLUS_NODE,
+    //  COMPARADORES
+    CURTO_CIRCUITO_NODE,
+    COMP_NODE,
 
-    REPEAT_NODE,
+    //  OPERADORES MALUCOS
+    YIELD_EXPR_NODE,
+    WITH_NODE,
 
-    TIMES_NODE,
-    VAR_DECL_NODE,
-    VAR_LIST_NODE,
-    VAR_USE_NODE,
+    //  EXPRESSORES
+    EXPR_STMT_LIST_NODE,
+    EXPR_STMT_NODE,
+    EXPR_NODE,
 
+    //  OUTROS
     LOW_NODE,
     NL_NODE,
     SUB_NODE,
     SIMPLE_STMT_NODE,
     SMALL_STMT_NODE,
-    YIELD_EXPR_NODE,
-    FROM_NODE,
+    STAR_NODE,
+    TSE_NODE_LIST,
+    TSE_NODE,
+    TEST_NODE_LIST,
+    COMPARACAO_NODE,
+    OR_TEST_NODE,
+    AND_TEST_NODE,
+    IF_ELSE_NODE,
+    LAMBDA_NODE,
+    LIST_NODE,
+    VBAR_NODE,
+    ANNASSIGN_NODE,
 } NodeKind;
 
 struct node; // Opaque structure to ensure encapsulation.

@@ -83,33 +83,44 @@ extern VarTable *vt;
 
 char* kind2str(NodeKind kind) {
     switch(kind) {
-        case ASSIGN_NODE:   return ":=";
-        case EQ_NODE:       return "=";
-        case BLOCK_NODE:    return "block";
-        case IF_NODE:       return "if";
-        case LT_NODE:       return "<";
-        case MINUS_NODE:    return "-";
-        case OVER_NODE:     return "/";
-        case PLUS_NODE:     return "+";
-        case PROGRAM_NODE:  return "program";
-        case REPEAT_NODE:   return "repeat";
-        case TIMES_NODE:    return "*";
-        case VAR_DECL_NODE: return "var_decl";
-        case VAR_LIST_NODE: return "var_list";
-        case VAR_USE_NODE:  return "var_use";
-        case LOW_NODE:      return "LOW";
-        case NL_NODE:       return "NEWLINE";
-        case SUB_NODE:      return "NOT DEFINED!";
-        case SIMPLE_STMT_NODE:   return "SIMPLE_STMT";
-        case SMALL_STMT_NODE:    return "SMALL_STMT";
-        default:            return "ERROR!!";
+        case EQ_NODE:                   return "=";
+        case BLOCK_NODE:                return "block";
+        case IF_NODE:                   return "if";
+        case MINUS_NODE:                return "-";
+        case OVER_NODE:                 return "/";
+        case PLUS_NODE:                 return "+";
+        case PROGRAM_NODE:              return "program";
+        case TIMES_NODE:                return "*";
+        case NAME_NODE:                 return "name";
+        case LOW_NODE:                  return "LOW";
+        case NL_NODE:                   return "NEWLINE";
+        case SUB_NODE:                  return "NOT DEFINED!";
+        case SIMPLE_STMT_NODE:          return "SIMPLE_STMT";
+        case SMALL_STMT_NODE:           return "SMALL_STMT";
+        case EXPR_NODE:                 return "EXPR_NODE";
+        case EXPR_STMT_NODE:            return "EXPR_STMT_NODE";
+        case EXPR_STMT_LIST_NODE:      return "EXPR_STMT_LIST_NODE";
+        case STAR_NODE:                 return "EXPR_NODE";
+        case TSE_NODE_LIST:             return "TSE_NODE_LIST";
+        case TSE_NODE:                  return "TSE_NODE";
+        case FLOW_NODE:                 return "FLOW_NODE";
+        case OP_EQUAL_NODE:             return "OP_EQUAL_NODE";
+        case COMPARACAO_NODE:           return "COMPARACAO_NODE";
+        case CURTO_CIRCUITO_NODE:       return "CURTO_CIRCUITO_NODE";
+        case OR_TEST_NODE:              return "OR_TEST_NODE";
+        case AND_TEST_NODE:             return "AND_TEST_NODE";
+        case IF_ELSE_NODE:              return "IF_ELSE_NODE";
+        case LAMBDA_NODE:               return "LAMBDA_NODE";
+        case LIST_NODE:                 return "LIST_NODE";
+        case ANNASSIGN_NODE:            return "ANNASSIGN_NODE";
+        default:                        return "ERROR!!";
     }
 }
 
 int has_data(NodeKind kind) {
     switch(kind) {
-        case VAR_DECL_NODE:
-        case VAR_USE_NODE:
+        case COMP_NODE:
+        case NAME_NODE:
             return 1;
         default:
             return 0;
@@ -119,20 +130,24 @@ int has_data(NodeKind kind) {
 int print_node_dot(AST *node, FILE *arq_dot) {
     int my_nr = nr++;
 
-    fprintf(arq_dot, "node%d[label=\"", my_nr);
-    if (node->kind == VAR_DECL_NODE || node->kind == VAR_USE_NODE) {
-        fprintf(arq_dot, "%s@", node->data);
-    } else {
-        fprintf(arq_dot, "%s", kind2str(node->kind));
-    }
-    if (has_data(node->kind)) {
-        fprintf(arq_dot, "%s", node->data);
-    }
-    fprintf(arq_dot, "\"];\n");
+    if(node->kind != LOW_NODE){
+        fprintf(arq_dot, "node%d[label=\"", my_nr);
+        if (node->kind == NAME_NODE) {
+            fprintf(arq_dot, "%s@", node->data);
+        } else {
+            fprintf(arq_dot, "%s", kind2str(node->kind));
+        }
+        if (has_data(node->kind)) {
+            fprintf(arq_dot, "%s", node->data);
+        }
+        fprintf(arq_dot, "\"];\n");
 
-    for (int i = 0; i < node->count; i++) {
-        int child_nr = print_node_dot(node->child[i], arq_dot);
-        fprintf(arq_dot, "node%d -> node%d;\n", my_nr, child_nr);
+        for (int i = 0; i < node->count; i++) {
+            if(node->child[i]->kind != LOW_NODE){
+                int child_nr = print_node_dot(node->child[i], arq_dot);
+                fprintf(arq_dot, "node%d -> node%d;\n", my_nr, child_nr);
+            }
+        }
     }
     return my_nr;
 }
