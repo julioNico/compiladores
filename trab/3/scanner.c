@@ -2894,18 +2894,37 @@ void imprime_token(int type) {
     }
 }
 
-
-
-
-
-
 Token *vTokens=NULL;
 int tamVT=0;
 int indexVT=0;
 
+void removerAspas(){
+    int i, j;
+    int tamNew;
+
+    char *new = (char*) malloc(sizeof(char));
+    int tamText = strlen(yytext);
+
+    for(i=0, j=0; i<tamText; i++){
+        if(yytext[i] != '\"'){
+            tamNew = strlen(new);
+            new = (char*) realloc(new, tamNew + sizeof(char));
+            new[j]=yytext[i];
+            j++;
+        }
+    }
+    yytext = new;
+}
+
 void addListaTokens(int type){
     vTokens = (Token*) realloc(vTokens, (tamVT+1)*sizeof(Token));
     vTokens[tamVT].type=type;
+
+    if(type == STRING){
+        removerAspas();
+        //printf("\n\nSTRING: %s\n", yytext);
+    }
+
     vTokens[tamVT].lexeme = strdup(yytext);
     vTokens[tamVT].lineno = yylineno;
     tamVT++;

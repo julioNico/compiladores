@@ -8,6 +8,7 @@ typedef enum {
     FUNCTION_NODE,
     CLASS_NODE,
     BLOCK_NODE,
+    FUNK_NODE,
 
     // OPERADORES
     OP_EQUAL_NODE,
@@ -27,11 +28,17 @@ typedef enum {
     //  IMPORT
     FROM_NODE,
 
-    //  VARIAVEL
+    //  VARIAVEIS
+    BOOL_NODE,
+    GLOBAL_NODE,
+    NONLOCAL_NODE,
     NAME_NODE,
+    NAME_LIST_NODE,
     NUMBER_NODE,
     STRING_NODE,
-    ARG_LIST_NODE,
+    STRING_LIST_NODE,
+    PARAMETERS_NODE,
+    RARROW_NODE,
 
     //  OPERADORES MATEMATICOS
     OP_MATH_NODE,
@@ -64,10 +71,12 @@ typedef enum {
     EXPR_NODE,
 
     //  OUTROS
+    STMT_NODE,
     LOW_NODE,
     NL_NODE,
     SUB_NODE,
     STAR_NODE,
+    NONE_NODE,
 
     IF_ELSE_NODE,
     LAMBDA_NODE,

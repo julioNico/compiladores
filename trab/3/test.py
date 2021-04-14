@@ -1,3 +1,5 @@
-a=1
-b=2
-#f = lambda a, b : a+b
+x="aa"
+
+def test ():
+    y=2
+    x="aa"

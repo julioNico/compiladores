@@ -83,14 +83,19 @@ extern VarTable *vt;
 
 char* kind2str(NodeKind kind) {
     switch(kind) {
+        case STRING_NODE:               return "(STRING) ";
+        case STRING_LIST_NODE:          return "STRING_LIST_NODE";
         case EQ_NODE:                   return "=";
         case BLOCK_NODE:                return "block";
         case IF_NODE:                   return "if";
         case OP_MATH_NODE:              return "OP_MATH_NODE";
-        case PROGRAM_NODE:              return "program";
-        case NAME_NODE:                 return "name";
-        case NUMBER_NODE:               return "NUMBER = ";
-        case ARG_LIST_NODE:             return "ARG_LIST_NODE";
+        case GLOBAL_NODE:               return "GLOBAL_NODE";
+        case NONLOCAL_NODE:             return "NONLOCAL_NODE";
+        case PROGRAM_NODE:              return "PROGRAM";
+        case NAME_NODE:                 return "NAME";
+        case NAME_LIST_NODE:            return "NAME_LIST";
+        case NUMBER_NODE:               return "(NUMBER) ";
+        case STMT_NODE:                 return "STMT_NODE";
         case LOW_NODE:                  return "LOW";
         case NL_NODE:                   return "NEWLINE";
         case SUB_NODE:                  return "NOT DEFINED!";
@@ -106,12 +111,19 @@ char* kind2str(NodeKind kind) {
         case OP_BIT_A_BIT_NODE:         return "OP_BIT_A_BIT_NODE";
         case OP_SINC_NODE:              return "OP_SINC_NODE";
         case COLON_NODE:                return "COLON_NODE";
+        case PARAMETERS_NODE:           return "PARAMETERS_NODE";
+        case RARROW_NODE:               return "RARROW_NODE";
+        case FUNK_NODE:                 return "FUNK_NODE";
+        case NONE_NODE:                 return "NONE_NODE"; 
+        case BOOL_NODE:                 return "BOOL = ";
         default:                        return "ERROR!!";
     }
 }
 
 int has_data(NodeKind kind) {
     switch(kind) {
+        case BOOL_NODE:
+        case STRING_NODE:
         case NUMBER_NODE:
         case COLON_NODE:
         case OP_SINC_NODE:
