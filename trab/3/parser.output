@@ -149,274 +149,289 @@ Gramática
 
    88 fk_COMMA_NAME: COMMA NAME $@6 fk_COMMA_NAME
 
-   89 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+   89 $@7: %empty
 
-   90 fk_ELIF_NT_COLON_SUITE: %empty
-   91                       | ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
+   90 if_stmt: IF $@7 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
 
-   92 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite
+   91 fk_ELIF_NT_COLON_SUITE: %empty
 
-   93 for_stmt: FOR exprlist IN testlist COLON suite opc_ELSE_COLON_suite
+   92 $@8: %empty
 
-   94 opc_ELSE_COLON_suite: %empty
-   95                     | ELSE COLON suite
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
 
-   96 with_stmt: WITH with_item fk_COMMA_WI COLON suite
+   94 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite
 
-   97 fk_COMMA_WI: %empty
-   98            | COMMA with_item fk_COMMA_WI
+   95 for_stmt: FOR exprlist IN testlist COLON suite opc_ELSE_COLON_suite
 
-   99 with_item: test opc_AS_expr
+   96 opc_ELSE_COLON_suite: %empty
 
-  100 opc_AS_expr: %empty
-  101            | AS expr
+   97 $@9: %empty
 
-  102 suite: simple_stmt
-  103      | NEWLINE INDENT stmt fk_stmt DEDENT
+   98 opc_ELSE_COLON_suite: ELSE $@9 COLON suite
 
-  104 namedexpr_test: test opc_COLONEQUAL_test
+   99 with_stmt: WITH with_item fk_COMMA_WI COLON suite
 
-  105 opc_COLONEQUAL_test: %empty
-  106                    | COLONEQUAL test
+  100 fk_COMMA_WI: %empty
+  101            | COMMA with_item fk_COMMA_WI
 
-  107 test: or_test opc_IF_or_test_ELSE_test
-  108     | lambdef
+  102 with_item: test opc_AS_expr
 
-  109 opc_IF_or_test_ELSE_test: %empty
-  110                         | IF or_test ELSE test
+  103 opc_AS_expr: %empty
+  104            | AS expr
 
-  111 test_nocond: or_test
-  112            | lambdef_nocond
+  105 suite: simple_stmt
+  106      | NEWLINE INDENT stmt fk_stmt DEDENT
 
-  113 lambdef: LAMBDA opc_argslist COLON test
+  107 namedexpr_test: test opc_COLONEQUAL_test
 
-  114 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond
+  108 opc_COLONEQUAL_test: %empty
 
-  115 or_test: and_test fk_OR_AT
+  109 $@10: %empty
 
-  116 fk_OR_AT: %empty
-  117         | OR and_test fk_OR_AT
+  110 opc_COLONEQUAL_test: COLONEQUAL $@10 test
 
-  118 and_test: not_test fk_AND_NT
+  111 test: or_test opc_IF_or_test_ELSE_test
+  112     | lambdef
 
-  119 fk_AND_NT: %empty
-  120          | AND not_test fk_AND_NT
+  113 opc_IF_or_test_ELSE_test: %empty
+  114                         | IF or_test ELSE test
 
-  121 not_test: NOT not_test
-  122         | comparison
+  115 test_nocond: or_test
+  116            | lambdef_nocond
 
-  123 comparison: expr fk_CO_EXPR
+  117 lambdef: LAMBDA opc_argslist COLON test
 
-  124 fk_CO_EXPR: %empty
-  125           | comp_op expr fk_CO_EXPR
+  118 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond
 
-  126 comp_op: LESS
-  127        | GREATER
-  128        | EQEQUAL
-  129        | GREATEREQUAL
-  130        | LESSEQUAL
-  131        | LESSGREATER
-  132        | NOTEQUAL
-  133        | IN
-  134        | NOT IN
-  135        | IS
-  136        | IS NOT
+  119 or_test: and_test fk_OR_AT
 
-  137 star_expr: STAR expr
+  120 fk_OR_AT: %empty
+  121         | OR and_test fk_OR_AT
 
-  138 expr: xor_expr fk_VBAR_XE
+  122 and_test: not_test fk_AND_NT
 
-  139 fk_VBAR_XE: %empty
-  140           | VBAR xor_expr fk_VBAR_XE
+  123 fk_AND_NT: %empty
+  124          | AND not_test fk_AND_NT
 
-  141 xor_expr: and_expr fk_CIRCUMFLEX_EXPR
+  125 not_test: NOT not_test
+  126         | comparison
 
-  142 fk_CIRCUMFLEX_EXPR: %empty
+  127 comparison: expr fk_CO_EXPR
 
-  143 $@7: %empty
+  128 fk_CO_EXPR: %empty
+  129           | comp_op expr fk_CO_EXPR
 
-  144 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@7 and_expr fk_CIRCUMFLEX_EXPR
+  130 comp_op: LESS
+  131        | GREATER
+  132        | EQEQUAL
+  133        | GREATEREQUAL
+  134        | LESSEQUAL
+  135        | LESSGREATER
+  136        | NOTEQUAL
+  137        | IN
+  138        | NOT IN
+  139        | IS
+  140        | IS NOT
 
-  145 and_expr: shift_expr fk_AMPER_SE
+  141 star_expr: STAR expr
 
-  146 fk_AMPER_SE: %empty
+  142 expr: xor_expr fk_VBAR_XE
 
-  147 $@8: %empty
+  143 fk_VBAR_XE: %empty
+  144           | VBAR xor_expr fk_VBAR_XE
 
-  148 fk_AMPER_SE: AMPER $@8 shift_expr fk_AMPER_SE
+  145 xor_expr: and_expr fk_CIRCUMFLEX_EXPR
 
-  149 shift_expr: arith_expr fk_LS_RS_AE
+  146 fk_CIRCUMFLEX_EXPR: %empty
 
-  150 fk_LS_RS_AE: %empty
-  151            | SE_stmt arith_expr fk_LS_RS_AE
+  147 $@11: %empty
 
-  152 SE_stmt: LEFTSHIFT
-  153        | RIGHTSHIFT
+  148 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@11 and_expr fk_CIRCUMFLEX_EXPR
 
-  154 arith_expr: term fk_T_PLUS_MINUS
+  149 and_expr: shift_expr fk_AMPER_SE
 
-  155 fk_T_PLUS_MINUS: %empty
-  156                | AE_stmt term fk_T_PLUS_MINUS
+  150 fk_AMPER_SE: %empty
 
-  157 AE_stmt: PLUS
-  158        | MINUS
+  151 $@12: %empty
 
-  159 term: factor fk_MATH
+  152 fk_AMPER_SE: AMPER $@12 shift_expr fk_AMPER_SE
 
-  160 fk_MATH: %empty
-  161        | term_stmt factor fk_MATH
+  153 shift_expr: arith_expr fk_LS_RS_AE
 
-  162 term_stmt: STAR
-  163          | AT
-  164          | SLASH
-  165          | PERCENT
-  166          | DOUBLESLASH
+  154 fk_LS_RS_AE: %empty
+  155            | SE_stmt arith_expr fk_LS_RS_AE
 
-  167 factor: factor_stmt factor
-  168       | power
+  156 SE_stmt: LEFTSHIFT
+  157        | RIGHTSHIFT
 
-  169 factor_stmt: PLUS
-  170            | MINUS
-  171            | TILDE
+  158 arith_expr: term fk_T_PLUS_MINUS
 
-  172 power: atom_expr opc_DOUBLESTAR_factor
+  159 fk_T_PLUS_MINUS: %empty
+  160                | AE_stmt term fk_T_PLUS_MINUS
 
-  173 opc_DOUBLESTAR_factor: %empty
+  161 AE_stmt: PLUS
+  162        | MINUS
 
-  174 $@9: %empty
+  163 term: factor fk_MATH
 
-  175 opc_DOUBLESTAR_factor: DOUBLESTAR $@9 factor
+  164 fk_MATH: %empty
+  165        | term_stmt factor fk_MATH
 
-  176 atom_expr: atom fk_trailer
+  166 term_stmt: STAR
+  167          | AT
+  168          | SLASH
+  169          | PERCENT
+  170          | DOUBLESLASH
 
-  177 $@10: %empty
+  171 factor: factor_stmt factor
+  172       | power
 
-  178 atom_expr: AWAIT $@10 atom fk_trailer
+  173 factor_stmt: PLUS
+  174            | MINUS
+  175            | TILDE
 
-  179 fk_trailer: %empty
-  180           | trailer fk_trailer
+  176 power: atom_expr opc_DOUBLESTAR_factor
 
-  181 atom: LPAR opc_atom_stmt RPAR
-  182     | LSQB opc_testlist_comp RSQB
-  183     | NAME
-  184     | NUMBER
+  177 opc_DOUBLESTAR_factor: %empty
 
-  185 $@11: %empty
+  178 $@13: %empty
 
-  186 atom: STRING $@11 fk_STRING
-  187     | ELLIPSIS
-  188     | NONE
-  189     | TRUE
-  190     | FALSE
+  179 opc_DOUBLESTAR_factor: DOUBLESTAR $@13 factor
 
-  191 opc_atom_stmt: %empty
-  192              | yield_expr
-  193              | testlist_comp
+  180 atom_expr: atom fk_trailer
 
-  194 opc_testlist_comp: %empty
-  195                  | testlist_comp
+  181 $@14: %empty
 
-  196 fk_STRING: %empty
+  182 atom_expr: AWAIT $@14 atom fk_trailer
 
-  197 $@12: %empty
+  183 fk_trailer: %empty
+  184           | trailer fk_trailer
 
-  198 fk_STRING: STRING $@12 fk_STRING
+  185 atom: LPAR opc_atom_stmt RPAR
+  186     | LSQB opc_testlist_comp RSQB
+  187     | NAME
+  188     | NUMBER
 
-  199 testlist_comp: trailer_stmt trailer_stmt_1
+  189 $@15: %empty
 
-  200 trailer: LPAR opc_arglist RPAR
-  201        | LSQB subscriptlist RSQB
-  202        | DOT NAME
+  190 atom: STRING $@15 fk_STRING
+  191     | ELLIPSIS
+  192     | NONE
+  193     | TRUE
+  194     | FALSE
 
-  203 opc_arglist: %empty
-  204            | arglist
+  195 opc_atom_stmt: %empty
+  196              | yield_expr
+  197              | testlist_comp
 
-  205 fk_COMMA_NT_SE: %empty
-  206               | COMMA trailer_stmt fk_COMMA_NT_SE
+  198 opc_testlist_comp: %empty
+  199                  | testlist_comp
 
-  207 trailer_stmt: namedexpr_test
-  208             | star_expr
+  200 fk_STRING: %empty
 
-  209 trailer_stmt_1: comp_for
-  210               | fk_COMMA_NT_SE opc_COMMA
+  201 $@16: %empty
 
-  211 subscriptlist: subscript fk_COMMA_S opc_COMMA
+  202 fk_STRING: STRING $@16 fk_STRING
 
-  212 fk_COMMA_S: %empty
-  213           | COMMA subscript fk_COMMA_S
+  203 testlist_comp: trailer_stmt trailer_stmt_1
 
-  214 subscript: test
-  215          | opc_test COLON opc_test opc_sliceop
+  204 trailer: LPAR opc_arglist RPAR
+  205        | LSQB subscriptlist RSQB
+  206        | DOT NAME
 
-  216 opc_test: %empty
-  217         | test
+  207 opc_arglist: %empty
+  208            | arglist
 
-  218 opc_sliceop: %empty
-  219            | sliceop
+  209 fk_COMMA_NT_SE: %empty
+  210               | COMMA trailer_stmt fk_COMMA_NT_SE
 
-  220 sliceop: COLON opc_test
+  211 trailer_stmt: namedexpr_test
+  212             | star_expr
 
-  221 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA
+  213 trailer_stmt_1: comp_for
+  214               | fk_COMMA_NT_SE opc_COMMA
 
-  222 fk_COMMA_E_SE: %empty
-  223              | COMMA exprlist_stmt fk_COMMA_E_SE
+  215 subscriptlist: subscript fk_COMMA_S opc_COMMA
 
-  224 exprlist_stmt: expr
-  225              | star_expr
+  216 fk_COMMA_S: %empty
+  217           | COMMA subscript fk_COMMA_S
 
-  226 testlist: test fk_COMMA_test opc_COMMA
+  218 subscript: test
+  219          | opc_test COLON opc_test opc_sliceop
 
-  227 fk_COMMA_test: %empty
-  228              | COMMA test fk_COMMA_test
+  220 opc_test: %empty
+  221         | test
 
-  229 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite
+  222 opc_sliceop: %empty
+  223            | sliceop
 
-  230 opc_LPAR_arglist_RPAR: %empty
-  231                      | LPAR RPAR
-  232                      | LPAR arglist RPAR
+  224 sliceop: COLON opc_test
 
-  233 arglist: argument fk_COMMA_A opc_COMMA
+  225 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA
 
-  234 fk_COMMA_A: %empty
-  235           | COMMA argument fk_COMMA_A
+  226 fk_COMMA_E_SE: %empty
+  227              | COMMA exprlist_stmt fk_COMMA_E_SE
 
-  236 argument: test opc_comp_for
-  237         | test COLONEQUAL test
-  238         | test EQUAL test
-  239         | DOUBLESTAR test
-  240         | STAR test
+  228 exprlist_stmt: expr
+  229              | star_expr
 
-  241 opc_comp_for: %empty
-  242             | comp_for
+  230 testlist: test fk_COMMA_test opc_COMMA
 
-  243 comp_iter: comp_for
-  244          | comp_if
+  231 fk_COMMA_test: %empty
+  232              | COMMA test fk_COMMA_test
 
-  245 sync_comp_for: FOR exprlist IN or_test opc_comp_iter
+  233 $@17: %empty
 
-  246 opc_comp_iter: %empty
-  247              | comp_iter
+  234 classdef: CLASS NAME $@17 opc_LPAR_arglist_RPAR COLON suite
 
-  248 comp_for: opc_ASYNC sync_comp_for
+  235 opc_LPAR_arglist_RPAR: %empty
+  236                      | LPAR RPAR
+  237                      | LPAR arglist RPAR
 
-  249 opc_ASYNC: %empty
-  250          | ASYNC
+  238 arglist: argument fk_COMMA_A opc_COMMA
 
-  251 comp_if: IF test_nocond opc_comp_iter
+  239 fk_COMMA_A: %empty
+  240           | COMMA argument fk_COMMA_A
 
-  252 yield_expr: YIELD opc_yield_arg
+  241 argument: test opc_comp_for
+  242         | test COLONEQUAL test
+  243         | test EQUAL test
+  244         | DOUBLESTAR test
+  245         | STAR test
 
-  253 opc_yield_arg: %empty
-  254              | yield_arg
+  246 opc_comp_for: %empty
+  247             | comp_for
 
-  255 yield_arg: FROM test
-  256          | testlist_star_expr
+  248 comp_iter: comp_for
+  249          | comp_if
 
-  257 func_body_suite: simple_stmt
-  258                | NEWLINE INDENT stmt fk_stmt DEDENT
+  250 sync_comp_for: FOR exprlist IN or_test opc_comp_iter
 
-  259 fk_stmt: %empty
-  260        | stmt fk_stmt
+  251 opc_comp_iter: %empty
+  252              | comp_iter
+
+  253 comp_for: opc_ASYNC sync_comp_for
+
+  254 opc_ASYNC: %empty
+  255          | ASYNC
+
+  256 $@18: %empty
+
+  257 comp_if: IF $@18 test_nocond opc_comp_iter
+
+  258 yield_expr: YIELD opc_yield_arg
+
+  259 opc_yield_arg: %empty
+  260              | yield_arg
+
+  261 yield_arg: FROM test
+  262          | testlist_star_expr
+
+  263 func_body_suite: simple_stmt
+  264                | NEWLINE INDENT stmt fk_stmt DEDENT
+
+  265 fk_stmt: %empty
+  266        | stmt fk_stmt
 
 
 Terminais, com as regras onde eles aparecem
@@ -424,77 +439,77 @@ Terminais, com as regras onde eles aparecem
     $end (0) 0
     error (256)
     IMPORT (258)
-    FROM (259) 255
-    AS (260) 101
-    CLASS (261) 229
+    FROM (259) 261
+    AS (260) 104
+    CLASS (261) 234
     DEF (262) 24
-    LAMBDA (263) 113 114
-    NOT (264) 121 134 136
-    AND (265) 120
-    OR (266) 117
-    IF (267) 89 110 251
-    ELSE_IF (268) 91
-    ELSE (269) 95 110
-    IS (270) 135 136
-    TRUE (271) 189
-    FALSE (272) 190
+    LAMBDA (263) 117 118
+    NOT (264) 125 138 140
+    AND (265) 124
+    OR (266) 121
+    IF (267) 90 114 257
+    ELSE_IF (268) 93
+    ELSE (269) 98 114
+    IS (270) 139 140
+    TRUE (271) 193
+    FALSE (272) 194
     ASSERT (273)
-    FOR (274) 93 245
-    IN (275) 93 133 134 245
-    WHILE (276) 92
+    FOR (274) 95 250
+    IN (275) 95 137 138 250
+    WHILE (276) 94
     PASS (277) 75
     BREAK (278) 76
     CONTINUE (279) 77
     TRY (280)
     EXCEPT (281)
     FINALLY (282)
-    WITH (283) 96
+    WITH (283) 99
     RETURN (284) 78
     RAISE (285)
-    YIELD (286) 252
+    YIELD (286) 258
     GLOBAL (287) 83
     NONLOCAL (288) 85
-    NONE (289) 188
+    NONE (289) 192
     DEL (290) 70
     EXEC (291)
-    ASYNC (292) 250
-    AWAIT (293) 178
-    NAME (294) 24 31 32 83 85 88 183 202 229
-    NUMBER (295) 184
-    STRING (296) 186 198
-    INDENT (297) 103 258
-    DEDENT (298) 103 258
-    NEWLINE (299) 4 8 103 258
-    LPAR (300) 28 181 200 231 232
-    RPAR (301) 28 181 200 231 232
-    LSQB (302) 182 201
-    RSQB (303) 182 201
-    COLON (304) 24 44 89 91 92 93 95 96 113 114 215 220 229
-    COMMA (305) 31 52 69 88 98 206 213 223 228 235
+    ASYNC (292) 255
+    AWAIT (293) 182
+    NAME (294) 24 31 32 83 85 88 187 206 234
+    NUMBER (295) 188
+    STRING (296) 190 202
+    INDENT (297) 106 264
+    DEDENT (298) 106 264
+    NEWLINE (299) 4 8 106 264
+    LPAR (300) 28 185 204 236 237
+    RPAR (301) 28 185 204 236 237
+    LSQB (302) 186 205
+    RSQB (303) 186 205
+    COLON (304) 24 44 90 93 94 95 98 99 117 118 219 224 234
+    COMMA (305) 31 52 69 88 101 210 217 227 232 240
     SEMI (306) 10 67
-    PLUS (307) 157 169
-    MINUS (308) 158 170
-    STAR (309) 137 162 240
-    SLASH (310) 164
-    VBAR (311) 140
-    AMPER (312) 148
-    LESS (313) 126
-    GREATER (314) 127
-    LESSGREATER (315) 131
-    EQUAL (316) 41 46 47 238
-    DOT (317) 202
-    PERCENT (318) 165
+    PLUS (307) 161 173
+    MINUS (308) 162 174
+    STAR (309) 141 166 245
+    SLASH (310) 168
+    VBAR (311) 144
+    AMPER (312) 152
+    LESS (313) 130
+    GREATER (314) 131
+    LESSGREATER (315) 135
+    EQUAL (316) 41 46 47 243
+    DOT (317) 206
+    PERCENT (318) 169
     LBRACE (319)
     RBRACE (320)
-    EQEQUAL (321) 128
-    NOTEQUAL (322) 132
-    LESSEQUAL (323) 130
-    GREATEREQUAL (324) 129
-    TILDE (325) 171
-    CIRCUMFLEX (326) 144
-    LEFTSHIFT (327) 152
-    RIGHTSHIFT (328) 153
-    DOUBLESTAR (329) 175 239
+    EQEQUAL (321) 132
+    NOTEQUAL (322) 136
+    LESSEQUAL (323) 134
+    GREATEREQUAL (324) 133
+    TILDE (325) 175
+    CIRCUMFLEX (326) 148
+    LEFTSHIFT (327) 156
+    RIGHTSHIFT (328) 157
+    DOUBLESTAR (329) 179 244
     PLUSEQUAL (330) 53
     MINEQUAL (331) 54
     STAREQUAL (332) 55
@@ -506,13 +521,13 @@ Terminais, com as regras onde eles aparecem
     LEFTSHIFTEQUAL (338) 62
     RIGHTSHIFTEQUAL (339) 63
     DOUBLESTAREQUAL (340) 64
-    DOUBLESLASH (341) 166
+    DOUBLESLASH (341) 170
     DOUBLESLASHEQUAL (342) 65
-    AT (343) 163
+    AT (343) 167
     ATEQUAL (344) 56
     RARROW (345) 27
-    ELLIPSIS (346) 187
-    COLONEQUAL (347) 106 237
+    ELLIPSIS (346) 191
+    COLONEQUAL (347) 110 242
     ENDMARKER (348) 1
     LOW (349)
 
@@ -532,10 +547,10 @@ Não terminais com as regras onde eles aparecem
         à direita: 3
     stmt (99)
         à esquerda: 6 7
-        à direita: 5 103 258 260
+        à direita: 5 106 264 266
     simple_stmt (100)
         à esquerda: 8
-        à direita: 6 102 257
+        à direita: 6 105 263
     fk_SEMI_small_stmt (101)
         à esquerda: 9 10
         à direita: 8
@@ -562,7 +577,7 @@ Não terminais com as regras onde eles aparecem
         à direita: 24
     opc_argslist (109)
         à esquerda: 29 31 32
-        à direita: 28 31 113 114
+        à direita: 28 31 117 118
     $@3 (110)
         à esquerda: 30
         à direita: 31
@@ -592,7 +607,7 @@ Não terminais com as regras onde eles aparecem
         à direita: 44
     testlist_star_expr (119)
         à esquerda: 48
-        à direita: 33 43 47 81 256
+        à direita: 33 43 47 81 262
     TSE_stmt (120)
         à esquerda: 49 50
         à direita: 48 52
@@ -607,7 +622,7 @@ Não terminais com as regras onde eles aparecem
         à direita: 8
     opc_COMMA (124)
         à esquerda: 68 69
-        à direita: 48 210 211 221 226 233
+        à direita: 48 214 215 225 230 238
     del_stmt (125)
         à esquerda: 70
         à direita: 12
@@ -651,278 +666,296 @@ Não terminais com as regras onde eles aparecem
         à esquerda: 87
         à direita: 88
     if_stmt (139)
-        à esquerda: 89
+        à esquerda: 90
         à direita: 17
-    fk_ELIF_NT_COLON_SUITE (140)
-        à esquerda: 90 91
-        à direita: 89 91
-    while_stmt (141)
+    $@7 (140)
+        à esquerda: 89
+        à direita: 90
+    fk_ELIF_NT_COLON_SUITE (141)
+        à esquerda: 91 93
+        à direita: 90 93
+    $@8 (142)
         à esquerda: 92
+        à direita: 93
+    while_stmt (143)
+        à esquerda: 94
         à direita: 18
-    for_stmt (142)
-        à esquerda: 93
+    for_stmt (144)
+        à esquerda: 95
         à direita: 19
-    opc_ELSE_COLON_suite (143)
-        à esquerda: 94 95
-        à direita: 89 92 93
-    with_stmt (144)
-        à esquerda: 96
-        à direita: 20
-    fk_COMMA_WI (145)
-        à esquerda: 97 98
-        à direita: 96 98
-    with_item (146)
+    opc_ELSE_COLON_suite (145)
+        à esquerda: 96 98
+        à direita: 90 94 95
+    $@9 (146)
+        à esquerda: 97
+        à direita: 98
+    with_stmt (147)
         à esquerda: 99
-        à direita: 96 98
-    opc_AS_expr (147)
+        à direita: 20
+    fk_COMMA_WI (148)
         à esquerda: 100 101
-        à direita: 99
-    suite (148)
-        à esquerda: 102 103
-        à direita: 89 91 92 93 95 96 229
-    namedexpr_test (149)
-        à esquerda: 104
-        à direita: 89 91 92 207
-    opc_COLONEQUAL_test (150)
+        à direita: 99 101
+    with_item (149)
+        à esquerda: 102
+        à direita: 99 101
+    opc_AS_expr (150)
+        à esquerda: 103 104
+        à direita: 102
+    suite (151)
         à esquerda: 105 106
-        à direita: 104
-    test (151)
-        à esquerda: 107 108
-        à direita: 27 44 49 99 104 106 110 113 214 217 226 228 236 237 238 239 240 255
-    opc_IF_or_test_ELSE_test (152)
-        à esquerda: 109 110
+        à direita: 90 93 94 95 98 99 234
+    namedexpr_test (152)
+        à esquerda: 107
+        à direita: 90 93 94 211
+    opc_COLONEQUAL_test (153)
+        à esquerda: 108 110
         à direita: 107
-    test_nocond (153)
+    $@10 (154)
+        à esquerda: 109
+        à direita: 110
+    test (155)
         à esquerda: 111 112
-        à direita: 114 251
-    lambdef (154)
-        à esquerda: 113
-        à direita: 108
-    lambdef_nocond (155)
-        à esquerda: 114
+        à direita: 27 44 49 102 107 110 114 117 218 221 230 232 241 242 243 244 245 261
+    opc_IF_or_test_ELSE_test (156)
+        à esquerda: 113 114
+        à direita: 111
+    test_nocond (157)
+        à esquerda: 115 116
+        à direita: 118 257
+    lambdef (158)
+        à esquerda: 117
         à direita: 112
-    or_test (156)
-        à esquerda: 115
-        à direita: 107 110 111 245
-    fk_OR_AT (157)
-        à esquerda: 116 117
-        à direita: 115 117
-    and_test (158)
+    lambdef_nocond (159)
         à esquerda: 118
-        à direita: 115 117
-    fk_AND_NT (159)
-        à esquerda: 119 120
-        à direita: 118 120
-    not_test (160)
-        à esquerda: 121 122
-        à direita: 118 120 121
-    comparison (161)
-        à esquerda: 123
-        à direita: 122
-    fk_CO_EXPR (162)
-        à esquerda: 124 125
-        à direita: 123 125
-    comp_op (163)
-        à esquerda: 126 127 128 129 130 131 132 133 134 135 136
-        à direita: 125
-    star_expr (164)
-        à esquerda: 137
-        à direita: 50 208 225
-    expr (165)
-        à esquerda: 138
-        à direita: 101 123 125 137 224
-    fk_VBAR_XE (166)
-        à esquerda: 139 140
-        à direita: 138 140
-    xor_expr (167)
+        à direita: 116
+    or_test (160)
+        à esquerda: 119
+        à direita: 111 114 115 250
+    fk_OR_AT (161)
+        à esquerda: 120 121
+        à direita: 119 121
+    and_test (162)
+        à esquerda: 122
+        à direita: 119 121
+    fk_AND_NT (163)
+        à esquerda: 123 124
+        à direita: 122 124
+    not_test (164)
+        à esquerda: 125 126
+        à direita: 122 124 125
+    comparison (165)
+        à esquerda: 127
+        à direita: 126
+    fk_CO_EXPR (166)
+        à esquerda: 128 129
+        à direita: 127 129
+    comp_op (167)
+        à esquerda: 130 131 132 133 134 135 136 137 138 139 140
+        à direita: 129
+    star_expr (168)
         à esquerda: 141
-        à direita: 138 140
-    fk_CIRCUMFLEX_EXPR (168)
-        à esquerda: 142 144
-        à direita: 141 144
-    $@7 (169)
-        à esquerda: 143
-        à direita: 144
-    and_expr (170)
+        à direita: 50 212 229
+    expr (169)
+        à esquerda: 142
+        à direita: 104 127 129 141 228
+    fk_VBAR_XE (170)
+        à esquerda: 143 144
+        à direita: 142 144
+    xor_expr (171)
         à esquerda: 145
-        à direita: 141 144
-    fk_AMPER_SE (171)
+        à direita: 142 144
+    fk_CIRCUMFLEX_EXPR (172)
         à esquerda: 146 148
         à direita: 145 148
-    $@8 (172)
+    $@11 (173)
         à esquerda: 147
         à direita: 148
-    shift_expr (173)
+    and_expr (174)
         à esquerda: 149
         à direita: 145 148
-    fk_LS_RS_AE (174)
-        à esquerda: 150 151
-        à direita: 149 151
-    SE_stmt (175)
-        à esquerda: 152 153
-        à direita: 151
-    arith_expr (176)
-        à esquerda: 154
-        à direita: 149 151
-    fk_T_PLUS_MINUS (177)
-        à esquerda: 155 156
-        à direita: 154 156
-    AE_stmt (178)
-        à esquerda: 157 158
-        à direita: 156
-    term (179)
-        à esquerda: 159
-        à direita: 154 156
-    fk_MATH (180)
-        à esquerda: 160 161
-        à direita: 159 161
-    term_stmt (181)
-        à esquerda: 162 163 164 165 166
-        à direita: 161
-    factor (182)
-        à esquerda: 167 168
-        à direita: 159 161 167 175
-    factor_stmt (183)
-        à esquerda: 169 170 171
-        à direita: 167
-    power (184)
-        à esquerda: 172
-        à direita: 168
-    opc_DOUBLESTAR_factor (185)
-        à esquerda: 173 175
+    fk_AMPER_SE (175)
+        à esquerda: 150 152
+        à direita: 149 152
+    $@12 (176)
+        à esquerda: 151
+        à direita: 152
+    shift_expr (177)
+        à esquerda: 153
+        à direita: 149 152
+    fk_LS_RS_AE (178)
+        à esquerda: 154 155
+        à direita: 153 155
+    SE_stmt (179)
+        à esquerda: 156 157
+        à direita: 155
+    arith_expr (180)
+        à esquerda: 158
+        à direita: 153 155
+    fk_T_PLUS_MINUS (181)
+        à esquerda: 159 160
+        à direita: 158 160
+    AE_stmt (182)
+        à esquerda: 161 162
+        à direita: 160
+    term (183)
+        à esquerda: 163
+        à direita: 158 160
+    fk_MATH (184)
+        à esquerda: 164 165
+        à direita: 163 165
+    term_stmt (185)
+        à esquerda: 166 167 168 169 170
+        à direita: 165
+    factor (186)
+        à esquerda: 171 172
+        à direita: 163 165 171 179
+    factor_stmt (187)
+        à esquerda: 173 174 175
+        à direita: 171
+    power (188)
+        à esquerda: 176
         à direita: 172
-    $@9 (186)
-        à esquerda: 174
-        à direita: 175
-    atom_expr (187)
-        à esquerda: 176 178
-        à direita: 172
-    $@10 (188)
-        à esquerda: 177
-        à direita: 178
-    fk_trailer (189)
-        à esquerda: 179 180
-        à direita: 176 178 180
-    atom (190)
-        à esquerda: 181 182 183 184 186 187 188 189 190
-        à direita: 176 178
-    $@11 (191)
-        à esquerda: 185
-        à direita: 186
-    opc_atom_stmt (192)
-        à esquerda: 191 192 193
-        à direita: 181
-    opc_testlist_comp (193)
-        à esquerda: 194 195
+    opc_DOUBLESTAR_factor (189)
+        à esquerda: 177 179
+        à direita: 176
+    $@13 (190)
+        à esquerda: 178
+        à direita: 179
+    atom_expr (191)
+        à esquerda: 180 182
+        à direita: 176
+    $@14 (192)
+        à esquerda: 181
         à direita: 182
-    fk_STRING (194)
-        à esquerda: 196 198
-        à direita: 186 198
-    $@12 (195)
-        à esquerda: 197
-        à direita: 198
-    testlist_comp (196)
-        à esquerda: 199
-        à direita: 193 195
-    trailer (197)
-        à esquerda: 200 201 202
-        à direita: 180
-    opc_arglist (198)
-        à esquerda: 203 204
-        à direita: 200
-    fk_COMMA_NT_SE (199)
-        à esquerda: 205 206
-        à direita: 206 210
-    trailer_stmt (200)
+    fk_trailer (193)
+        à esquerda: 183 184
+        à direita: 180 182 184
+    atom (194)
+        à esquerda: 185 186 187 188 190 191 192 193 194
+        à direita: 180 182
+    $@15 (195)
+        à esquerda: 189
+        à direita: 190
+    opc_atom_stmt (196)
+        à esquerda: 195 196 197
+        à direita: 185
+    opc_testlist_comp (197)
+        à esquerda: 198 199
+        à direita: 186
+    fk_STRING (198)
+        à esquerda: 200 202
+        à direita: 190 202
+    $@16 (199)
+        à esquerda: 201
+        à direita: 202
+    testlist_comp (200)
+        à esquerda: 203
+        à direita: 197 199
+    trailer (201)
+        à esquerda: 204 205 206
+        à direita: 184
+    opc_arglist (202)
         à esquerda: 207 208
-        à direita: 199 206
-    trailer_stmt_1 (201)
+        à direita: 204
+    fk_COMMA_NT_SE (203)
         à esquerda: 209 210
-        à direita: 199
-    subscriptlist (202)
-        à esquerda: 211
-        à direita: 201
-    fk_COMMA_S (203)
-        à esquerda: 212 213
-        à direita: 211 213
-    subscript (204)
-        à esquerda: 214 215
-        à direita: 211 213
-    opc_test (205)
+        à direita: 210 214
+    trailer_stmt (204)
+        à esquerda: 211 212
+        à direita: 203 210
+    trailer_stmt_1 (205)
+        à esquerda: 213 214
+        à direita: 203
+    subscriptlist (206)
+        à esquerda: 215
+        à direita: 205
+    fk_COMMA_S (207)
         à esquerda: 216 217
-        à direita: 215 220
-    opc_sliceop (206)
+        à direita: 215 217
+    subscript (208)
         à esquerda: 218 219
-        à direita: 215
-    sliceop (207)
-        à esquerda: 220
-        à direita: 219
-    exprlist (208)
-        à esquerda: 221
-        à direita: 70 93 245
-    fk_COMMA_E_SE (209)
+        à direita: 215 217
+    opc_test (209)
+        à esquerda: 220 221
+        à direita: 219 224
+    opc_sliceop (210)
         à esquerda: 222 223
-        à direita: 221 223
-    exprlist_stmt (210)
-        à esquerda: 224 225
-        à direita: 221 223
-    testlist (211)
-        à esquerda: 226
-        à direita: 38 93
-    fk_COMMA_test (212)
-        à esquerda: 227 228
-        à direita: 226 228
-    classdef (213)
-        à esquerda: 229
+        à direita: 219
+    sliceop (211)
+        à esquerda: 224
+        à direita: 223
+    exprlist (212)
+        à esquerda: 225
+        à direita: 70 95 250
+    fk_COMMA_E_SE (213)
+        à esquerda: 226 227
+        à direita: 225 227
+    exprlist_stmt (214)
+        à esquerda: 228 229
+        à direita: 225 227
+    testlist (215)
+        à esquerda: 230
+        à direita: 38 95
+    fk_COMMA_test (216)
+        à esquerda: 231 232
+        à direita: 230 232
+    classdef (217)
+        à esquerda: 234
         à direita: 22
-    opc_LPAR_arglist_RPAR (214)
-        à esquerda: 230 231 232
-        à direita: 229
-    arglist (215)
+    $@17 (218)
         à esquerda: 233
-        à direita: 204 232
-    fk_COMMA_A (216)
-        à esquerda: 234 235
-        à direita: 233 235
-    argument (217)
-        à esquerda: 236 237 238 239 240
-        à direita: 233 235
-    opc_comp_for (218)
-        à esquerda: 241 242
-        à direita: 236
-    comp_iter (219)
-        à esquerda: 243 244
-        à direita: 247
-    sync_comp_for (220)
-        à esquerda: 245
-        à direita: 248
-    opc_comp_iter (221)
+        à direita: 234
+    opc_LPAR_arglist_RPAR (219)
+        à esquerda: 235 236 237
+        à direita: 234
+    arglist (220)
+        à esquerda: 238
+        à direita: 208 237
+    fk_COMMA_A (221)
+        à esquerda: 239 240
+        à direita: 238 240
+    argument (222)
+        à esquerda: 241 242 243 244 245
+        à direita: 238 240
+    opc_comp_for (223)
         à esquerda: 246 247
-        à direita: 245 251
-    comp_for (222)
-        à esquerda: 248
-        à direita: 209 242 243
-    opc_ASYNC (223)
-        à esquerda: 249 250
-        à direita: 248
-    comp_if (224)
-        à esquerda: 251
-        à direita: 244
-    yield_expr (225)
-        à esquerda: 252
-        à direita: 37 42 46 79 192
-    opc_yield_arg (226)
-        à esquerda: 253 254
+        à direita: 241
+    comp_iter (224)
+        à esquerda: 248 249
         à direita: 252
-    yield_arg (227)
-        à esquerda: 255 256
-        à direita: 254
-    func_body_suite (228)
-        à esquerda: 257 258
-        à direita: 24
-    fk_stmt (229)
+    sync_comp_for (225)
+        à esquerda: 250
+        à direita: 253
+    opc_comp_iter (226)
+        à esquerda: 251 252
+        à direita: 250 257
+    comp_for (227)
+        à esquerda: 253
+        à direita: 213 247 248
+    opc_ASYNC (228)
+        à esquerda: 254 255
+        à direita: 253
+    comp_if (229)
+        à esquerda: 257
+        à direita: 249
+    $@18 (230)
+        à esquerda: 256
+        à direita: 257
+    yield_expr (231)
+        à esquerda: 258
+        à direita: 37 42 46 79 196
+    opc_yield_arg (232)
         à esquerda: 259 260
-        à direita: 103 258 260
+        à direita: 258
+    yield_arg (233)
+        à esquerda: 261 262
+        à direita: 260
+    func_body_suite (234)
+        à esquerda: 263 264
+        à direita: 24
+    fk_stmt (235)
+        à esquerda: 265 266
+        à direita: 106 264 266
 
 
 Estado 0
@@ -1011,7 +1044,7 @@ Estado 0
 
 Estado 1
 
-  229 classdef: CLASS . NAME opc_LPAR_arglist_RPAR COLON suite
+  234 classdef: CLASS . NAME $@17 opc_LPAR_arglist_RPAR COLON suite
 
     NAME  deslocar, e ir ao estado 76
 
@@ -1025,7 +1058,7 @@ Estado 2
 
 Estado 3
 
-  113 lambdef: LAMBDA . opc_argslist COLON test
+  117 lambdef: LAMBDA . opc_argslist COLON test
 
     NAME  deslocar, e ir ao estado 78
 
@@ -1036,7 +1069,7 @@ Estado 3
 
 Estado 4
 
-  121 not_test: NOT . not_test
+  125 not_test: NOT . not_test
 
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
@@ -1070,61 +1103,30 @@ Estado 4
 
 Estado 5
 
-   89 if_stmt: IF . namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+   90 if_stmt: IF . $@7 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
 
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
+    $padrão  reduzir usando a regra 89 ($@7)
 
-    namedexpr_test  ir ao estado 81
-    test            ir ao estado 82
-    lambdef         ir ao estado 57
-    or_test         ir ao estado 58
-    and_test        ir ao estado 59
-    not_test        ir ao estado 60
-    comparison      ir ao estado 61
-    expr            ir ao estado 63
-    xor_expr        ir ao estado 64
-    and_expr        ir ao estado 65
-    shift_expr      ir ao estado 66
-    arith_expr      ir ao estado 67
-    term            ir ao estado 68
-    factor          ir ao estado 69
-    factor_stmt     ir ao estado 70
-    power           ir ao estado 71
-    atom_expr       ir ao estado 72
-    atom            ir ao estado 73
+    $@7  ir ao estado 81
 
 
 Estado 6
 
-  189 atom: TRUE .
+  193 atom: TRUE .
 
-    $padrão  reduzir usando a regra 189 (atom)
+    $padrão  reduzir usando a regra 193 (atom)
 
 
 Estado 7
 
-  190 atom: FALSE .
+  194 atom: FALSE .
 
-    $padrão  reduzir usando a regra 190 (atom)
+    $padrão  reduzir usando a regra 194 (atom)
 
 
 Estado 8
 
-   93 for_stmt: FOR . exprlist IN testlist COLON suite opc_ELSE_COLON_suite
+   95 for_stmt: FOR . exprlist IN testlist COLON suite opc_ELSE_COLON_suite
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -1141,8 +1143,8 @@ Estado 8
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    star_expr      ir ao estado 83
-    expr           ir ao estado 84
+    star_expr      ir ao estado 82
+    expr           ir ao estado 83
     xor_expr       ir ao estado 64
     and_expr       ir ao estado 65
     shift_expr     ir ao estado 66
@@ -1153,13 +1155,13 @@ Estado 8
     power          ir ao estado 71
     atom_expr      ir ao estado 72
     atom           ir ao estado 73
-    exprlist       ir ao estado 85
-    exprlist_stmt  ir ao estado 86
+    exprlist       ir ao estado 84
+    exprlist_stmt  ir ao estado 85
 
 
 Estado 9
 
-   92 while_stmt: WHILE . namedexpr_test COLON suite opc_ELSE_COLON_suite
+   94 while_stmt: WHILE . namedexpr_test COLON suite opc_ELSE_COLON_suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -1177,8 +1179,8 @@ Estado 9
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    namedexpr_test  ir ao estado 87
-    test            ir ao estado 82
+    namedexpr_test  ir ao estado 86
+    test            ir ao estado 87
     lambdef         ir ao estado 57
     or_test         ir ao estado 58
     and_test        ir ao estado 59
@@ -1220,7 +1222,7 @@ Estado 12
 
 Estado 13
 
-   96 with_stmt: WITH . with_item fk_COMMA_WI COLON suite
+   99 with_stmt: WITH . with_item fk_COMMA_WI COLON suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -1306,7 +1308,7 @@ Estado 14
 
 Estado 15
 
-  252 yield_expr: YIELD . opc_yield_arg
+  258 yield_expr: YIELD . opc_yield_arg
 
     FROM      deslocar, e ir ao estado 92
     LAMBDA    deslocar, e ir ao estado 3
@@ -1326,7 +1328,7 @@ Estado 15
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 253 (opc_yield_arg)
+    $padrão  reduzir usando a regra 259 (opc_yield_arg)
 
     testlist_star_expr  ir ao estado 93
     TSE_stmt            ir ao estado 42
@@ -1368,9 +1370,9 @@ Estado 17
 
 Estado 18
 
-  188 atom: NONE .
+  192 atom: NONE .
 
-    $padrão  reduzir usando a regra 188 (atom)
+    $padrão  reduzir usando a regra 192 (atom)
 
 
 Estado 19
@@ -1392,8 +1394,8 @@ Estado 19
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    star_expr      ir ao estado 83
-    expr           ir ao estado 84
+    star_expr      ir ao estado 82
+    expr           ir ao estado 83
     xor_expr       ir ao estado 64
     and_expr       ir ao estado 65
     shift_expr     ir ao estado 66
@@ -1405,39 +1407,39 @@ Estado 19
     atom_expr      ir ao estado 72
     atom           ir ao estado 73
     exprlist       ir ao estado 98
-    exprlist_stmt  ir ao estado 86
+    exprlist_stmt  ir ao estado 85
 
 
 Estado 20
 
-  178 atom_expr: AWAIT . $@10 atom fk_trailer
+  182 atom_expr: AWAIT . $@14 atom fk_trailer
 
-    $padrão  reduzir usando a regra 177 ($@10)
+    $padrão  reduzir usando a regra 181 ($@14)
 
-    $@10  ir ao estado 99
+    $@14  ir ao estado 99
 
 
 Estado 21
 
-  183 atom: NAME .
+  187 atom: NAME .
 
-    $padrão  reduzir usando a regra 183 (atom)
+    $padrão  reduzir usando a regra 187 (atom)
 
 
 Estado 22
 
-  184 atom: NUMBER .
+  188 atom: NUMBER .
 
-    $padrão  reduzir usando a regra 184 (atom)
+    $padrão  reduzir usando a regra 188 (atom)
 
 
 Estado 23
 
-  186 atom: STRING . $@11 fk_STRING
+  190 atom: STRING . $@15 fk_STRING
 
-    $padrão  reduzir usando a regra 185 ($@11)
+    $padrão  reduzir usando a regra 189 ($@15)
 
-    $@11  ir ao estado 100
+    $@15  ir ao estado 100
 
 
 Estado 24
@@ -1449,7 +1451,7 @@ Estado 24
 
 Estado 25
 
-  181 atom: LPAR . opc_atom_stmt RPAR
+  185 atom: LPAR . opc_atom_stmt RPAR
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -1469,10 +1471,10 @@ Estado 25
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 191 (opc_atom_stmt)
+    $padrão  reduzir usando a regra 195 (opc_atom_stmt)
 
     namedexpr_test  ir ao estado 101
-    test            ir ao estado 82
+    test            ir ao estado 87
     lambdef         ir ao estado 57
     or_test         ir ao estado 58
     and_test        ir ao estado 59
@@ -1498,7 +1500,7 @@ Estado 25
 
 Estado 26
 
-  182 atom: LSQB . opc_testlist_comp RSQB
+  186 atom: LSQB . opc_testlist_comp RSQB
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -1517,10 +1519,10 @@ Estado 26
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 194 (opc_testlist_comp)
+    $padrão  reduzir usando a regra 198 (opc_testlist_comp)
 
     namedexpr_test     ir ao estado 101
-    test               ir ao estado 82
+    test               ir ao estado 87
     lambdef            ir ao estado 57
     or_test            ir ao estado 58
     and_test           ir ao estado 59
@@ -1545,21 +1547,21 @@ Estado 26
 
 Estado 27
 
-  169 factor_stmt: PLUS .
+  173 factor_stmt: PLUS .
 
-    $padrão  reduzir usando a regra 169 (factor_stmt)
+    $padrão  reduzir usando a regra 173 (factor_stmt)
 
 
 Estado 28
 
-  170 factor_stmt: MINUS .
+  174 factor_stmt: MINUS .
 
-    $padrão  reduzir usando a regra 170 (factor_stmt)
+    $padrão  reduzir usando a regra 174 (factor_stmt)
 
 
 Estado 29
 
-  137 star_expr: STAR . expr
+  141 star_expr: STAR . expr
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -1590,16 +1592,16 @@ Estado 29
 
 Estado 30
 
-  171 factor_stmt: TILDE .
+  175 factor_stmt: TILDE .
 
-    $padrão  reduzir usando a regra 171 (factor_stmt)
+    $padrão  reduzir usando a regra 175 (factor_stmt)
 
 
 Estado 31
 
-  187 atom: ELLIPSIS .
+  191 atom: ELLIPSIS .
 
-    $padrão  reduzir usando a regra 187 (atom)
+    $padrão  reduzir usando a regra 191 (atom)
 
 
 Estado 32
@@ -1885,49 +1887,49 @@ Estado 56
 
 Estado 57
 
-  108 test: lambdef .
+  112 test: lambdef .
 
-    $padrão  reduzir usando a regra 108 (test)
+    $padrão  reduzir usando a regra 112 (test)
 
 
 Estado 58
 
-  107 test: or_test . opc_IF_or_test_ELSE_test
+  111 test: or_test . opc_IF_or_test_ELSE_test
 
     IF  deslocar, e ir ao estado 137
 
-    $padrão  reduzir usando a regra 109 (opc_IF_or_test_ELSE_test)
+    $padrão  reduzir usando a regra 113 (opc_IF_or_test_ELSE_test)
 
     opc_IF_or_test_ELSE_test  ir ao estado 138
 
 
 Estado 59
 
-  115 or_test: and_test . fk_OR_AT
+  119 or_test: and_test . fk_OR_AT
 
     OR  deslocar, e ir ao estado 139
 
-    $padrão  reduzir usando a regra 116 (fk_OR_AT)
+    $padrão  reduzir usando a regra 120 (fk_OR_AT)
 
     fk_OR_AT  ir ao estado 140
 
 
 Estado 60
 
-  118 and_test: not_test . fk_AND_NT
+  122 and_test: not_test . fk_AND_NT
 
     AND  deslocar, e ir ao estado 141
 
-    $padrão  reduzir usando a regra 119 (fk_AND_NT)
+    $padrão  reduzir usando a regra 123 (fk_AND_NT)
 
     fk_AND_NT  ir ao estado 142
 
 
 Estado 61
 
-  122 not_test: comparison .
+  126 not_test: comparison .
 
-    $padrão  reduzir usando a regra 122 (not_test)
+    $padrão  reduzir usando a regra 126 (not_test)
 
 
 Estado 62
@@ -1939,7 +1941,7 @@ Estado 62
 
 Estado 63
 
-  123 comparison: expr . fk_CO_EXPR
+  127 comparison: expr . fk_CO_EXPR
 
     NOT           deslocar, e ir ao estado 143
     IS            deslocar, e ir ao estado 144
@@ -1952,7 +1954,7 @@ Estado 63
     LESSEQUAL     deslocar, e ir ao estado 151
     GREATEREQUAL  deslocar, e ir ao estado 152
 
-    $padrão  reduzir usando a regra 124 (fk_CO_EXPR)
+    $padrão  reduzir usando a regra 128 (fk_CO_EXPR)
 
     fk_CO_EXPR  ir ao estado 153
     comp_op     ir ao estado 154
@@ -1960,45 +1962,45 @@ Estado 63
 
 Estado 64
 
-  138 expr: xor_expr . fk_VBAR_XE
+  142 expr: xor_expr . fk_VBAR_XE
 
     VBAR  deslocar, e ir ao estado 155
 
-    $padrão  reduzir usando a regra 139 (fk_VBAR_XE)
+    $padrão  reduzir usando a regra 143 (fk_VBAR_XE)
 
     fk_VBAR_XE  ir ao estado 156
 
 
 Estado 65
 
-  141 xor_expr: and_expr . fk_CIRCUMFLEX_EXPR
+  145 xor_expr: and_expr . fk_CIRCUMFLEX_EXPR
 
     CIRCUMFLEX  deslocar, e ir ao estado 157
 
-    $padrão  reduzir usando a regra 142 (fk_CIRCUMFLEX_EXPR)
+    $padrão  reduzir usando a regra 146 (fk_CIRCUMFLEX_EXPR)
 
     fk_CIRCUMFLEX_EXPR  ir ao estado 158
 
 
 Estado 66
 
-  145 and_expr: shift_expr . fk_AMPER_SE
+  149 and_expr: shift_expr . fk_AMPER_SE
 
     AMPER  deslocar, e ir ao estado 159
 
-    $padrão  reduzir usando a regra 146 (fk_AMPER_SE)
+    $padrão  reduzir usando a regra 150 (fk_AMPER_SE)
 
     fk_AMPER_SE  ir ao estado 160
 
 
 Estado 67
 
-  149 shift_expr: arith_expr . fk_LS_RS_AE
+  153 shift_expr: arith_expr . fk_LS_RS_AE
 
     LEFTSHIFT   deslocar, e ir ao estado 161
     RIGHTSHIFT  deslocar, e ir ao estado 162
 
-    $padrão  reduzir usando a regra 150 (fk_LS_RS_AE)
+    $padrão  reduzir usando a regra 154 (fk_LS_RS_AE)
 
     fk_LS_RS_AE  ir ao estado 163
     SE_stmt      ir ao estado 164
@@ -2006,12 +2008,12 @@ Estado 67
 
 Estado 68
 
-  154 arith_expr: term . fk_T_PLUS_MINUS
+  158 arith_expr: term . fk_T_PLUS_MINUS
 
     PLUS   deslocar, e ir ao estado 165
     MINUS  deslocar, e ir ao estado 166
 
-    $padrão  reduzir usando a regra 155 (fk_T_PLUS_MINUS)
+    $padrão  reduzir usando a regra 159 (fk_T_PLUS_MINUS)
 
     fk_T_PLUS_MINUS  ir ao estado 167
     AE_stmt          ir ao estado 168
@@ -2019,7 +2021,7 @@ Estado 68
 
 Estado 69
 
-  159 term: factor . fk_MATH
+  163 term: factor . fk_MATH
 
     STAR         deslocar, e ir ao estado 169
     SLASH        deslocar, e ir ao estado 170
@@ -2027,7 +2029,7 @@ Estado 69
     DOUBLESLASH  deslocar, e ir ao estado 172
     AT           deslocar, e ir ao estado 173
 
-    $padrão  reduzir usando a regra 160 (fk_MATH)
+    $padrão  reduzir usando a regra 164 (fk_MATH)
 
     fk_MATH    ir ao estado 174
     term_stmt  ir ao estado 175
@@ -2035,7 +2037,7 @@ Estado 69
 
 Estado 70
 
-  167 factor: factor_stmt . factor
+  171 factor: factor_stmt . factor
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -2060,31 +2062,31 @@ Estado 70
 
 Estado 71
 
-  168 factor: power .
+  172 factor: power .
 
-    $padrão  reduzir usando a regra 168 (factor)
+    $padrão  reduzir usando a regra 172 (factor)
 
 
 Estado 72
 
-  172 power: atom_expr . opc_DOUBLESTAR_factor
+  176 power: atom_expr . opc_DOUBLESTAR_factor
 
     DOUBLESTAR  deslocar, e ir ao estado 177
 
-    $padrão  reduzir usando a regra 173 (opc_DOUBLESTAR_factor)
+    $padrão  reduzir usando a regra 177 (opc_DOUBLESTAR_factor)
 
     opc_DOUBLESTAR_factor  ir ao estado 178
 
 
 Estado 73
 
-  176 atom_expr: atom . fk_trailer
+  180 atom_expr: atom . fk_trailer
 
     LPAR  deslocar, e ir ao estado 179
     LSQB  deslocar, e ir ao estado 180
     DOT   deslocar, e ir ao estado 181
 
-    $padrão  reduzir usando a regra 179 (fk_trailer)
+    $padrão  reduzir usando a regra 183 (fk_trailer)
 
     fk_trailer  ir ao estado 182
     trailer     ir ao estado 183
@@ -2106,13 +2108,11 @@ Estado 75
 
 Estado 76
 
-  229 classdef: CLASS NAME . opc_LPAR_arglist_RPAR COLON suite
+  234 classdef: CLASS NAME . $@17 opc_LPAR_arglist_RPAR COLON suite
 
-    LPAR  deslocar, e ir ao estado 184
+    $padrão  reduzir usando a regra 233 ($@17)
 
-    $padrão  reduzir usando a regra 230 (opc_LPAR_arglist_RPAR)
-
-    opc_LPAR_arglist_RPAR  ir ao estado 185
+    $@17  ir ao estado 184
 
 
 Estado 77
@@ -2121,7 +2121,7 @@ Estado 77
 
     $padrão  reduzir usando a regra 23 ($@1)
 
-    $@1  ir ao estado 186
+    $@1  ir ao estado 185
 
 
 Estado 78
@@ -2132,100 +2132,133 @@ Estado 78
     COMMA     reduzir usando a regra 30 ($@3)
     $padrão  reduzir usando a regra 32 (opc_argslist)
 
-    $@3  ir ao estado 187
+    $@3  ir ao estado 186
 
 
 Estado 79
 
-  113 lambdef: LAMBDA opc_argslist . COLON test
+  117 lambdef: LAMBDA opc_argslist . COLON test
 
-    COLON  deslocar, e ir ao estado 188
+    COLON  deslocar, e ir ao estado 187
 
 
 Estado 80
 
-  121 not_test: NOT not_test .
+  125 not_test: NOT not_test .
 
-    $padrão  reduzir usando a regra 121 (not_test)
+    $padrão  reduzir usando a regra 125 (not_test)
 
 
 Estado 81
 
-   89 if_stmt: IF namedexpr_test . COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+   90 if_stmt: IF $@7 . namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
 
-    COLON  deslocar, e ir ao estado 189
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    namedexpr_test  ir ao estado 188
+    test            ir ao estado 87
+    lambdef         ir ao estado 57
+    or_test         ir ao estado 58
+    and_test        ir ao estado 59
+    not_test        ir ao estado 60
+    comparison      ir ao estado 61
+    expr            ir ao estado 63
+    xor_expr        ir ao estado 64
+    and_expr        ir ao estado 65
+    shift_expr      ir ao estado 66
+    arith_expr      ir ao estado 67
+    term            ir ao estado 68
+    factor          ir ao estado 69
+    factor_stmt     ir ao estado 70
+    power           ir ao estado 71
+    atom_expr       ir ao estado 72
+    atom            ir ao estado 73
 
 
 Estado 82
 
-  104 namedexpr_test: test . opc_COLONEQUAL_test
+  229 exprlist_stmt: star_expr .
 
-    COLONEQUAL  deslocar, e ir ao estado 190
-
-    $padrão  reduzir usando a regra 105 (opc_COLONEQUAL_test)
-
-    opc_COLONEQUAL_test  ir ao estado 191
+    $padrão  reduzir usando a regra 229 (exprlist_stmt)
 
 
 Estado 83
 
-  225 exprlist_stmt: star_expr .
+  228 exprlist_stmt: expr .
 
-    $padrão  reduzir usando a regra 225 (exprlist_stmt)
+    $padrão  reduzir usando a regra 228 (exprlist_stmt)
 
 
 Estado 84
 
-  224 exprlist_stmt: expr .
+   95 for_stmt: FOR exprlist . IN testlist COLON suite opc_ELSE_COLON_suite
 
-    $padrão  reduzir usando a regra 224 (exprlist_stmt)
+    IN  deslocar, e ir ao estado 189
 
 
 Estado 85
 
-   93 for_stmt: FOR exprlist . IN testlist COLON suite opc_ELSE_COLON_suite
+  225 exprlist: exprlist_stmt . fk_COMMA_E_SE opc_COMMA
 
-    IN  deslocar, e ir ao estado 192
+    COMMA  deslocar, e ir ao estado 190
+
+    $padrão  reduzir usando a regra 226 (fk_COMMA_E_SE)
+
+    fk_COMMA_E_SE  ir ao estado 191
 
 
 Estado 86
 
-  221 exprlist: exprlist_stmt . fk_COMMA_E_SE opc_COMMA
+   94 while_stmt: WHILE namedexpr_test . COLON suite opc_ELSE_COLON_suite
 
-    COMMA  deslocar, e ir ao estado 193
-
-    $padrão  reduzir usando a regra 222 (fk_COMMA_E_SE)
-
-    fk_COMMA_E_SE  ir ao estado 194
+    COLON  deslocar, e ir ao estado 192
 
 
 Estado 87
 
-   92 while_stmt: WHILE namedexpr_test . COLON suite opc_ELSE_COLON_suite
+  107 namedexpr_test: test . opc_COLONEQUAL_test
 
-    COLON  deslocar, e ir ao estado 195
+    COLONEQUAL  deslocar, e ir ao estado 193
+
+    $padrão  reduzir usando a regra 108 (opc_COLONEQUAL_test)
+
+    opc_COLONEQUAL_test  ir ao estado 194
 
 
 Estado 88
 
-   96 with_stmt: WITH with_item . fk_COMMA_WI COLON suite
+   99 with_stmt: WITH with_item . fk_COMMA_WI COLON suite
 
-    COMMA  deslocar, e ir ao estado 196
+    COMMA  deslocar, e ir ao estado 195
 
-    $padrão  reduzir usando a regra 97 (fk_COMMA_WI)
+    $padrão  reduzir usando a regra 100 (fk_COMMA_WI)
 
-    fk_COMMA_WI  ir ao estado 197
+    fk_COMMA_WI  ir ao estado 196
 
 
 Estado 89
 
-   99 with_item: test . opc_AS_expr
+  102 with_item: test . opc_AS_expr
 
-    AS  deslocar, e ir ao estado 198
+    AS  deslocar, e ir ao estado 197
 
-    $padrão  reduzir usando a regra 100 (opc_AS_expr)
+    $padrão  reduzir usando a regra 103 (opc_AS_expr)
 
-    opc_AS_expr  ir ao estado 199
+    opc_AS_expr  ir ao estado 198
 
 
 Estado 90
@@ -2244,7 +2277,7 @@ Estado 91
 
 Estado 92
 
-  255 yield_arg: FROM . test
+  261 yield_arg: FROM . test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -2262,7 +2295,7 @@ Estado 92
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 200
+    test         ir ao estado 199
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -2283,23 +2316,23 @@ Estado 92
 
 Estado 93
 
-  256 yield_arg: testlist_star_expr .
+  262 yield_arg: testlist_star_expr .
 
-    $padrão  reduzir usando a regra 256 (yield_arg)
+    $padrão  reduzir usando a regra 262 (yield_arg)
 
 
 Estado 94
 
-  252 yield_expr: YIELD opc_yield_arg .
+  258 yield_expr: YIELD opc_yield_arg .
 
-    $padrão  reduzir usando a regra 252 (yield_expr)
+    $padrão  reduzir usando a regra 258 (yield_expr)
 
 
 Estado 95
 
-  254 opc_yield_arg: yield_arg .
+  260 opc_yield_arg: yield_arg .
 
-    $padrão  reduzir usando a regra 254 (opc_yield_arg)
+    $padrão  reduzir usando a regra 260 (opc_yield_arg)
 
 
 Estado 96
@@ -2308,7 +2341,7 @@ Estado 96
 
     $padrão  reduzir usando a regra 82 ($@4)
 
-    $@4  ir ao estado 201
+    $@4  ir ao estado 200
 
 
 Estado 97
@@ -2317,7 +2350,7 @@ Estado 97
 
     $padrão  reduzir usando a regra 84 ($@5)
 
-    $@5  ir ao estado 202
+    $@5  ir ao estado 201
 
 
 Estado 98
@@ -2329,7 +2362,7 @@ Estado 98
 
 Estado 99
 
-  178 atom_expr: AWAIT $@10 . atom fk_trailer
+  182 atom_expr: AWAIT $@14 . atom fk_trailer
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -2341,90 +2374,90 @@ Estado 99
     LSQB      deslocar, e ir ao estado 26
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    atom  ir ao estado 203
+    atom  ir ao estado 202
 
 
 Estado 100
 
-  186 atom: STRING $@11 . fk_STRING
+  190 atom: STRING $@15 . fk_STRING
 
-    STRING  deslocar, e ir ao estado 204
+    STRING  deslocar, e ir ao estado 203
 
-    $padrão  reduzir usando a regra 196 (fk_STRING)
+    $padrão  reduzir usando a regra 200 (fk_STRING)
 
-    fk_STRING  ir ao estado 205
+    fk_STRING  ir ao estado 204
 
 
 Estado 101
 
-  207 trailer_stmt: namedexpr_test .
+  211 trailer_stmt: namedexpr_test .
 
-    $padrão  reduzir usando a regra 207 (trailer_stmt)
+    $padrão  reduzir usando a regra 211 (trailer_stmt)
 
 
 Estado 102
 
-  208 trailer_stmt: star_expr .
+  212 trailer_stmt: star_expr .
 
-    $padrão  reduzir usando a regra 208 (trailer_stmt)
+    $padrão  reduzir usando a regra 212 (trailer_stmt)
 
 
 Estado 103
 
-  181 atom: LPAR opc_atom_stmt . RPAR
+  185 atom: LPAR opc_atom_stmt . RPAR
 
-    RPAR  deslocar, e ir ao estado 206
+    RPAR  deslocar, e ir ao estado 205
 
 
 Estado 104
 
-  193 opc_atom_stmt: testlist_comp .
+  197 opc_atom_stmt: testlist_comp .
 
-    $padrão  reduzir usando a regra 193 (opc_atom_stmt)
+    $padrão  reduzir usando a regra 197 (opc_atom_stmt)
 
 
 Estado 105
 
-  199 testlist_comp: trailer_stmt . trailer_stmt_1
+  203 testlist_comp: trailer_stmt . trailer_stmt_1
 
-    ASYNC  deslocar, e ir ao estado 207
-    COMMA  deslocar, e ir ao estado 208
+    ASYNC  deslocar, e ir ao estado 206
+    COMMA  deslocar, e ir ao estado 207
 
-    FOR       reduzir usando a regra 249 (opc_ASYNC)
-    $padrão  reduzir usando a regra 205 (fk_COMMA_NT_SE)
+    FOR       reduzir usando a regra 254 (opc_ASYNC)
+    $padrão  reduzir usando a regra 209 (fk_COMMA_NT_SE)
 
-    fk_COMMA_NT_SE  ir ao estado 209
-    trailer_stmt_1  ir ao estado 210
-    comp_for        ir ao estado 211
-    opc_ASYNC       ir ao estado 212
+    fk_COMMA_NT_SE  ir ao estado 208
+    trailer_stmt_1  ir ao estado 209
+    comp_for        ir ao estado 210
+    opc_ASYNC       ir ao estado 211
 
 
 Estado 106
 
-  192 opc_atom_stmt: yield_expr .
+  196 opc_atom_stmt: yield_expr .
 
-    $padrão  reduzir usando a regra 192 (opc_atom_stmt)
+    $padrão  reduzir usando a regra 196 (opc_atom_stmt)
 
 
 Estado 107
 
-  182 atom: LSQB opc_testlist_comp . RSQB
+  186 atom: LSQB opc_testlist_comp . RSQB
 
-    RSQB  deslocar, e ir ao estado 213
+    RSQB  deslocar, e ir ao estado 212
 
 
 Estado 108
 
-  195 opc_testlist_comp: testlist_comp .
+  199 opc_testlist_comp: testlist_comp .
 
-    $padrão  reduzir usando a regra 195 (opc_testlist_comp)
+    $padrão  reduzir usando a regra 199 (opc_testlist_comp)
 
 
 Estado 109
 
-  137 star_expr: STAR expr .
+  141 star_expr: STAR expr .
 
-    $padrão  reduzir usando a regra 137 (star_expr)
+    $padrão  reduzir usando a regra 141 (star_expr)
 
 
 Estado 110
@@ -2477,7 +2510,7 @@ Estado 113
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    small_stmt          ir ao estado 214
+    small_stmt          ir ao estado 213
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
     TSE_stmt            ir ao estado 42
@@ -2515,11 +2548,11 @@ Estado 114
 
     8 simple_stmt: small_stmt fk_SEMI_small_stmt . opc_SEMI NEWLINE
 
-    SEMI  deslocar, e ir ao estado 215
+    SEMI  deslocar, e ir ao estado 214
 
     $padrão  reduzir usando a regra 66 (opc_SEMI)
 
-    opc_SEMI  ir ao estado 216
+    opc_SEMI  ir ao estado 215
 
 
 Estado 115
@@ -2542,7 +2575,7 @@ Estado 115
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 217
+    test         ir ao estado 216
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -2583,8 +2616,8 @@ Estado 116
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    expr_stmt_4         ir ao estado 218
-    testlist_star_expr  ir ao estado 219
+    expr_stmt_4         ir ao estado 217
+    testlist_star_expr  ir ao estado 218
     TSE_stmt            ir ao estado 42
     test                ir ao estado 56
     lambdef             ir ao estado 57
@@ -2604,7 +2637,7 @@ Estado 116
     power               ir ao estado 71
     atom_expr           ir ao estado 72
     atom                ir ao estado 73
-    yield_expr          ir ao estado 220
+    yield_expr          ir ao estado 219
 
 
 Estado 117
@@ -2720,7 +2753,7 @@ Estado 132
 
     $padrão  reduzir usando a regra 39 (fk_EQ_YE_TSE)
 
-    fk_EQ_YE_TSE  ir ao estado 221
+    fk_EQ_YE_TSE  ir ao estado 220
     expr_stmt_3   ir ao estado 132
 
 
@@ -2752,8 +2785,8 @@ Estado 134
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    expr_stmt_2  ir ao estado 222
-    test         ir ao estado 223
+    expr_stmt_2  ir ao estado 221
+    test         ir ao estado 222
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -2770,8 +2803,8 @@ Estado 134
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
-    testlist     ir ao estado 224
-    yield_expr   ir ao estado 225
+    testlist     ir ao estado 223
+    yield_expr   ir ao estado 224
 
 
 Estado 135
@@ -2795,7 +2828,7 @@ Estado 135
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    TSE_stmt     ir ao estado 226
+    TSE_stmt     ir ao estado 225
     test         ir ao estado 56
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
@@ -2820,16 +2853,16 @@ Estado 136
 
    48 testlist_star_expr: TSE_stmt fk_COMMA_T_SE . opc_COMMA
 
-    COMMA  deslocar, e ir ao estado 227
+    COMMA  deslocar, e ir ao estado 226
 
     $padrão  reduzir usando a regra 68 (opc_COMMA)
 
-    opc_COMMA  ir ao estado 228
+    opc_COMMA  ir ao estado 227
 
 
 Estado 137
 
-  110 opc_IF_or_test_ELSE_test: IF . or_test ELSE test
+  114 opc_IF_or_test_ELSE_test: IF . or_test ELSE test
 
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
@@ -2846,7 +2879,7 @@ Estado 137
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    or_test      ir ao estado 229
+    or_test      ir ao estado 228
     and_test     ir ao estado 59
     not_test     ir ao estado 60
     comparison   ir ao estado 61
@@ -2865,14 +2898,14 @@ Estado 137
 
 Estado 138
 
-  107 test: or_test opc_IF_or_test_ELSE_test .
+  111 test: or_test opc_IF_or_test_ELSE_test .
 
-    $padrão  reduzir usando a regra 107 (test)
+    $padrão  reduzir usando a regra 111 (test)
 
 
 Estado 139
 
-  117 fk_OR_AT: OR . and_test fk_OR_AT
+  121 fk_OR_AT: OR . and_test fk_OR_AT
 
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
@@ -2889,7 +2922,7 @@ Estado 139
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    and_test     ir ao estado 230
+    and_test     ir ao estado 229
     not_test     ir ao estado 60
     comparison   ir ao estado 61
     expr         ir ao estado 63
@@ -2907,14 +2940,14 @@ Estado 139
 
 Estado 140
 
-  115 or_test: and_test fk_OR_AT .
+  119 or_test: and_test fk_OR_AT .
 
-    $padrão  reduzir usando a regra 115 (or_test)
+    $padrão  reduzir usando a regra 119 (or_test)
 
 
 Estado 141
 
-  120 fk_AND_NT: AND . not_test fk_AND_NT
+  124 fk_AND_NT: AND . not_test fk_AND_NT
 
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
@@ -2931,7 +2964,7 @@ Estado 141
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    not_test     ir ao estado 231
+    not_test     ir ao estado 230
     comparison   ir ao estado 61
     expr         ir ao estado 63
     xor_expr     ir ao estado 64
@@ -2948,94 +2981,94 @@ Estado 141
 
 Estado 142
 
-  118 and_test: not_test fk_AND_NT .
+  122 and_test: not_test fk_AND_NT .
 
-    $padrão  reduzir usando a regra 118 (and_test)
+    $padrão  reduzir usando a regra 122 (and_test)
 
 
 Estado 143
 
-  134 comp_op: NOT . IN
+  138 comp_op: NOT . IN
 
-    IN  deslocar, e ir ao estado 232
+    IN  deslocar, e ir ao estado 231
 
 
 Estado 144
 
-  135 comp_op: IS .
-  136        | IS . NOT
+  139 comp_op: IS .
+  140        | IS . NOT
 
-    NOT  deslocar, e ir ao estado 233
+    NOT  deslocar, e ir ao estado 232
 
-    $padrão  reduzir usando a regra 135 (comp_op)
+    $padrão  reduzir usando a regra 139 (comp_op)
 
 
 Estado 145
 
-  133 comp_op: IN .
+  137 comp_op: IN .
 
-    $padrão  reduzir usando a regra 133 (comp_op)
+    $padrão  reduzir usando a regra 137 (comp_op)
 
 
 Estado 146
 
-  126 comp_op: LESS .
-
-    $padrão  reduzir usando a regra 126 (comp_op)
-
-
-Estado 147
-
-  127 comp_op: GREATER .
-
-    $padrão  reduzir usando a regra 127 (comp_op)
-
-
-Estado 148
-
-  131 comp_op: LESSGREATER .
-
-    $padrão  reduzir usando a regra 131 (comp_op)
-
-
-Estado 149
-
-  128 comp_op: EQEQUAL .
-
-    $padrão  reduzir usando a regra 128 (comp_op)
-
-
-Estado 150
-
-  132 comp_op: NOTEQUAL .
-
-    $padrão  reduzir usando a regra 132 (comp_op)
-
-
-Estado 151
-
-  130 comp_op: LESSEQUAL .
+  130 comp_op: LESS .
 
     $padrão  reduzir usando a regra 130 (comp_op)
 
 
+Estado 147
+
+  131 comp_op: GREATER .
+
+    $padrão  reduzir usando a regra 131 (comp_op)
+
+
+Estado 148
+
+  135 comp_op: LESSGREATER .
+
+    $padrão  reduzir usando a regra 135 (comp_op)
+
+
+Estado 149
+
+  132 comp_op: EQEQUAL .
+
+    $padrão  reduzir usando a regra 132 (comp_op)
+
+
+Estado 150
+
+  136 comp_op: NOTEQUAL .
+
+    $padrão  reduzir usando a regra 136 (comp_op)
+
+
+Estado 151
+
+  134 comp_op: LESSEQUAL .
+
+    $padrão  reduzir usando a regra 134 (comp_op)
+
+
 Estado 152
 
-  129 comp_op: GREATEREQUAL .
+  133 comp_op: GREATEREQUAL .
 
-    $padrão  reduzir usando a regra 129 (comp_op)
+    $padrão  reduzir usando a regra 133 (comp_op)
 
 
 Estado 153
 
-  123 comparison: expr fk_CO_EXPR .
+  127 comparison: expr fk_CO_EXPR .
 
-    $padrão  reduzir usando a regra 123 (comparison)
+    $padrão  reduzir usando a regra 127 (comparison)
 
 
 Estado 154
 
-  125 fk_CO_EXPR: comp_op . expr fk_CO_EXPR
+  129 fk_CO_EXPR: comp_op . expr fk_CO_EXPR
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3051,7 +3084,7 @@ Estado 154
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    expr         ir ao estado 234
+    expr         ir ao estado 233
     xor_expr     ir ao estado 64
     and_expr     ir ao estado 65
     shift_expr   ir ao estado 66
@@ -3066,7 +3099,7 @@ Estado 154
 
 Estado 155
 
-  140 fk_VBAR_XE: VBAR . xor_expr fk_VBAR_XE
+  144 fk_VBAR_XE: VBAR . xor_expr fk_VBAR_XE
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3082,7 +3115,7 @@ Estado 155
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    xor_expr     ir ao estado 235
+    xor_expr     ir ao estado 234
     and_expr     ir ao estado 65
     shift_expr   ir ao estado 66
     arith_expr   ir ao estado 67
@@ -3096,67 +3129,67 @@ Estado 155
 
 Estado 156
 
-  138 expr: xor_expr fk_VBAR_XE .
+  142 expr: xor_expr fk_VBAR_XE .
 
-    $padrão  reduzir usando a regra 138 (expr)
+    $padrão  reduzir usando a regra 142 (expr)
 
 
 Estado 157
 
-  144 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX . $@7 and_expr fk_CIRCUMFLEX_EXPR
+  148 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX . $@11 and_expr fk_CIRCUMFLEX_EXPR
 
-    $padrão  reduzir usando a regra 143 ($@7)
+    $padrão  reduzir usando a regra 147 ($@11)
 
-    $@7  ir ao estado 236
+    $@11  ir ao estado 235
 
 
 Estado 158
 
-  141 xor_expr: and_expr fk_CIRCUMFLEX_EXPR .
+  145 xor_expr: and_expr fk_CIRCUMFLEX_EXPR .
 
-    $padrão  reduzir usando a regra 141 (xor_expr)
+    $padrão  reduzir usando a regra 145 (xor_expr)
 
 
 Estado 159
 
-  148 fk_AMPER_SE: AMPER . $@8 shift_expr fk_AMPER_SE
+  152 fk_AMPER_SE: AMPER . $@12 shift_expr fk_AMPER_SE
 
-    $padrão  reduzir usando a regra 147 ($@8)
+    $padrão  reduzir usando a regra 151 ($@12)
 
-    $@8  ir ao estado 237
+    $@12  ir ao estado 236
 
 
 Estado 160
 
-  145 and_expr: shift_expr fk_AMPER_SE .
+  149 and_expr: shift_expr fk_AMPER_SE .
 
-    $padrão  reduzir usando a regra 145 (and_expr)
+    $padrão  reduzir usando a regra 149 (and_expr)
 
 
 Estado 161
 
-  152 SE_stmt: LEFTSHIFT .
+  156 SE_stmt: LEFTSHIFT .
 
-    $padrão  reduzir usando a regra 152 (SE_stmt)
+    $padrão  reduzir usando a regra 156 (SE_stmt)
 
 
 Estado 162
 
-  153 SE_stmt: RIGHTSHIFT .
+  157 SE_stmt: RIGHTSHIFT .
 
-    $padrão  reduzir usando a regra 153 (SE_stmt)
+    $padrão  reduzir usando a regra 157 (SE_stmt)
 
 
 Estado 163
 
-  149 shift_expr: arith_expr fk_LS_RS_AE .
+  153 shift_expr: arith_expr fk_LS_RS_AE .
 
-    $padrão  reduzir usando a regra 149 (shift_expr)
+    $padrão  reduzir usando a regra 153 (shift_expr)
 
 
 Estado 164
 
-  151 fk_LS_RS_AE: SE_stmt . arith_expr fk_LS_RS_AE
+  155 fk_LS_RS_AE: SE_stmt . arith_expr fk_LS_RS_AE
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3172,7 +3205,7 @@ Estado 164
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    arith_expr   ir ao estado 238
+    arith_expr   ir ao estado 237
     term         ir ao estado 68
     factor       ir ao estado 69
     factor_stmt  ir ao estado 70
@@ -3183,28 +3216,28 @@ Estado 164
 
 Estado 165
 
-  157 AE_stmt: PLUS .
+  161 AE_stmt: PLUS .
 
-    $padrão  reduzir usando a regra 157 (AE_stmt)
+    $padrão  reduzir usando a regra 161 (AE_stmt)
 
 
 Estado 166
 
-  158 AE_stmt: MINUS .
+  162 AE_stmt: MINUS .
 
-    $padrão  reduzir usando a regra 158 (AE_stmt)
+    $padrão  reduzir usando a regra 162 (AE_stmt)
 
 
 Estado 167
 
-  154 arith_expr: term fk_T_PLUS_MINUS .
+  158 arith_expr: term fk_T_PLUS_MINUS .
 
-    $padrão  reduzir usando a regra 154 (arith_expr)
+    $padrão  reduzir usando a regra 158 (arith_expr)
 
 
 Estado 168
 
-  156 fk_T_PLUS_MINUS: AE_stmt . term fk_T_PLUS_MINUS
+  160 fk_T_PLUS_MINUS: AE_stmt . term fk_T_PLUS_MINUS
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3220,7 +3253,7 @@ Estado 168
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    term         ir ao estado 239
+    term         ir ao estado 238
     factor       ir ao estado 69
     factor_stmt  ir ao estado 70
     power        ir ao estado 71
@@ -3230,49 +3263,49 @@ Estado 168
 
 Estado 169
 
-  162 term_stmt: STAR .
-
-    $padrão  reduzir usando a regra 162 (term_stmt)
-
-
-Estado 170
-
-  164 term_stmt: SLASH .
-
-    $padrão  reduzir usando a regra 164 (term_stmt)
-
-
-Estado 171
-
-  165 term_stmt: PERCENT .
-
-    $padrão  reduzir usando a regra 165 (term_stmt)
-
-
-Estado 172
-
-  166 term_stmt: DOUBLESLASH .
+  166 term_stmt: STAR .
 
     $padrão  reduzir usando a regra 166 (term_stmt)
 
 
+Estado 170
+
+  168 term_stmt: SLASH .
+
+    $padrão  reduzir usando a regra 168 (term_stmt)
+
+
+Estado 171
+
+  169 term_stmt: PERCENT .
+
+    $padrão  reduzir usando a regra 169 (term_stmt)
+
+
+Estado 172
+
+  170 term_stmt: DOUBLESLASH .
+
+    $padrão  reduzir usando a regra 170 (term_stmt)
+
+
 Estado 173
 
-  163 term_stmt: AT .
+  167 term_stmt: AT .
 
-    $padrão  reduzir usando a regra 163 (term_stmt)
+    $padrão  reduzir usando a regra 167 (term_stmt)
 
 
 Estado 174
 
-  159 term: factor fk_MATH .
+  163 term: factor fk_MATH .
 
-    $padrão  reduzir usando a regra 159 (term)
+    $padrão  reduzir usando a regra 163 (term)
 
 
 Estado 175
 
-  161 fk_MATH: term_stmt . factor fk_MATH
+  165 fk_MATH: term_stmt . factor fk_MATH
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3288,7 +3321,7 @@ Estado 175
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    factor       ir ao estado 240
+    factor       ir ao estado 239
     factor_stmt  ir ao estado 70
     power        ir ao estado 71
     atom_expr    ir ao estado 72
@@ -3297,30 +3330,30 @@ Estado 175
 
 Estado 176
 
-  167 factor: factor_stmt factor .
+  171 factor: factor_stmt factor .
 
-    $padrão  reduzir usando a regra 167 (factor)
+    $padrão  reduzir usando a regra 171 (factor)
 
 
 Estado 177
 
-  175 opc_DOUBLESTAR_factor: DOUBLESTAR . $@9 factor
+  179 opc_DOUBLESTAR_factor: DOUBLESTAR . $@13 factor
 
-    $padrão  reduzir usando a regra 174 ($@9)
+    $padrão  reduzir usando a regra 178 ($@13)
 
-    $@9  ir ao estado 241
+    $@13  ir ao estado 240
 
 
 Estado 178
 
-  172 power: atom_expr opc_DOUBLESTAR_factor .
+  176 power: atom_expr opc_DOUBLESTAR_factor .
 
-    $padrão  reduzir usando a regra 172 (power)
+    $padrão  reduzir usando a regra 176 (power)
 
 
 Estado 179
 
-  200 trailer: LPAR . opc_arglist RPAR
+  204 trailer: LPAR . opc_arglist RPAR
 
     LAMBDA      deslocar, e ir ao estado 3
     NOT         deslocar, e ir ao estado 4
@@ -3335,14 +3368,14 @@ Estado 179
     LSQB        deslocar, e ir ao estado 26
     PLUS        deslocar, e ir ao estado 27
     MINUS       deslocar, e ir ao estado 28
-    STAR        deslocar, e ir ao estado 242
+    STAR        deslocar, e ir ao estado 241
     TILDE       deslocar, e ir ao estado 30
-    DOUBLESTAR  deslocar, e ir ao estado 243
+    DOUBLESTAR  deslocar, e ir ao estado 242
     ELLIPSIS    deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 203 (opc_arglist)
+    $padrão  reduzir usando a regra 207 (opc_arglist)
 
-    test         ir ao estado 244
+    test         ir ao estado 243
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -3359,14 +3392,14 @@ Estado 179
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
-    opc_arglist  ir ao estado 245
-    arglist      ir ao estado 246
-    argument     ir ao estado 247
+    opc_arglist  ir ao estado 244
+    arglist      ir ao estado 245
+    argument     ir ao estado 246
 
 
 Estado 180
 
-  201 trailer: LSQB . subscriptlist RSQB
+  205 trailer: LSQB . subscriptlist RSQB
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -3384,9 +3417,9 @@ Estado 180
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 216 (opc_test)
+    $padrão  reduzir usando a regra 220 (opc_test)
 
-    test           ir ao estado 248
+    test           ir ao estado 247
     lambdef        ir ao estado 57
     or_test        ir ao estado 58
     and_test       ir ao estado 59
@@ -3403,301 +3436,155 @@ Estado 180
     power          ir ao estado 71
     atom_expr      ir ao estado 72
     atom           ir ao estado 73
-    subscriptlist  ir ao estado 249
-    subscript      ir ao estado 250
-    opc_test       ir ao estado 251
+    subscriptlist  ir ao estado 248
+    subscript      ir ao estado 249
+    opc_test       ir ao estado 250
 
 
 Estado 181
 
-  202 trailer: DOT . NAME
+  206 trailer: DOT . NAME
 
-    NAME  deslocar, e ir ao estado 252
+    NAME  deslocar, e ir ao estado 251
 
 
 Estado 182
 
-  176 atom_expr: atom fk_trailer .
+  180 atom_expr: atom fk_trailer .
 
-    $padrão  reduzir usando a regra 176 (atom_expr)
+    $padrão  reduzir usando a regra 180 (atom_expr)
 
 
 Estado 183
 
-  180 fk_trailer: trailer . fk_trailer
+  184 fk_trailer: trailer . fk_trailer
 
     LPAR  deslocar, e ir ao estado 179
     LSQB  deslocar, e ir ao estado 180
     DOT   deslocar, e ir ao estado 181
 
-    $padrão  reduzir usando a regra 179 (fk_trailer)
+    $padrão  reduzir usando a regra 183 (fk_trailer)
 
-    fk_trailer  ir ao estado 253
+    fk_trailer  ir ao estado 252
     trailer     ir ao estado 183
 
 
 Estado 184
 
-  231 opc_LPAR_arglist_RPAR: LPAR . RPAR
-  232                      | LPAR . arglist RPAR
+  234 classdef: CLASS NAME $@17 . opc_LPAR_arglist_RPAR COLON suite
 
-    LAMBDA      deslocar, e ir ao estado 3
-    NOT         deslocar, e ir ao estado 4
-    TRUE        deslocar, e ir ao estado 6
-    FALSE       deslocar, e ir ao estado 7
-    NONE        deslocar, e ir ao estado 18
-    AWAIT       deslocar, e ir ao estado 20
-    NAME        deslocar, e ir ao estado 21
-    NUMBER      deslocar, e ir ao estado 22
-    STRING      deslocar, e ir ao estado 23
-    LPAR        deslocar, e ir ao estado 25
-    RPAR        deslocar, e ir ao estado 254
-    LSQB        deslocar, e ir ao estado 26
-    PLUS        deslocar, e ir ao estado 27
-    MINUS       deslocar, e ir ao estado 28
-    STAR        deslocar, e ir ao estado 242
-    TILDE       deslocar, e ir ao estado 30
-    DOUBLESTAR  deslocar, e ir ao estado 243
-    ELLIPSIS    deslocar, e ir ao estado 31
+    LPAR  deslocar, e ir ao estado 253
 
-    test         ir ao estado 244
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
-    arglist      ir ao estado 255
-    argument     ir ao estado 247
+    $padrão  reduzir usando a regra 235 (opc_LPAR_arglist_RPAR)
+
+    opc_LPAR_arglist_RPAR  ir ao estado 254
 
 
 Estado 185
 
-  229 classdef: CLASS NAME opc_LPAR_arglist_RPAR . COLON suite
+   24 funcdef: DEF NAME $@1 . parameters opc_RARROW_test COLON func_body_suite
 
-    COLON  deslocar, e ir ao estado 256
+    LPAR  deslocar, e ir ao estado 255
+
+    parameters  ir ao estado 256
 
 
 Estado 186
 
-   24 funcdef: DEF NAME $@1 . parameters opc_RARROW_test COLON func_body_suite
+   31 opc_argslist: NAME $@3 . COMMA opc_argslist
 
-    LPAR  deslocar, e ir ao estado 257
-
-    parameters  ir ao estado 258
+    COMMA  deslocar, e ir ao estado 257
 
 
 Estado 187
 
-   31 opc_argslist: NAME $@3 . COMMA opc_argslist
+  117 lambdef: LAMBDA opc_argslist COLON . test
 
-    COMMA  deslocar, e ir ao estado 259
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    test         ir ao estado 258
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
 
 
 Estado 188
 
-  113 lambdef: LAMBDA opc_argslist COLON . test
+   90 if_stmt: IF $@7 namedexpr_test . COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
 
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    test         ir ao estado 260
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
+    COLON  deslocar, e ir ao estado 259
 
 
 Estado 189
 
-   89 if_stmt: IF namedexpr_test COLON . suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+   95 for_stmt: FOR exprlist IN . testlist COLON suite opc_ELSE_COLON_suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
     NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
     AWAIT     deslocar, e ir ao estado 20
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
     MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    simple_stmt         ir ao estado 262
-    small_stmt          ir ao estado 37
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 263
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    yield_expr          ir ao estado 75
+    test         ir ao estado 222
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
+    testlist     ir ao estado 260
 
 
 Estado 190
 
-  106 opc_COLONEQUAL_test: COLONEQUAL . test
-
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    test         ir ao estado 264
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
-
-
-Estado 191
-
-  104 namedexpr_test: test opc_COLONEQUAL_test .
-
-    $padrão  reduzir usando a regra 104 (namedexpr_test)
-
-
-Estado 192
-
-   93 for_stmt: FOR exprlist IN . testlist COLON suite opc_ELSE_COLON_suite
-
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    test         ir ao estado 223
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
-    testlist     ir ao estado 265
-
-
-Estado 193
-
-  223 fk_COMMA_E_SE: COMMA . exprlist_stmt fk_COMMA_E_SE
+  227 fk_COMMA_E_SE: COMMA . exprlist_stmt fk_COMMA_E_SE
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3714,8 +3601,8 @@ Estado 193
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    star_expr      ir ao estado 83
-    expr           ir ao estado 84
+    star_expr      ir ao estado 82
+    expr           ir ao estado 83
     xor_expr       ir ao estado 64
     and_expr       ir ao estado 65
     shift_expr     ir ao estado 66
@@ -3726,23 +3613,23 @@ Estado 193
     power          ir ao estado 71
     atom_expr      ir ao estado 72
     atom           ir ao estado 73
-    exprlist_stmt  ir ao estado 266
+    exprlist_stmt  ir ao estado 261
 
 
-Estado 194
+Estado 191
 
-  221 exprlist: exprlist_stmt fk_COMMA_E_SE . opc_COMMA
+  225 exprlist: exprlist_stmt fk_COMMA_E_SE . opc_COMMA
 
-    COMMA  deslocar, e ir ao estado 227
+    COMMA  deslocar, e ir ao estado 226
 
     $padrão  reduzir usando a regra 68 (opc_COMMA)
 
-    opc_COMMA  ir ao estado 267
+    opc_COMMA  ir ao estado 262
 
 
-Estado 195
+Estado 192
 
-   92 while_stmt: WHILE namedexpr_test COLON . suite opc_ELSE_COLON_suite
+   94 while_stmt: WHILE namedexpr_test COLON . suite opc_ELSE_COLON_suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -3761,7 +3648,7 @@ Estado 195
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
+    NEWLINE   deslocar, e ir ao estado 263
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
@@ -3770,7 +3657,7 @@ Estado 195
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    simple_stmt         ir ao estado 262
+    simple_stmt         ir ao estado 264
     small_stmt          ir ao estado 37
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
@@ -3784,7 +3671,7 @@ Estado 195
     yield_stmt          ir ao estado 49
     global_stmt         ir ao estado 50
     nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 268
+    suite               ir ao estado 265
     test                ir ao estado 56
     lambdef             ir ao estado 57
     or_test             ir ao estado 58
@@ -3806,9 +3693,25 @@ Estado 195
     yield_expr          ir ao estado 75
 
 
-Estado 196
+Estado 193
 
-   98 fk_COMMA_WI: COMMA . with_item fk_COMMA_WI
+  110 opc_COLONEQUAL_test: COLONEQUAL . $@10 test
+
+    $padrão  reduzir usando a regra 109 ($@10)
+
+    $@10  ir ao estado 266
+
+
+Estado 194
+
+  107 namedexpr_test: test opc_COLONEQUAL_test .
+
+    $padrão  reduzir usando a regra 107 (namedexpr_test)
+
+
+Estado 195
+
+  101 fk_COMMA_WI: COMMA . with_item fk_COMMA_WI
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -3826,7 +3729,7 @@ Estado 196
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    with_item    ir ao estado 269
+    with_item    ir ao estado 267
     test         ir ao estado 89
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
@@ -3846,16 +3749,16 @@ Estado 196
     atom         ir ao estado 73
 
 
+Estado 196
+
+   99 with_stmt: WITH with_item fk_COMMA_WI . COLON suite
+
+    COLON  deslocar, e ir ao estado 268
+
+
 Estado 197
 
-   96 with_stmt: WITH with_item fk_COMMA_WI . COLON suite
-
-    COLON  deslocar, e ir ao estado 270
-
-
-Estado 198
-
-  101 opc_AS_expr: AS . expr
+  104 opc_AS_expr: AS . expr
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -3871,7 +3774,7 @@ Estado 198
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    expr         ir ao estado 271
+    expr         ir ao estado 269
     xor_expr     ir ao estado 64
     and_expr     ir ao estado 65
     shift_expr   ir ao estado 66
@@ -3884,89 +3787,89 @@ Estado 198
     atom         ir ao estado 73
 
 
+Estado 198
+
+  102 with_item: test opc_AS_expr .
+
+    $padrão  reduzir usando a regra 102 (with_item)
+
+
 Estado 199
 
-   99 with_item: test opc_AS_expr .
+  261 yield_arg: FROM test .
 
-    $padrão  reduzir usando a regra 99 (with_item)
+    $padrão  reduzir usando a regra 261 (yield_arg)
 
 
 Estado 200
 
-  255 yield_arg: FROM test .
+   83 global_stmt: GLOBAL NAME $@4 . fk_COMMA_NAME
 
-    $padrão  reduzir usando a regra 255 (yield_arg)
+    COMMA  deslocar, e ir ao estado 270
+
+    $padrão  reduzir usando a regra 86 (fk_COMMA_NAME)
+
+    fk_COMMA_NAME  ir ao estado 271
 
 
 Estado 201
 
-   83 global_stmt: GLOBAL NAME $@4 . fk_COMMA_NAME
+   85 nonlocal_stmt: NONLOCAL NAME $@5 . fk_COMMA_NAME
 
-    COMMA  deslocar, e ir ao estado 272
+    COMMA  deslocar, e ir ao estado 270
 
     $padrão  reduzir usando a regra 86 (fk_COMMA_NAME)
 
-    fk_COMMA_NAME  ir ao estado 273
+    fk_COMMA_NAME  ir ao estado 272
 
 
 Estado 202
 
-   85 nonlocal_stmt: NONLOCAL NAME $@5 . fk_COMMA_NAME
-
-    COMMA  deslocar, e ir ao estado 272
-
-    $padrão  reduzir usando a regra 86 (fk_COMMA_NAME)
-
-    fk_COMMA_NAME  ir ao estado 274
-
-
-Estado 203
-
-  178 atom_expr: AWAIT $@10 atom . fk_trailer
+  182 atom_expr: AWAIT $@14 atom . fk_trailer
 
     LPAR  deslocar, e ir ao estado 179
     LSQB  deslocar, e ir ao estado 180
     DOT   deslocar, e ir ao estado 181
 
-    $padrão  reduzir usando a regra 179 (fk_trailer)
+    $padrão  reduzir usando a regra 183 (fk_trailer)
 
-    fk_trailer  ir ao estado 275
+    fk_trailer  ir ao estado 273
     trailer     ir ao estado 183
+
+
+Estado 203
+
+  202 fk_STRING: STRING . $@16 fk_STRING
+
+    $padrão  reduzir usando a regra 201 ($@16)
+
+    $@16  ir ao estado 274
 
 
 Estado 204
 
-  198 fk_STRING: STRING . $@12 fk_STRING
+  190 atom: STRING $@15 fk_STRING .
 
-    $padrão  reduzir usando a regra 197 ($@12)
-
-    $@12  ir ao estado 276
+    $padrão  reduzir usando a regra 190 (atom)
 
 
 Estado 205
 
-  186 atom: STRING $@11 fk_STRING .
+  185 atom: LPAR opc_atom_stmt RPAR .
 
-    $padrão  reduzir usando a regra 186 (atom)
+    $padrão  reduzir usando a regra 185 (atom)
 
 
 Estado 206
 
-  181 atom: LPAR opc_atom_stmt RPAR .
+  255 opc_ASYNC: ASYNC .
 
-    $padrão  reduzir usando a regra 181 (atom)
+    $padrão  reduzir usando a regra 255 (opc_ASYNC)
 
 
 Estado 207
 
-  250 opc_ASYNC: ASYNC .
-
-    $padrão  reduzir usando a regra 250 (opc_ASYNC)
-
-
-Estado 208
-
-  206 fk_COMMA_NT_SE: COMMA . trailer_stmt fk_COMMA_NT_SE
+  210 fk_COMMA_NT_SE: COMMA . trailer_stmt fk_COMMA_NT_SE
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -3986,7 +3889,7 @@ Estado 208
     ELLIPSIS  deslocar, e ir ao estado 31
 
     namedexpr_test  ir ao estado 101
-    test            ir ao estado 82
+    test            ir ao estado 87
     lambdef         ir ao estado 57
     or_test         ir ao estado 58
     and_test        ir ao estado 59
@@ -4004,51 +3907,51 @@ Estado 208
     power           ir ao estado 71
     atom_expr       ir ao estado 72
     atom            ir ao estado 73
-    trailer_stmt    ir ao estado 277
+    trailer_stmt    ir ao estado 275
+
+
+Estado 208
+
+  214 trailer_stmt_1: fk_COMMA_NT_SE . opc_COMMA
+
+    COMMA  deslocar, e ir ao estado 226
+
+    $padrão  reduzir usando a regra 68 (opc_COMMA)
+
+    opc_COMMA  ir ao estado 276
 
 
 Estado 209
 
-  210 trailer_stmt_1: fk_COMMA_NT_SE . opc_COMMA
+  203 testlist_comp: trailer_stmt trailer_stmt_1 .
 
-    COMMA  deslocar, e ir ao estado 227
-
-    $padrão  reduzir usando a regra 68 (opc_COMMA)
-
-    opc_COMMA  ir ao estado 278
+    $padrão  reduzir usando a regra 203 (testlist_comp)
 
 
 Estado 210
 
-  199 testlist_comp: trailer_stmt trailer_stmt_1 .
+  213 trailer_stmt_1: comp_for .
 
-    $padrão  reduzir usando a regra 199 (testlist_comp)
+    $padrão  reduzir usando a regra 213 (trailer_stmt_1)
 
 
 Estado 211
 
-  209 trailer_stmt_1: comp_for .
+  253 comp_for: opc_ASYNC . sync_comp_for
 
-    $padrão  reduzir usando a regra 209 (trailer_stmt_1)
+    FOR  deslocar, e ir ao estado 277
+
+    sync_comp_for  ir ao estado 278
 
 
 Estado 212
 
-  248 comp_for: opc_ASYNC . sync_comp_for
+  186 atom: LSQB opc_testlist_comp RSQB .
 
-    FOR  deslocar, e ir ao estado 279
-
-    sync_comp_for  ir ao estado 280
+    $padrão  reduzir usando a regra 186 (atom)
 
 
 Estado 213
-
-  182 atom: LSQB opc_testlist_comp RSQB .
-
-    $padrão  reduzir usando a regra 182 (atom)
-
-
-Estado 214
 
    10 fk_SEMI_small_stmt: SEMI small_stmt . fk_NEWLINE_stmt
 
@@ -4086,7 +3989,7 @@ Estado 214
 
     $padrão  reduzir usando a regra 2 (fk_NEWLINE_stmt)
 
-    fk_NEWLINE_stmt     ir ao estado 281
+    fk_NEWLINE_stmt     ir ao estado 279
     NL_stmt             ir ao estado 34
     stmt                ir ao estado 35
     simple_stmt         ir ao estado 36
@@ -4131,92 +4034,92 @@ Estado 214
     yield_expr          ir ao estado 75
 
 
-Estado 215
+Estado 214
 
    67 opc_SEMI: SEMI .
 
     $padrão  reduzir usando a regra 67 (opc_SEMI)
 
 
-Estado 216
+Estado 215
 
     8 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI . NEWLINE
 
-    NEWLINE  deslocar, e ir ao estado 282
+    NEWLINE  deslocar, e ir ao estado 280
 
 
-Estado 217
+Estado 216
 
    44 annassign: COLON test . opc_EQUAL_MALUCO
 
-    EQUAL  deslocar, e ir ao estado 283
+    EQUAL  deslocar, e ir ao estado 281
 
     $padrão  reduzir usando a regra 45 (opc_EQUAL_MALUCO)
 
-    opc_EQUAL_MALUCO  ir ao estado 284
+    opc_EQUAL_MALUCO  ir ao estado 282
 
 
-Estado 218
+Estado 217
 
    41 expr_stmt_3: EQUAL expr_stmt_4 .
 
     $padrão  reduzir usando a regra 41 (expr_stmt_3)
 
 
-Estado 219
+Estado 218
 
    43 expr_stmt_4: testlist_star_expr .
 
     $padrão  reduzir usando a regra 43 (expr_stmt_4)
 
 
-Estado 220
+Estado 219
 
    42 expr_stmt_4: yield_expr .
 
     $padrão  reduzir usando a regra 42 (expr_stmt_4)
 
 
-Estado 221
+Estado 220
 
    40 fk_EQ_YE_TSE: expr_stmt_3 fk_EQ_YE_TSE .
 
     $padrão  reduzir usando a regra 40 (fk_EQ_YE_TSE)
 
 
-Estado 222
+Estado 221
 
    35 expr_stmt_1: augassign expr_stmt_2 .
 
     $padrão  reduzir usando a regra 35 (expr_stmt_1)
 
 
+Estado 222
+
+  230 testlist: test . fk_COMMA_test opc_COMMA
+
+    COMMA  deslocar, e ir ao estado 283
+
+    $padrão  reduzir usando a regra 231 (fk_COMMA_test)
+
+    fk_COMMA_test  ir ao estado 284
+
+
 Estado 223
-
-  226 testlist: test . fk_COMMA_test opc_COMMA
-
-    COMMA  deslocar, e ir ao estado 285
-
-    $padrão  reduzir usando a regra 227 (fk_COMMA_test)
-
-    fk_COMMA_test  ir ao estado 286
-
-
-Estado 224
 
    38 expr_stmt_2: testlist .
 
     $padrão  reduzir usando a regra 38 (expr_stmt_2)
 
 
-Estado 225
+Estado 224
 
    37 expr_stmt_2: yield_expr .
 
     $padrão  reduzir usando a regra 37 (expr_stmt_2)
 
 
-Estado 226
+Estado 225
 
    52 fk_COMMA_T_SE: COMMA TSE_stmt . fk_COMMA_T_SE
 
@@ -4224,69 +4127,69 @@ Estado 226
 
     $padrão  reduzir usando a regra 51 (fk_COMMA_T_SE)
 
-    fk_COMMA_T_SE  ir ao estado 287
+    fk_COMMA_T_SE  ir ao estado 285
 
 
-Estado 227
+Estado 226
 
    69 opc_COMMA: COMMA .
 
     $padrão  reduzir usando a regra 69 (opc_COMMA)
 
 
-Estado 228
+Estado 227
 
    48 testlist_star_expr: TSE_stmt fk_COMMA_T_SE opc_COMMA .
 
     $padrão  reduzir usando a regra 48 (testlist_star_expr)
 
 
+Estado 228
+
+  114 opc_IF_or_test_ELSE_test: IF or_test . ELSE test
+
+    ELSE  deslocar, e ir ao estado 286
+
+
 Estado 229
 
-  110 opc_IF_or_test_ELSE_test: IF or_test . ELSE test
+  121 fk_OR_AT: OR and_test . fk_OR_AT
 
-    ELSE  deslocar, e ir ao estado 288
+    OR  deslocar, e ir ao estado 139
+
+    $padrão  reduzir usando a regra 120 (fk_OR_AT)
+
+    fk_OR_AT  ir ao estado 287
 
 
 Estado 230
 
-  117 fk_OR_AT: OR and_test . fk_OR_AT
+  124 fk_AND_NT: AND not_test . fk_AND_NT
 
-    OR  deslocar, e ir ao estado 139
+    AND  deslocar, e ir ao estado 141
 
-    $padrão  reduzir usando a regra 116 (fk_OR_AT)
+    $padrão  reduzir usando a regra 123 (fk_AND_NT)
 
-    fk_OR_AT  ir ao estado 289
+    fk_AND_NT  ir ao estado 288
 
 
 Estado 231
 
-  120 fk_AND_NT: AND not_test . fk_AND_NT
+  138 comp_op: NOT IN .
 
-    AND  deslocar, e ir ao estado 141
-
-    $padrão  reduzir usando a regra 119 (fk_AND_NT)
-
-    fk_AND_NT  ir ao estado 290
+    $padrão  reduzir usando a regra 138 (comp_op)
 
 
 Estado 232
 
-  134 comp_op: NOT IN .
+  140 comp_op: IS NOT .
 
-    $padrão  reduzir usando a regra 134 (comp_op)
+    $padrão  reduzir usando a regra 140 (comp_op)
 
 
 Estado 233
 
-  136 comp_op: IS NOT .
-
-    $padrão  reduzir usando a regra 136 (comp_op)
-
-
-Estado 234
-
-  125 fk_CO_EXPR: comp_op expr . fk_CO_EXPR
+  129 fk_CO_EXPR: comp_op expr . fk_CO_EXPR
 
     NOT           deslocar, e ir ao estado 143
     IS            deslocar, e ir ao estado 144
@@ -4299,26 +4202,26 @@ Estado 234
     LESSEQUAL     deslocar, e ir ao estado 151
     GREATEREQUAL  deslocar, e ir ao estado 152
 
-    $padrão  reduzir usando a regra 124 (fk_CO_EXPR)
+    $padrão  reduzir usando a regra 128 (fk_CO_EXPR)
 
-    fk_CO_EXPR  ir ao estado 291
+    fk_CO_EXPR  ir ao estado 289
     comp_op     ir ao estado 154
+
+
+Estado 234
+
+  144 fk_VBAR_XE: VBAR xor_expr . fk_VBAR_XE
+
+    VBAR  deslocar, e ir ao estado 155
+
+    $padrão  reduzir usando a regra 143 (fk_VBAR_XE)
+
+    fk_VBAR_XE  ir ao estado 290
 
 
 Estado 235
 
-  140 fk_VBAR_XE: VBAR xor_expr . fk_VBAR_XE
-
-    VBAR  deslocar, e ir ao estado 155
-
-    $padrão  reduzir usando a regra 139 (fk_VBAR_XE)
-
-    fk_VBAR_XE  ir ao estado 292
-
-
-Estado 236
-
-  144 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@7 . and_expr fk_CIRCUMFLEX_EXPR
+  148 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@11 . and_expr fk_CIRCUMFLEX_EXPR
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -4334,8 +4237,36 @@ Estado 236
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    and_expr     ir ao estado 293
+    and_expr     ir ao estado 291
     shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
+
+
+Estado 236
+
+  152 fk_AMPER_SE: AMPER $@12 . shift_expr fk_AMPER_SE
+
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    shift_expr   ir ao estado 292
     arith_expr   ir ao estado 67
     term         ir ao estado 68
     factor       ir ao estado 69
@@ -4347,61 +4278,33 @@ Estado 236
 
 Estado 237
 
-  148 fk_AMPER_SE: AMPER $@8 . shift_expr fk_AMPER_SE
-
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    shift_expr   ir ao estado 294
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
-
-
-Estado 238
-
-  151 fk_LS_RS_AE: SE_stmt arith_expr . fk_LS_RS_AE
+  155 fk_LS_RS_AE: SE_stmt arith_expr . fk_LS_RS_AE
 
     LEFTSHIFT   deslocar, e ir ao estado 161
     RIGHTSHIFT  deslocar, e ir ao estado 162
 
-    $padrão  reduzir usando a regra 150 (fk_LS_RS_AE)
+    $padrão  reduzir usando a regra 154 (fk_LS_RS_AE)
 
-    fk_LS_RS_AE  ir ao estado 295
+    fk_LS_RS_AE  ir ao estado 293
     SE_stmt      ir ao estado 164
 
 
-Estado 239
+Estado 238
 
-  156 fk_T_PLUS_MINUS: AE_stmt term . fk_T_PLUS_MINUS
+  160 fk_T_PLUS_MINUS: AE_stmt term . fk_T_PLUS_MINUS
 
     PLUS   deslocar, e ir ao estado 165
     MINUS  deslocar, e ir ao estado 166
 
-    $padrão  reduzir usando a regra 155 (fk_T_PLUS_MINUS)
+    $padrão  reduzir usando a regra 159 (fk_T_PLUS_MINUS)
 
-    fk_T_PLUS_MINUS  ir ao estado 296
+    fk_T_PLUS_MINUS  ir ao estado 294
     AE_stmt          ir ao estado 168
 
 
-Estado 240
+Estado 239
 
-  161 fk_MATH: term_stmt factor . fk_MATH
+  165 fk_MATH: term_stmt factor . fk_MATH
 
     STAR         deslocar, e ir ao estado 169
     SLASH        deslocar, e ir ao estado 170
@@ -4409,15 +4312,15 @@ Estado 240
     DOUBLESLASH  deslocar, e ir ao estado 172
     AT           deslocar, e ir ao estado 173
 
-    $padrão  reduzir usando a regra 160 (fk_MATH)
+    $padrão  reduzir usando a regra 164 (fk_MATH)
 
-    fk_MATH    ir ao estado 297
+    fk_MATH    ir ao estado 295
     term_stmt  ir ao estado 175
 
 
-Estado 241
+Estado 240
 
-  175 opc_DOUBLESTAR_factor: DOUBLESTAR $@9 . factor
+  179 opc_DOUBLESTAR_factor: DOUBLESTAR $@13 . factor
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -4433,16 +4336,16 @@ Estado 241
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    factor       ir ao estado 298
+    factor       ir ao estado 296
     factor_stmt  ir ao estado 70
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
 
 
-Estado 242
+Estado 241
 
-  240 argument: STAR . test
+  245 argument: STAR . test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -4460,7 +4363,46 @@ Estado 242
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 299
+    test         ir ao estado 297
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
+
+
+Estado 242
+
+  244 argument: DOUBLESTAR . test
+
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    test         ir ao estado 298
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -4481,7 +4423,306 @@ Estado 242
 
 Estado 243
 
-  239 argument: DOUBLESTAR . test
+  241 argument: test . opc_comp_for
+  242         | test . COLONEQUAL test
+  243         | test . EQUAL test
+
+    ASYNC       deslocar, e ir ao estado 206
+    EQUAL       deslocar, e ir ao estado 299
+    COLONEQUAL  deslocar, e ir ao estado 300
+
+    FOR       reduzir usando a regra 254 (opc_ASYNC)
+    $padrão  reduzir usando a regra 246 (opc_comp_for)
+
+    opc_comp_for  ir ao estado 301
+    comp_for      ir ao estado 302
+    opc_ASYNC     ir ao estado 211
+
+
+Estado 244
+
+  204 trailer: LPAR opc_arglist . RPAR
+
+    RPAR  deslocar, e ir ao estado 303
+
+
+Estado 245
+
+  208 opc_arglist: arglist .
+
+    $padrão  reduzir usando a regra 208 (opc_arglist)
+
+
+Estado 246
+
+  238 arglist: argument . fk_COMMA_A opc_COMMA
+
+    COMMA  deslocar, e ir ao estado 304
+
+    $padrão  reduzir usando a regra 239 (fk_COMMA_A)
+
+    fk_COMMA_A  ir ao estado 305
+
+
+Estado 247
+
+  218 subscript: test .
+  221 opc_test: test .
+
+    COLON     reduzir usando a regra 221 (opc_test)
+    $padrão  reduzir usando a regra 218 (subscript)
+
+
+Estado 248
+
+  205 trailer: LSQB subscriptlist . RSQB
+
+    RSQB  deslocar, e ir ao estado 306
+
+
+Estado 249
+
+  215 subscriptlist: subscript . fk_COMMA_S opc_COMMA
+
+    COMMA  deslocar, e ir ao estado 307
+
+    $padrão  reduzir usando a regra 216 (fk_COMMA_S)
+
+    fk_COMMA_S  ir ao estado 308
+
+
+Estado 250
+
+  219 subscript: opc_test . COLON opc_test opc_sliceop
+
+    COLON  deslocar, e ir ao estado 309
+
+
+Estado 251
+
+  206 trailer: DOT NAME .
+
+    $padrão  reduzir usando a regra 206 (trailer)
+
+
+Estado 252
+
+  184 fk_trailer: trailer fk_trailer .
+
+    $padrão  reduzir usando a regra 184 (fk_trailer)
+
+
+Estado 253
+
+  236 opc_LPAR_arglist_RPAR: LPAR . RPAR
+  237                      | LPAR . arglist RPAR
+
+    LAMBDA      deslocar, e ir ao estado 3
+    NOT         deslocar, e ir ao estado 4
+    TRUE        deslocar, e ir ao estado 6
+    FALSE       deslocar, e ir ao estado 7
+    NONE        deslocar, e ir ao estado 18
+    AWAIT       deslocar, e ir ao estado 20
+    NAME        deslocar, e ir ao estado 21
+    NUMBER      deslocar, e ir ao estado 22
+    STRING      deslocar, e ir ao estado 23
+    LPAR        deslocar, e ir ao estado 25
+    RPAR        deslocar, e ir ao estado 310
+    LSQB        deslocar, e ir ao estado 26
+    PLUS        deslocar, e ir ao estado 27
+    MINUS       deslocar, e ir ao estado 28
+    STAR        deslocar, e ir ao estado 241
+    TILDE       deslocar, e ir ao estado 30
+    DOUBLESTAR  deslocar, e ir ao estado 242
+    ELLIPSIS    deslocar, e ir ao estado 31
+
+    test         ir ao estado 243
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
+    arglist      ir ao estado 311
+    argument     ir ao estado 246
+
+
+Estado 254
+
+  234 classdef: CLASS NAME $@17 opc_LPAR_arglist_RPAR . COLON suite
+
+    COLON  deslocar, e ir ao estado 312
+
+
+Estado 255
+
+   28 parameters: LPAR . opc_argslist RPAR
+
+    NAME  deslocar, e ir ao estado 78
+
+    $padrão  reduzir usando a regra 29 (opc_argslist)
+
+    opc_argslist  ir ao estado 313
+
+
+Estado 256
+
+   24 funcdef: DEF NAME $@1 parameters . opc_RARROW_test COLON func_body_suite
+
+    RARROW  deslocar, e ir ao estado 314
+
+    $padrão  reduzir usando a regra 25 (opc_RARROW_test)
+
+    opc_RARROW_test  ir ao estado 315
+
+
+Estado 257
+
+   31 opc_argslist: NAME $@3 COMMA . opc_argslist
+
+    NAME  deslocar, e ir ao estado 78
+
+    $padrão  reduzir usando a regra 29 (opc_argslist)
+
+    opc_argslist  ir ao estado 316
+
+
+Estado 258
+
+  117 lambdef: LAMBDA opc_argslist COLON test .
+
+    $padrão  reduzir usando a regra 117 (lambdef)
+
+
+Estado 259
+
+   90 if_stmt: IF $@7 namedexpr_test COLON . suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    NEWLINE   deslocar, e ir ao estado 263
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    simple_stmt         ir ao estado 264
+    small_stmt          ir ao estado 37
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    suite               ir ao estado 317
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    yield_expr          ir ao estado 75
+
+
+Estado 260
+
+   95 for_stmt: FOR exprlist IN testlist . COLON suite opc_ELSE_COLON_suite
+
+    COLON  deslocar, e ir ao estado 318
+
+
+Estado 261
+
+  227 fk_COMMA_E_SE: COMMA exprlist_stmt . fk_COMMA_E_SE
+
+    COMMA  deslocar, e ir ao estado 190
+
+    $padrão  reduzir usando a regra 226 (fk_COMMA_E_SE)
+
+    fk_COMMA_E_SE  ir ao estado 319
+
+
+Estado 262
+
+  225 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA .
+
+    $padrão  reduzir usando a regra 225 (exprlist)
+
+
+Estado 263
+
+  106 suite: NEWLINE . INDENT stmt fk_stmt DEDENT
+
+    INDENT  deslocar, e ir ao estado 320
+
+
+Estado 264
+
+  105 suite: simple_stmt .
+
+    $padrão  reduzir usando a regra 105 (suite)
+
+
+Estado 265
+
+   94 while_stmt: WHILE namedexpr_test COLON suite . opc_ELSE_COLON_suite
+
+    ELSE  deslocar, e ir ao estado 321
+
+    $padrão  reduzir usando a regra 96 (opc_ELSE_COLON_suite)
+
+    opc_ELSE_COLON_suite  ir ao estado 322
+
+
+Estado 266
+
+  110 opc_COLONEQUAL_test: COLONEQUAL $@10 . test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -4499,7 +4740,7 @@ Estado 243
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 300
+    test         ir ao estado 323
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -4518,299 +4759,20 @@ Estado 243
     atom         ir ao estado 73
 
 
-Estado 244
-
-  236 argument: test . opc_comp_for
-  237         | test . COLONEQUAL test
-  238         | test . EQUAL test
-
-    ASYNC       deslocar, e ir ao estado 207
-    EQUAL       deslocar, e ir ao estado 301
-    COLONEQUAL  deslocar, e ir ao estado 302
-
-    FOR       reduzir usando a regra 249 (opc_ASYNC)
-    $padrão  reduzir usando a regra 241 (opc_comp_for)
-
-    opc_comp_for  ir ao estado 303
-    comp_for      ir ao estado 304
-    opc_ASYNC     ir ao estado 212
-
-
-Estado 245
-
-  200 trailer: LPAR opc_arglist . RPAR
-
-    RPAR  deslocar, e ir ao estado 305
-
-
-Estado 246
-
-  204 opc_arglist: arglist .
-
-    $padrão  reduzir usando a regra 204 (opc_arglist)
-
-
-Estado 247
-
-  233 arglist: argument . fk_COMMA_A opc_COMMA
-
-    COMMA  deslocar, e ir ao estado 306
-
-    $padrão  reduzir usando a regra 234 (fk_COMMA_A)
-
-    fk_COMMA_A  ir ao estado 307
-
-
-Estado 248
-
-  214 subscript: test .
-  217 opc_test: test .
-
-    COLON     reduzir usando a regra 217 (opc_test)
-    $padrão  reduzir usando a regra 214 (subscript)
-
-
-Estado 249
-
-  201 trailer: LSQB subscriptlist . RSQB
-
-    RSQB  deslocar, e ir ao estado 308
-
-
-Estado 250
-
-  211 subscriptlist: subscript . fk_COMMA_S opc_COMMA
-
-    COMMA  deslocar, e ir ao estado 309
-
-    $padrão  reduzir usando a regra 212 (fk_COMMA_S)
-
-    fk_COMMA_S  ir ao estado 310
-
-
-Estado 251
-
-  215 subscript: opc_test . COLON opc_test opc_sliceop
-
-    COLON  deslocar, e ir ao estado 311
-
-
-Estado 252
-
-  202 trailer: DOT NAME .
-
-    $padrão  reduzir usando a regra 202 (trailer)
-
-
-Estado 253
-
-  180 fk_trailer: trailer fk_trailer .
-
-    $padrão  reduzir usando a regra 180 (fk_trailer)
-
-
-Estado 254
-
-  231 opc_LPAR_arglist_RPAR: LPAR RPAR .
-
-    $padrão  reduzir usando a regra 231 (opc_LPAR_arglist_RPAR)
-
-
-Estado 255
-
-  232 opc_LPAR_arglist_RPAR: LPAR arglist . RPAR
-
-    RPAR  deslocar, e ir ao estado 312
-
-
-Estado 256
-
-  229 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON . suite
-
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
-    NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    simple_stmt         ir ao estado 262
-    small_stmt          ir ao estado 37
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 313
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    yield_expr          ir ao estado 75
-
-
-Estado 257
-
-   28 parameters: LPAR . opc_argslist RPAR
-
-    NAME  deslocar, e ir ao estado 78
-
-    $padrão  reduzir usando a regra 29 (opc_argslist)
-
-    opc_argslist  ir ao estado 314
-
-
-Estado 258
-
-   24 funcdef: DEF NAME $@1 parameters . opc_RARROW_test COLON func_body_suite
-
-    RARROW  deslocar, e ir ao estado 315
-
-    $padrão  reduzir usando a regra 25 (opc_RARROW_test)
-
-    opc_RARROW_test  ir ao estado 316
-
-
-Estado 259
-
-   31 opc_argslist: NAME $@3 COMMA . opc_argslist
-
-    NAME  deslocar, e ir ao estado 78
-
-    $padrão  reduzir usando a regra 29 (opc_argslist)
-
-    opc_argslist  ir ao estado 317
-
-
-Estado 260
-
-  113 lambdef: LAMBDA opc_argslist COLON test .
-
-    $padrão  reduzir usando a regra 113 (lambdef)
-
-
-Estado 261
-
-  103 suite: NEWLINE . INDENT stmt fk_stmt DEDENT
-
-    INDENT  deslocar, e ir ao estado 318
-
-
-Estado 262
-
-  102 suite: simple_stmt .
-
-    $padrão  reduzir usando a regra 102 (suite)
-
-
-Estado 263
-
-   89 if_stmt: IF namedexpr_test COLON suite . fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
-
-    ELSE_IF  deslocar, e ir ao estado 319
-
-    $padrão  reduzir usando a regra 90 (fk_ELIF_NT_COLON_SUITE)
-
-    fk_ELIF_NT_COLON_SUITE  ir ao estado 320
-
-
-Estado 264
-
-  106 opc_COLONEQUAL_test: COLONEQUAL test .
-
-    $padrão  reduzir usando a regra 106 (opc_COLONEQUAL_test)
-
-
-Estado 265
-
-   93 for_stmt: FOR exprlist IN testlist . COLON suite opc_ELSE_COLON_suite
-
-    COLON  deslocar, e ir ao estado 321
-
-
-Estado 266
-
-  223 fk_COMMA_E_SE: COMMA exprlist_stmt . fk_COMMA_E_SE
-
-    COMMA  deslocar, e ir ao estado 193
-
-    $padrão  reduzir usando a regra 222 (fk_COMMA_E_SE)
-
-    fk_COMMA_E_SE  ir ao estado 322
-
-
 Estado 267
 
-  221 exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA .
+  101 fk_COMMA_WI: COMMA with_item . fk_COMMA_WI
 
-    $padrão  reduzir usando a regra 221 (exprlist)
+    COMMA  deslocar, e ir ao estado 195
+
+    $padrão  reduzir usando a regra 100 (fk_COMMA_WI)
+
+    fk_COMMA_WI  ir ao estado 324
 
 
 Estado 268
 
-   92 while_stmt: WHILE namedexpr_test COLON suite . opc_ELSE_COLON_suite
-
-    ELSE  deslocar, e ir ao estado 323
-
-    $padrão  reduzir usando a regra 94 (opc_ELSE_COLON_suite)
-
-    opc_ELSE_COLON_suite  ir ao estado 324
-
-
-Estado 269
-
-   98 fk_COMMA_WI: COMMA with_item . fk_COMMA_WI
-
-    COMMA  deslocar, e ir ao estado 196
-
-    $padrão  reduzir usando a regra 97 (fk_COMMA_WI)
-
-    fk_COMMA_WI  ir ao estado 325
-
-
-Estado 270
-
-   96 with_stmt: WITH with_item fk_COMMA_WI COLON . suite
+   99 with_stmt: WITH with_item fk_COMMA_WI COLON . suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -4829,7 +4791,7 @@ Estado 270
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
+    NEWLINE   deslocar, e ir ao estado 263
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
@@ -4838,7 +4800,7 @@ Estado 270
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    simple_stmt         ir ao estado 262
+    simple_stmt         ir ao estado 264
     small_stmt          ir ao estado 37
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
@@ -4852,7 +4814,7 @@ Estado 270
     yield_stmt          ir ao estado 49
     global_stmt         ir ao estado 50
     nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 326
+    suite               ir ao estado 325
     test                ir ao estado 56
     lambdef             ir ao estado 57
     or_test             ir ao estado 58
@@ -4874,73 +4836,73 @@ Estado 270
     yield_expr          ir ao estado 75
 
 
-Estado 271
+Estado 269
 
-  101 opc_AS_expr: AS expr .
+  104 opc_AS_expr: AS expr .
 
-    $padrão  reduzir usando a regra 101 (opc_AS_expr)
+    $padrão  reduzir usando a regra 104 (opc_AS_expr)
 
 
-Estado 272
+Estado 270
 
    88 fk_COMMA_NAME: COMMA . NAME $@6 fk_COMMA_NAME
 
-    NAME  deslocar, e ir ao estado 327
+    NAME  deslocar, e ir ao estado 326
 
 
-Estado 273
+Estado 271
 
    83 global_stmt: GLOBAL NAME $@4 fk_COMMA_NAME .
 
     $padrão  reduzir usando a regra 83 (global_stmt)
 
 
-Estado 274
+Estado 272
 
    85 nonlocal_stmt: NONLOCAL NAME $@5 fk_COMMA_NAME .
 
     $padrão  reduzir usando a regra 85 (nonlocal_stmt)
 
 
+Estado 273
+
+  182 atom_expr: AWAIT $@14 atom fk_trailer .
+
+    $padrão  reduzir usando a regra 182 (atom_expr)
+
+
+Estado 274
+
+  202 fk_STRING: STRING $@16 . fk_STRING
+
+    STRING  deslocar, e ir ao estado 203
+
+    $padrão  reduzir usando a regra 200 (fk_STRING)
+
+    fk_STRING  ir ao estado 327
+
+
 Estado 275
 
-  178 atom_expr: AWAIT $@10 atom fk_trailer .
+  210 fk_COMMA_NT_SE: COMMA trailer_stmt . fk_COMMA_NT_SE
 
-    $padrão  reduzir usando a regra 178 (atom_expr)
+    COMMA  deslocar, e ir ao estado 207
+
+    $padrão  reduzir usando a regra 209 (fk_COMMA_NT_SE)
+
+    fk_COMMA_NT_SE  ir ao estado 328
 
 
 Estado 276
 
-  198 fk_STRING: STRING $@12 . fk_STRING
+  214 trailer_stmt_1: fk_COMMA_NT_SE opc_COMMA .
 
-    STRING  deslocar, e ir ao estado 204
-
-    $padrão  reduzir usando a regra 196 (fk_STRING)
-
-    fk_STRING  ir ao estado 328
+    $padrão  reduzir usando a regra 214 (trailer_stmt_1)
 
 
 Estado 277
 
-  206 fk_COMMA_NT_SE: COMMA trailer_stmt . fk_COMMA_NT_SE
-
-    COMMA  deslocar, e ir ao estado 208
-
-    $padrão  reduzir usando a regra 205 (fk_COMMA_NT_SE)
-
-    fk_COMMA_NT_SE  ir ao estado 329
-
-
-Estado 278
-
-  210 trailer_stmt_1: fk_COMMA_NT_SE opc_COMMA .
-
-    $padrão  reduzir usando a regra 210 (trailer_stmt_1)
-
-
-Estado 279
-
-  245 sync_comp_for: FOR . exprlist IN or_test opc_comp_iter
+  250 sync_comp_for: FOR . exprlist IN or_test opc_comp_iter
 
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -4957,8 +4919,8 @@ Estado 279
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    star_expr      ir ao estado 83
-    expr           ir ao estado 84
+    star_expr      ir ao estado 82
+    expr           ir ao estado 83
     xor_expr       ir ao estado 64
     and_expr       ir ao estado 65
     shift_expr     ir ao estado 66
@@ -4969,32 +4931,32 @@ Estado 279
     power          ir ao estado 71
     atom_expr      ir ao estado 72
     atom           ir ao estado 73
-    exprlist       ir ao estado 330
-    exprlist_stmt  ir ao estado 86
+    exprlist       ir ao estado 329
+    exprlist_stmt  ir ao estado 85
 
 
-Estado 280
+Estado 278
 
-  248 comp_for: opc_ASYNC sync_comp_for .
+  253 comp_for: opc_ASYNC sync_comp_for .
 
-    $padrão  reduzir usando a regra 248 (comp_for)
+    $padrão  reduzir usando a regra 253 (comp_for)
 
 
-Estado 281
+Estado 279
 
    10 fk_SEMI_small_stmt: SEMI small_stmt fk_NEWLINE_stmt .
 
     $padrão  reduzir usando a regra 10 (fk_SEMI_small_stmt)
 
 
-Estado 282
+Estado 280
 
     8 simple_stmt: small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE .
 
     $padrão  reduzir usando a regra 8 (simple_stmt)
 
 
-Estado 283
+Estado 281
 
    46 opc_EQUAL_MALUCO: EQUAL . yield_expr
    47                 | EQUAL . testlist_star_expr
@@ -5017,7 +4979,7 @@ Estado 283
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    testlist_star_expr  ir ao estado 331
+    testlist_star_expr  ir ao estado 330
     TSE_stmt            ir ao estado 42
     test                ir ao estado 56
     lambdef             ir ao estado 57
@@ -5037,19 +4999,19 @@ Estado 283
     power               ir ao estado 71
     atom_expr           ir ao estado 72
     atom                ir ao estado 73
-    yield_expr          ir ao estado 332
+    yield_expr          ir ao estado 331
 
 
-Estado 284
+Estado 282
 
    44 annassign: COLON test opc_EQUAL_MALUCO .
 
     $padrão  reduzir usando a regra 44 (annassign)
 
 
-Estado 285
+Estado 283
 
-  228 fk_COMMA_test: COMMA . test fk_COMMA_test
+  232 fk_COMMA_test: COMMA . test fk_COMMA_test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -5067,7 +5029,7 @@ Estado 285
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 333
+    test         ir ao estado 332
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -5086,27 +5048,27 @@ Estado 285
     atom         ir ao estado 73
 
 
-Estado 286
+Estado 284
 
-  226 testlist: test fk_COMMA_test . opc_COMMA
+  230 testlist: test fk_COMMA_test . opc_COMMA
 
-    COMMA  deslocar, e ir ao estado 227
+    COMMA  deslocar, e ir ao estado 226
 
     $padrão  reduzir usando a regra 68 (opc_COMMA)
 
-    opc_COMMA  ir ao estado 334
+    opc_COMMA  ir ao estado 333
 
 
-Estado 287
+Estado 285
 
    52 fk_COMMA_T_SE: COMMA TSE_stmt fk_COMMA_T_SE .
 
     $padrão  reduzir usando a regra 52 (fk_COMMA_T_SE)
 
 
-Estado 288
+Estado 286
 
-  110 opc_IF_or_test_ELSE_test: IF or_test ELSE . test
+  114 opc_IF_or_test_ELSE_test: IF or_test ELSE . test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -5124,7 +5086,7 @@ Estado 288
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 335
+    test         ir ao estado 334
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -5143,101 +5105,140 @@ Estado 288
     atom         ir ao estado 73
 
 
+Estado 287
+
+  121 fk_OR_AT: OR and_test fk_OR_AT .
+
+    $padrão  reduzir usando a regra 121 (fk_OR_AT)
+
+
+Estado 288
+
+  124 fk_AND_NT: AND not_test fk_AND_NT .
+
+    $padrão  reduzir usando a regra 124 (fk_AND_NT)
+
+
 Estado 289
 
-  117 fk_OR_AT: OR and_test fk_OR_AT .
+  129 fk_CO_EXPR: comp_op expr fk_CO_EXPR .
 
-    $padrão  reduzir usando a regra 117 (fk_OR_AT)
+    $padrão  reduzir usando a regra 129 (fk_CO_EXPR)
 
 
 Estado 290
 
-  120 fk_AND_NT: AND not_test fk_AND_NT .
+  144 fk_VBAR_XE: VBAR xor_expr fk_VBAR_XE .
 
-    $padrão  reduzir usando a regra 120 (fk_AND_NT)
+    $padrão  reduzir usando a regra 144 (fk_VBAR_XE)
 
 
 Estado 291
 
-  125 fk_CO_EXPR: comp_op expr fk_CO_EXPR .
+  148 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@11 and_expr . fk_CIRCUMFLEX_EXPR
 
-    $padrão  reduzir usando a regra 125 (fk_CO_EXPR)
+    CIRCUMFLEX  deslocar, e ir ao estado 157
+
+    $padrão  reduzir usando a regra 146 (fk_CIRCUMFLEX_EXPR)
+
+    fk_CIRCUMFLEX_EXPR  ir ao estado 335
 
 
 Estado 292
 
-  140 fk_VBAR_XE: VBAR xor_expr fk_VBAR_XE .
+  152 fk_AMPER_SE: AMPER $@12 shift_expr . fk_AMPER_SE
 
-    $padrão  reduzir usando a regra 140 (fk_VBAR_XE)
+    AMPER  deslocar, e ir ao estado 159
+
+    $padrão  reduzir usando a regra 150 (fk_AMPER_SE)
+
+    fk_AMPER_SE  ir ao estado 336
 
 
 Estado 293
 
-  144 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@7 and_expr . fk_CIRCUMFLEX_EXPR
+  155 fk_LS_RS_AE: SE_stmt arith_expr fk_LS_RS_AE .
 
-    CIRCUMFLEX  deslocar, e ir ao estado 157
-
-    $padrão  reduzir usando a regra 142 (fk_CIRCUMFLEX_EXPR)
-
-    fk_CIRCUMFLEX_EXPR  ir ao estado 336
+    $padrão  reduzir usando a regra 155 (fk_LS_RS_AE)
 
 
 Estado 294
 
-  148 fk_AMPER_SE: AMPER $@8 shift_expr . fk_AMPER_SE
+  160 fk_T_PLUS_MINUS: AE_stmt term fk_T_PLUS_MINUS .
 
-    AMPER  deslocar, e ir ao estado 159
-
-    $padrão  reduzir usando a regra 146 (fk_AMPER_SE)
-
-    fk_AMPER_SE  ir ao estado 337
+    $padrão  reduzir usando a regra 160 (fk_T_PLUS_MINUS)
 
 
 Estado 295
 
-  151 fk_LS_RS_AE: SE_stmt arith_expr fk_LS_RS_AE .
+  165 fk_MATH: term_stmt factor fk_MATH .
 
-    $padrão  reduzir usando a regra 151 (fk_LS_RS_AE)
+    $padrão  reduzir usando a regra 165 (fk_MATH)
 
 
 Estado 296
 
-  156 fk_T_PLUS_MINUS: AE_stmt term fk_T_PLUS_MINUS .
+  179 opc_DOUBLESTAR_factor: DOUBLESTAR $@13 factor .
 
-    $padrão  reduzir usando a regra 156 (fk_T_PLUS_MINUS)
+    $padrão  reduzir usando a regra 179 (opc_DOUBLESTAR_factor)
 
 
 Estado 297
 
-  161 fk_MATH: term_stmt factor fk_MATH .
+  245 argument: STAR test .
 
-    $padrão  reduzir usando a regra 161 (fk_MATH)
+    $padrão  reduzir usando a regra 245 (argument)
 
 
 Estado 298
 
-  175 opc_DOUBLESTAR_factor: DOUBLESTAR $@9 factor .
+  244 argument: DOUBLESTAR test .
 
-    $padrão  reduzir usando a regra 175 (opc_DOUBLESTAR_factor)
+    $padrão  reduzir usando a regra 244 (argument)
 
 
 Estado 299
 
-  240 argument: STAR test .
+  243 argument: test EQUAL . test
 
-    $padrão  reduzir usando a regra 240 (argument)
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    test         ir ao estado 337
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
 
 
 Estado 300
 
-  239 argument: DOUBLESTAR test .
-
-    $padrão  reduzir usando a regra 239 (argument)
-
-
-Estado 301
-
-  238 argument: test EQUAL . test
+  242 argument: test COLONEQUAL . test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -5274,69 +5275,30 @@ Estado 301
     atom         ir ao estado 73
 
 
+Estado 301
+
+  241 argument: test opc_comp_for .
+
+    $padrão  reduzir usando a regra 241 (argument)
+
+
 Estado 302
 
-  237 argument: test COLONEQUAL . test
+  247 opc_comp_for: comp_for .
 
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    test         ir ao estado 339
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
+    $padrão  reduzir usando a regra 247 (opc_comp_for)
 
 
 Estado 303
 
-  236 argument: test opc_comp_for .
+  204 trailer: LPAR opc_arglist RPAR .
 
-    $padrão  reduzir usando a regra 236 (argument)
+    $padrão  reduzir usando a regra 204 (trailer)
 
 
 Estado 304
 
-  242 opc_comp_for: comp_for .
-
-    $padrão  reduzir usando a regra 242 (opc_comp_for)
-
-
-Estado 305
-
-  200 trailer: LPAR opc_arglist RPAR .
-
-    $padrão  reduzir usando a regra 200 (trailer)
-
-
-Estado 306
-
-  235 fk_COMMA_A: COMMA . argument fk_COMMA_A
+  240 fk_COMMA_A: COMMA . argument fk_COMMA_A
 
     LAMBDA      deslocar, e ir ao estado 3
     NOT         deslocar, e ir ao estado 4
@@ -5351,12 +5313,12 @@ Estado 306
     LSQB        deslocar, e ir ao estado 26
     PLUS        deslocar, e ir ao estado 27
     MINUS       deslocar, e ir ao estado 28
-    STAR        deslocar, e ir ao estado 242
+    STAR        deslocar, e ir ao estado 241
     TILDE       deslocar, e ir ao estado 30
-    DOUBLESTAR  deslocar, e ir ao estado 243
+    DOUBLESTAR  deslocar, e ir ao estado 242
     ELLIPSIS    deslocar, e ir ao estado 31
 
-    test         ir ao estado 244
+    test         ir ao estado 243
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -5373,30 +5335,84 @@ Estado 306
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
-    argument     ir ao estado 340
+    argument     ir ao estado 339
+
+
+Estado 305
+
+  238 arglist: argument fk_COMMA_A . opc_COMMA
+
+    COMMA  deslocar, e ir ao estado 226
+
+    $padrão  reduzir usando a regra 68 (opc_COMMA)
+
+    opc_COMMA  ir ao estado 340
+
+
+Estado 306
+
+  205 trailer: LSQB subscriptlist RSQB .
+
+    $padrão  reduzir usando a regra 205 (trailer)
 
 
 Estado 307
 
-  233 arglist: argument fk_COMMA_A . opc_COMMA
+  217 fk_COMMA_S: COMMA . subscript fk_COMMA_S
 
-    COMMA  deslocar, e ir ao estado 227
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 68 (opc_COMMA)
+    $padrão  reduzir usando a regra 220 (opc_test)
 
-    opc_COMMA  ir ao estado 341
+    test         ir ao estado 247
+    lambdef      ir ao estado 57
+    or_test      ir ao estado 58
+    and_test     ir ao estado 59
+    not_test     ir ao estado 60
+    comparison   ir ao estado 61
+    expr         ir ao estado 63
+    xor_expr     ir ao estado 64
+    and_expr     ir ao estado 65
+    shift_expr   ir ao estado 66
+    arith_expr   ir ao estado 67
+    term         ir ao estado 68
+    factor       ir ao estado 69
+    factor_stmt  ir ao estado 70
+    power        ir ao estado 71
+    atom_expr    ir ao estado 72
+    atom         ir ao estado 73
+    subscript    ir ao estado 341
+    opc_test     ir ao estado 250
 
 
 Estado 308
 
-  201 trailer: LSQB subscriptlist RSQB .
+  215 subscriptlist: subscript fk_COMMA_S . opc_COMMA
 
-    $padrão  reduzir usando a regra 201 (trailer)
+    COMMA  deslocar, e ir ao estado 226
+
+    $padrão  reduzir usando a regra 68 (opc_COMMA)
+
+    opc_COMMA  ir ao estado 342
 
 
 Estado 309
 
-  213 fk_COMMA_S: COMMA . subscript fk_COMMA_S
+  219 subscript: opc_test COLON . opc_test opc_sliceop
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -5414,9 +5430,9 @@ Estado 309
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 216 (opc_test)
+    $padrão  reduzir usando a regra 220 (opc_test)
 
-    test         ir ao estado 248
+    test         ir ao estado 343
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -5433,124 +5449,34 @@ Estado 309
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
-    subscript    ir ao estado 342
-    opc_test     ir ao estado 251
+    opc_test     ir ao estado 344
 
 
 Estado 310
 
-  211 subscriptlist: subscript fk_COMMA_S . opc_COMMA
+  236 opc_LPAR_arglist_RPAR: LPAR RPAR .
 
-    COMMA  deslocar, e ir ao estado 227
-
-    $padrão  reduzir usando a regra 68 (opc_COMMA)
-
-    opc_COMMA  ir ao estado 343
+    $padrão  reduzir usando a regra 236 (opc_LPAR_arglist_RPAR)
 
 
 Estado 311
 
-  215 subscript: opc_test COLON . opc_test opc_sliceop
+  237 opc_LPAR_arglist_RPAR: LPAR arglist . RPAR
 
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    $padrão  reduzir usando a regra 216 (opc_test)
-
-    test         ir ao estado 344
-    lambdef      ir ao estado 57
-    or_test      ir ao estado 58
-    and_test     ir ao estado 59
-    not_test     ir ao estado 60
-    comparison   ir ao estado 61
-    expr         ir ao estado 63
-    xor_expr     ir ao estado 64
-    and_expr     ir ao estado 65
-    shift_expr   ir ao estado 66
-    arith_expr   ir ao estado 67
-    term         ir ao estado 68
-    factor       ir ao estado 69
-    factor_stmt  ir ao estado 70
-    power        ir ao estado 71
-    atom_expr    ir ao estado 72
-    atom         ir ao estado 73
-    opc_test     ir ao estado 345
+    RPAR  deslocar, e ir ao estado 345
 
 
 Estado 312
 
-  232 opc_LPAR_arglist_RPAR: LPAR arglist RPAR .
+  234 classdef: CLASS NAME $@17 opc_LPAR_arglist_RPAR COLON . suite
 
-    $padrão  reduzir usando a regra 232 (opc_LPAR_arglist_RPAR)
-
-
-Estado 313
-
-  229 classdef: CLASS NAME opc_LPAR_arglist_RPAR COLON suite .
-
-    $padrão  reduzir usando a regra 229 (classdef)
-
-
-Estado 314
-
-   28 parameters: LPAR opc_argslist . RPAR
-
-    RPAR  deslocar, e ir ao estado 346
-
-
-Estado 315
-
-   27 opc_RARROW_test: RARROW . $@2 test
-
-    $padrão  reduzir usando a regra 26 ($@2)
-
-    $@2  ir ao estado 347
-
-
-Estado 316
-
-   24 funcdef: DEF NAME $@1 parameters opc_RARROW_test . COLON func_body_suite
-
-    COLON  deslocar, e ir ao estado 348
-
-
-Estado 317
-
-   31 opc_argslist: NAME $@3 COMMA opc_argslist .
-
-    $padrão  reduzir usando a regra 31 (opc_argslist)
-
-
-Estado 318
-
-  103 suite: NEWLINE INDENT . stmt fk_stmt DEDENT
-
-    CLASS     deslocar, e ir ao estado 1
-    DEF       deslocar, e ir ao estado 2
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
-    IF        deslocar, e ir ao estado 5
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
-    FOR       deslocar, e ir ao estado 8
-    WHILE     deslocar, e ir ao estado 9
     PASS      deslocar, e ir ao estado 10
     BREAK     deslocar, e ir ao estado 11
     CONTINUE  deslocar, e ir ao estado 12
-    WITH      deslocar, e ir ao estado 13
     RETURN    deslocar, e ir ao estado 14
     YIELD     deslocar, e ir ao estado 15
     GLOBAL    deslocar, e ir ao estado 16
@@ -5561,6 +5487,7 @@ Estado 318
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
+    NEWLINE   deslocar, e ir ao estado 263
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
@@ -5569,11 +5496,8 @@ Estado 318
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    stmt                ir ao estado 349
-    simple_stmt         ir ao estado 36
+    simple_stmt         ir ao estado 264
     small_stmt          ir ao estado 37
-    compound_stmt       ir ao estado 38
-    funcdef             ir ao estado 39
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
     TSE_stmt            ir ao estado 42
@@ -5586,10 +5510,7 @@ Estado 318
     yield_stmt          ir ao estado 49
     global_stmt         ir ao estado 50
     nonlocal_stmt       ir ao estado 51
-    if_stmt             ir ao estado 52
-    while_stmt          ir ao estado 53
-    for_stmt            ir ao estado 54
-    with_stmt           ir ao estado 55
+    suite               ir ao estado 346
     test                ir ao estado 56
     lambdef             ir ao estado 57
     or_test             ir ao estado 58
@@ -5608,64 +5529,53 @@ Estado 318
     power               ir ao estado 71
     atom_expr           ir ao estado 72
     atom                ir ao estado 73
-    classdef            ir ao estado 74
     yield_expr          ir ao estado 75
 
 
-Estado 319
+Estado 313
 
-   91 fk_ELIF_NT_COLON_SUITE: ELSE_IF . namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
+   28 parameters: LPAR opc_argslist . RPAR
 
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    NONE      deslocar, e ir ao estado 18
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    namedexpr_test  ir ao estado 350
-    test            ir ao estado 82
-    lambdef         ir ao estado 57
-    or_test         ir ao estado 58
-    and_test        ir ao estado 59
-    not_test        ir ao estado 60
-    comparison      ir ao estado 61
-    expr            ir ao estado 63
-    xor_expr        ir ao estado 64
-    and_expr        ir ao estado 65
-    shift_expr      ir ao estado 66
-    arith_expr      ir ao estado 67
-    term            ir ao estado 68
-    factor          ir ao estado 69
-    factor_stmt     ir ao estado 70
-    power           ir ao estado 71
-    atom_expr       ir ao estado 72
-    atom            ir ao estado 73
+    RPAR  deslocar, e ir ao estado 347
 
 
-Estado 320
+Estado 314
 
-   89 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE . opc_ELSE_COLON_suite
+   27 opc_RARROW_test: RARROW . $@2 test
 
-    ELSE  deslocar, e ir ao estado 323
+    $padrão  reduzir usando a regra 26 ($@2)
 
-    $padrão  reduzir usando a regra 94 (opc_ELSE_COLON_suite)
-
-    opc_ELSE_COLON_suite  ir ao estado 351
+    $@2  ir ao estado 348
 
 
-Estado 321
+Estado 315
 
-   93 for_stmt: FOR exprlist IN testlist COLON . suite opc_ELSE_COLON_suite
+   24 funcdef: DEF NAME $@1 parameters opc_RARROW_test . COLON func_body_suite
+
+    COLON  deslocar, e ir ao estado 349
+
+
+Estado 316
+
+   31 opc_argslist: NAME $@3 COMMA opc_argslist .
+
+    $padrão  reduzir usando a regra 31 (opc_argslist)
+
+
+Estado 317
+
+   90 if_stmt: IF $@7 namedexpr_test COLON suite . fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite
+
+    ELSE_IF  deslocar, e ir ao estado 350
+
+    $padrão  reduzir usando a regra 91 (fk_ELIF_NT_COLON_SUITE)
+
+    fk_ELIF_NT_COLON_SUITE  ir ao estado 351
+
+
+Estado 318
+
+   95 for_stmt: FOR exprlist IN testlist COLON . suite opc_ELSE_COLON_suite
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -5684,7 +5594,7 @@ Estado 321
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
+    NEWLINE   deslocar, e ir ao estado 263
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
@@ -5693,7 +5603,7 @@ Estado 321
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    simple_stmt         ir ao estado 262
+    simple_stmt         ir ao estado 264
     small_stmt          ir ao estado 37
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
@@ -5729,201 +5639,302 @@ Estado 321
     yield_expr          ir ao estado 75
 
 
+Estado 319
+
+  227 fk_COMMA_E_SE: COMMA exprlist_stmt fk_COMMA_E_SE .
+
+    $padrão  reduzir usando a regra 227 (fk_COMMA_E_SE)
+
+
+Estado 320
+
+  106 suite: NEWLINE INDENT . stmt fk_stmt DEDENT
+
+    CLASS     deslocar, e ir ao estado 1
+    DEF       deslocar, e ir ao estado 2
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    IF        deslocar, e ir ao estado 5
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    FOR       deslocar, e ir ao estado 8
+    WHILE     deslocar, e ir ao estado 9
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    WITH      deslocar, e ir ao estado 13
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    stmt                ir ao estado 353
+    simple_stmt         ir ao estado 36
+    small_stmt          ir ao estado 37
+    compound_stmt       ir ao estado 38
+    funcdef             ir ao estado 39
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    if_stmt             ir ao estado 52
+    while_stmt          ir ao estado 53
+    for_stmt            ir ao estado 54
+    with_stmt           ir ao estado 55
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    classdef            ir ao estado 74
+    yield_expr          ir ao estado 75
+
+
+Estado 321
+
+   98 opc_ELSE_COLON_suite: ELSE . $@9 COLON suite
+
+    $padrão  reduzir usando a regra 97 ($@9)
+
+    $@9  ir ao estado 354
+
+
 Estado 322
 
-  223 fk_COMMA_E_SE: COMMA exprlist_stmt fk_COMMA_E_SE .
+   94 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite .
 
-    $padrão  reduzir usando a regra 223 (fk_COMMA_E_SE)
+    $padrão  reduzir usando a regra 94 (while_stmt)
 
 
 Estado 323
 
-   95 opc_ELSE_COLON_suite: ELSE . COLON suite
+  110 opc_COLONEQUAL_test: COLONEQUAL $@10 test .
 
-    COLON  deslocar, e ir ao estado 353
+    $padrão  reduzir usando a regra 110 (opc_COLONEQUAL_test)
 
 
 Estado 324
 
-   92 while_stmt: WHILE namedexpr_test COLON suite opc_ELSE_COLON_suite .
+  101 fk_COMMA_WI: COMMA with_item fk_COMMA_WI .
 
-    $padrão  reduzir usando a regra 92 (while_stmt)
+    $padrão  reduzir usando a regra 101 (fk_COMMA_WI)
 
 
 Estado 325
 
-   98 fk_COMMA_WI: COMMA with_item fk_COMMA_WI .
+   99 with_stmt: WITH with_item fk_COMMA_WI COLON suite .
 
-    $padrão  reduzir usando a regra 98 (fk_COMMA_WI)
+    $padrão  reduzir usando a regra 99 (with_stmt)
 
 
 Estado 326
-
-   96 with_stmt: WITH with_item fk_COMMA_WI COLON suite .
-
-    $padrão  reduzir usando a regra 96 (with_stmt)
-
-
-Estado 327
 
    88 fk_COMMA_NAME: COMMA NAME . $@6 fk_COMMA_NAME
 
     $padrão  reduzir usando a regra 87 ($@6)
 
-    $@6  ir ao estado 354
+    $@6  ir ao estado 355
+
+
+Estado 327
+
+  202 fk_STRING: STRING $@16 fk_STRING .
+
+    $padrão  reduzir usando a regra 202 (fk_STRING)
 
 
 Estado 328
 
-  198 fk_STRING: STRING $@12 fk_STRING .
+  210 fk_COMMA_NT_SE: COMMA trailer_stmt fk_COMMA_NT_SE .
 
-    $padrão  reduzir usando a regra 198 (fk_STRING)
+    $padrão  reduzir usando a regra 210 (fk_COMMA_NT_SE)
 
 
 Estado 329
 
-  206 fk_COMMA_NT_SE: COMMA trailer_stmt fk_COMMA_NT_SE .
+  250 sync_comp_for: FOR exprlist . IN or_test opc_comp_iter
 
-    $padrão  reduzir usando a regra 206 (fk_COMMA_NT_SE)
+    IN  deslocar, e ir ao estado 356
 
 
 Estado 330
-
-  245 sync_comp_for: FOR exprlist . IN or_test opc_comp_iter
-
-    IN  deslocar, e ir ao estado 355
-
-
-Estado 331
 
    47 opc_EQUAL_MALUCO: EQUAL testlist_star_expr .
 
     $padrão  reduzir usando a regra 47 (opc_EQUAL_MALUCO)
 
 
-Estado 332
+Estado 331
 
    46 opc_EQUAL_MALUCO: EQUAL yield_expr .
 
     $padrão  reduzir usando a regra 46 (opc_EQUAL_MALUCO)
 
 
+Estado 332
+
+  232 fk_COMMA_test: COMMA test . fk_COMMA_test
+
+    COMMA  deslocar, e ir ao estado 283
+
+    $padrão  reduzir usando a regra 231 (fk_COMMA_test)
+
+    fk_COMMA_test  ir ao estado 357
+
+
 Estado 333
 
-  228 fk_COMMA_test: COMMA test . fk_COMMA_test
+  230 testlist: test fk_COMMA_test opc_COMMA .
 
-    COMMA  deslocar, e ir ao estado 285
-
-    $padrão  reduzir usando a regra 227 (fk_COMMA_test)
-
-    fk_COMMA_test  ir ao estado 356
+    $padrão  reduzir usando a regra 230 (testlist)
 
 
 Estado 334
 
-  226 testlist: test fk_COMMA_test opc_COMMA .
+  114 opc_IF_or_test_ELSE_test: IF or_test ELSE test .
 
-    $padrão  reduzir usando a regra 226 (testlist)
+    $padrão  reduzir usando a regra 114 (opc_IF_or_test_ELSE_test)
 
 
 Estado 335
 
-  110 opc_IF_or_test_ELSE_test: IF or_test ELSE test .
+  148 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@11 and_expr fk_CIRCUMFLEX_EXPR .
 
-    $padrão  reduzir usando a regra 110 (opc_IF_or_test_ELSE_test)
+    $padrão  reduzir usando a regra 148 (fk_CIRCUMFLEX_EXPR)
 
 
 Estado 336
 
-  144 fk_CIRCUMFLEX_EXPR: CIRCUMFLEX $@7 and_expr fk_CIRCUMFLEX_EXPR .
+  152 fk_AMPER_SE: AMPER $@12 shift_expr fk_AMPER_SE .
 
-    $padrão  reduzir usando a regra 144 (fk_CIRCUMFLEX_EXPR)
+    $padrão  reduzir usando a regra 152 (fk_AMPER_SE)
 
 
 Estado 337
 
-  148 fk_AMPER_SE: AMPER $@8 shift_expr fk_AMPER_SE .
+  243 argument: test EQUAL test .
 
-    $padrão  reduzir usando a regra 148 (fk_AMPER_SE)
+    $padrão  reduzir usando a regra 243 (argument)
 
 
 Estado 338
 
-  238 argument: test EQUAL test .
+  242 argument: test COLONEQUAL test .
 
-    $padrão  reduzir usando a regra 238 (argument)
+    $padrão  reduzir usando a regra 242 (argument)
 
 
 Estado 339
 
-  237 argument: test COLONEQUAL test .
+  240 fk_COMMA_A: COMMA argument . fk_COMMA_A
 
-    $padrão  reduzir usando a regra 237 (argument)
+    COMMA  deslocar, e ir ao estado 304
+
+    $padrão  reduzir usando a regra 239 (fk_COMMA_A)
+
+    fk_COMMA_A  ir ao estado 358
 
 
 Estado 340
 
-  235 fk_COMMA_A: COMMA argument . fk_COMMA_A
+  238 arglist: argument fk_COMMA_A opc_COMMA .
 
-    COMMA  deslocar, e ir ao estado 306
-
-    $padrão  reduzir usando a regra 234 (fk_COMMA_A)
-
-    fk_COMMA_A  ir ao estado 357
+    $padrão  reduzir usando a regra 238 (arglist)
 
 
 Estado 341
 
-  233 arglist: argument fk_COMMA_A opc_COMMA .
+  217 fk_COMMA_S: COMMA subscript . fk_COMMA_S
 
-    $padrão  reduzir usando a regra 233 (arglist)
+    COMMA  deslocar, e ir ao estado 307
+
+    $padrão  reduzir usando a regra 216 (fk_COMMA_S)
+
+    fk_COMMA_S  ir ao estado 359
 
 
 Estado 342
 
-  213 fk_COMMA_S: COMMA subscript . fk_COMMA_S
+  215 subscriptlist: subscript fk_COMMA_S opc_COMMA .
 
-    COMMA  deslocar, e ir ao estado 309
-
-    $padrão  reduzir usando a regra 212 (fk_COMMA_S)
-
-    fk_COMMA_S  ir ao estado 358
+    $padrão  reduzir usando a regra 215 (subscriptlist)
 
 
 Estado 343
 
-  211 subscriptlist: subscript fk_COMMA_S opc_COMMA .
+  221 opc_test: test .
 
-    $padrão  reduzir usando a regra 211 (subscriptlist)
+    $padrão  reduzir usando a regra 221 (opc_test)
 
 
 Estado 344
 
-  217 opc_test: test .
+  219 subscript: opc_test COLON opc_test . opc_sliceop
 
-    $padrão  reduzir usando a regra 217 (opc_test)
+    COLON  deslocar, e ir ao estado 360
+
+    $padrão  reduzir usando a regra 222 (opc_sliceop)
+
+    opc_sliceop  ir ao estado 361
+    sliceop      ir ao estado 362
 
 
 Estado 345
 
-  215 subscript: opc_test COLON opc_test . opc_sliceop
+  237 opc_LPAR_arglist_RPAR: LPAR arglist RPAR .
 
-    COLON  deslocar, e ir ao estado 359
-
-    $padrão  reduzir usando a regra 218 (opc_sliceop)
-
-    opc_sliceop  ir ao estado 360
-    sliceop      ir ao estado 361
+    $padrão  reduzir usando a regra 237 (opc_LPAR_arglist_RPAR)
 
 
 Estado 346
+
+  234 classdef: CLASS NAME $@17 opc_LPAR_arglist_RPAR COLON suite .
+
+    $padrão  reduzir usando a regra 234 (classdef)
+
+
+Estado 347
 
    28 parameters: LPAR opc_argslist RPAR .
 
     $padrão  reduzir usando a regra 28 (parameters)
 
 
-Estado 347
+Estado 348
 
    27 opc_RARROW_test: RARROW $@2 . test
 
@@ -5943,7 +5954,7 @@ Estado 347
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test         ir ao estado 362
+    test         ir ao estado 363
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -5962,7 +5973,7 @@ Estado 347
     atom         ir ao estado 73
 
 
-Estado 348
+Estado 349
 
    24 funcdef: DEF NAME $@1 parameters opc_RARROW_test COLON . func_body_suite
 
@@ -5983,7 +5994,7 @@ Estado 348
     NAME      deslocar, e ir ao estado 21
     NUMBER    deslocar, e ir ao estado 22
     STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 363
+    NEWLINE   deslocar, e ir ao estado 364
     LPAR      deslocar, e ir ao estado 25
     LSQB      deslocar, e ir ao estado 26
     PLUS      deslocar, e ir ao estado 27
@@ -5992,7 +6003,7 @@ Estado 348
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    simple_stmt         ir ao estado 364
+    simple_stmt         ir ao estado 365
     small_stmt          ir ao estado 37
     expr_stmt           ir ao estado 40
     testlist_star_expr  ir ao estado 41
@@ -6025,12 +6036,43 @@ Estado 348
     atom_expr           ir ao estado 72
     atom                ir ao estado 73
     yield_expr          ir ao estado 75
-    func_body_suite     ir ao estado 365
+    func_body_suite     ir ao estado 366
 
 
-Estado 349
+Estado 350
 
-  103 suite: NEWLINE INDENT stmt . fk_stmt DEDENT
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF . $@8 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
+
+    $padrão  reduzir usando a regra 92 ($@8)
+
+    $@8  ir ao estado 367
+
+
+Estado 351
+
+   90 if_stmt: IF $@7 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE . opc_ELSE_COLON_suite
+
+    ELSE  deslocar, e ir ao estado 321
+
+    $padrão  reduzir usando a regra 96 (opc_ELSE_COLON_suite)
+
+    opc_ELSE_COLON_suite  ir ao estado 368
+
+
+Estado 352
+
+   95 for_stmt: FOR exprlist IN testlist COLON suite . opc_ELSE_COLON_suite
+
+    ELSE  deslocar, e ir ao estado 321
+
+    $padrão  reduzir usando a regra 96 (opc_ELSE_COLON_suite)
+
+    opc_ELSE_COLON_suite  ir ao estado 369
+
+
+Estado 353
+
+  106 suite: NEWLINE INDENT stmt . fk_stmt DEDENT
 
     CLASS     deslocar, e ir ao estado 1
     DEF       deslocar, e ir ao estado 2
@@ -6063,9 +6105,9 @@ Estado 349
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 259 (fk_stmt)
+    $padrão  reduzir usando a regra 265 (fk_stmt)
 
-    stmt                ir ao estado 366
+    stmt                ir ao estado 370
     simple_stmt         ir ao estado 36
     small_stmt          ir ao estado 37
     compound_stmt       ir ao estado 38
@@ -6106,114 +6148,30 @@ Estado 349
     atom                ir ao estado 73
     classdef            ir ao estado 74
     yield_expr          ir ao estado 75
-    fk_stmt             ir ao estado 367
-
-
-Estado 350
-
-   91 fk_ELIF_NT_COLON_SUITE: ELSE_IF namedexpr_test . COLON suite fk_ELIF_NT_COLON_SUITE
-
-    COLON  deslocar, e ir ao estado 368
-
-
-Estado 351
-
-   89 if_stmt: IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite .
-
-    $padrão  reduzir usando a regra 89 (if_stmt)
-
-
-Estado 352
-
-   93 for_stmt: FOR exprlist IN testlist COLON suite . opc_ELSE_COLON_suite
-
-    ELSE  deslocar, e ir ao estado 323
-
-    $padrão  reduzir usando a regra 94 (opc_ELSE_COLON_suite)
-
-    opc_ELSE_COLON_suite  ir ao estado 369
-
-
-Estado 353
-
-   95 opc_ELSE_COLON_suite: ELSE COLON . suite
-
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
-    NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    simple_stmt         ir ao estado 262
-    small_stmt          ir ao estado 37
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 370
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    yield_expr          ir ao estado 75
+    fk_stmt             ir ao estado 371
 
 
 Estado 354
 
-   88 fk_COMMA_NAME: COMMA NAME $@6 . fk_COMMA_NAME
+   98 opc_ELSE_COLON_suite: ELSE $@9 . COLON suite
 
-    COMMA  deslocar, e ir ao estado 272
-
-    $padrão  reduzir usando a regra 86 (fk_COMMA_NAME)
-
-    fk_COMMA_NAME  ir ao estado 371
+    COLON  deslocar, e ir ao estado 372
 
 
 Estado 355
 
-  245 sync_comp_for: FOR exprlist IN . or_test opc_comp_iter
+   88 fk_COMMA_NAME: COMMA NAME $@6 . fk_COMMA_NAME
+
+    COMMA  deslocar, e ir ao estado 270
+
+    $padrão  reduzir usando a regra 86 (fk_COMMA_NAME)
+
+    fk_COMMA_NAME  ir ao estado 373
+
+
+Estado 356
+
+  250 sync_comp_for: FOR exprlist IN . or_test opc_comp_iter
 
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
@@ -6230,7 +6188,7 @@ Estado 355
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    or_test      ir ao estado 372
+    or_test      ir ao estado 374
     and_test     ir ao estado 59
     not_test     ir ao estado 60
     comparison   ir ao estado 61
@@ -6247,30 +6205,30 @@ Estado 355
     atom         ir ao estado 73
 
 
-Estado 356
-
-  228 fk_COMMA_test: COMMA test fk_COMMA_test .
-
-    $padrão  reduzir usando a regra 228 (fk_COMMA_test)
-
-
 Estado 357
 
-  235 fk_COMMA_A: COMMA argument fk_COMMA_A .
+  232 fk_COMMA_test: COMMA test fk_COMMA_test .
 
-    $padrão  reduzir usando a regra 235 (fk_COMMA_A)
+    $padrão  reduzir usando a regra 232 (fk_COMMA_test)
 
 
 Estado 358
 
-  213 fk_COMMA_S: COMMA subscript fk_COMMA_S .
+  240 fk_COMMA_A: COMMA argument fk_COMMA_A .
 
-    $padrão  reduzir usando a regra 213 (fk_COMMA_S)
+    $padrão  reduzir usando a regra 240 (fk_COMMA_A)
 
 
 Estado 359
 
-  220 sliceop: COLON . opc_test
+  217 fk_COMMA_S: COMMA subscript fk_COMMA_S .
+
+    $padrão  reduzir usando a regra 217 (fk_COMMA_S)
+
+
+Estado 360
+
+  224 sliceop: COLON . opc_test
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
@@ -6288,9 +6246,9 @@ Estado 359
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 216 (opc_test)
+    $padrão  reduzir usando a regra 220 (opc_test)
 
-    test         ir ao estado 344
+    test         ir ao estado 343
     lambdef      ir ao estado 57
     or_test      ir ao estado 58
     and_test     ir ao estado 59
@@ -6307,361 +6265,59 @@ Estado 359
     power        ir ao estado 71
     atom_expr    ir ao estado 72
     atom         ir ao estado 73
-    opc_test     ir ao estado 373
-
-
-Estado 360
-
-  215 subscript: opc_test COLON opc_test opc_sliceop .
-
-    $padrão  reduzir usando a regra 215 (subscript)
+    opc_test     ir ao estado 375
 
 
 Estado 361
 
-  219 opc_sliceop: sliceop .
+  219 subscript: opc_test COLON opc_test opc_sliceop .
 
-    $padrão  reduzir usando a regra 219 (opc_sliceop)
+    $padrão  reduzir usando a regra 219 (subscript)
 
 
 Estado 362
+
+  223 opc_sliceop: sliceop .
+
+    $padrão  reduzir usando a regra 223 (opc_sliceop)
+
+
+Estado 363
 
    27 opc_RARROW_test: RARROW $@2 test .
 
     $padrão  reduzir usando a regra 27 (opc_RARROW_test)
 
 
-Estado 363
-
-  258 func_body_suite: NEWLINE . INDENT stmt fk_stmt DEDENT
-
-    INDENT  deslocar, e ir ao estado 374
-
-
 Estado 364
 
-  257 func_body_suite: simple_stmt .
+  264 func_body_suite: NEWLINE . INDENT stmt fk_stmt DEDENT
 
-    $padrão  reduzir usando a regra 257 (func_body_suite)
+    INDENT  deslocar, e ir ao estado 376
 
 
 Estado 365
+
+  263 func_body_suite: simple_stmt .
+
+    $padrão  reduzir usando a regra 263 (func_body_suite)
+
+
+Estado 366
 
    24 funcdef: DEF NAME $@1 parameters opc_RARROW_test COLON func_body_suite .
 
     $padrão  reduzir usando a regra 24 (funcdef)
 
 
-Estado 366
-
-  260 fk_stmt: stmt . fk_stmt
-
-    CLASS     deslocar, e ir ao estado 1
-    DEF       deslocar, e ir ao estado 2
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    IF        deslocar, e ir ao estado 5
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    FOR       deslocar, e ir ao estado 8
-    WHILE     deslocar, e ir ao estado 9
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    WITH      deslocar, e ir ao estado 13
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
-    NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    $padrão  reduzir usando a regra 259 (fk_stmt)
-
-    stmt                ir ao estado 366
-    simple_stmt         ir ao estado 36
-    small_stmt          ir ao estado 37
-    compound_stmt       ir ao estado 38
-    funcdef             ir ao estado 39
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    if_stmt             ir ao estado 52
-    while_stmt          ir ao estado 53
-    for_stmt            ir ao estado 54
-    with_stmt           ir ao estado 55
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    classdef            ir ao estado 74
-    yield_expr          ir ao estado 75
-    fk_stmt             ir ao estado 375
-
-
 Estado 367
 
-  103 suite: NEWLINE INDENT stmt fk_stmt . DEDENT
-
-    DEDENT  deslocar, e ir ao estado 376
-
-
-Estado 368
-
-   91 fk_ELIF_NT_COLON_SUITE: ELSE_IF namedexpr_test COLON . suite fk_ELIF_NT_COLON_SUITE
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 . namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE
 
     LAMBDA    deslocar, e ir ao estado 3
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
-    NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    NEWLINE   deslocar, e ir ao estado 261
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    simple_stmt         ir ao estado 262
-    small_stmt          ir ao estado 37
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    suite               ir ao estado 377
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    yield_expr          ir ao estado 75
-
-
-Estado 369
-
-   93 for_stmt: FOR exprlist IN testlist COLON suite opc_ELSE_COLON_suite .
-
-    $padrão  reduzir usando a regra 93 (for_stmt)
-
-
-Estado 370
-
-   95 opc_ELSE_COLON_suite: ELSE COLON suite .
-
-    $padrão  reduzir usando a regra 95 (opc_ELSE_COLON_suite)
-
-
-Estado 371
-
-   88 fk_COMMA_NAME: COMMA NAME $@6 fk_COMMA_NAME .
-
-    $padrão  reduzir usando a regra 88 (fk_COMMA_NAME)
-
-
-Estado 372
-
-  245 sync_comp_for: FOR exprlist IN or_test . opc_comp_iter
-
-    IF     deslocar, e ir ao estado 378
-    ASYNC  deslocar, e ir ao estado 207
-
-    FOR       reduzir usando a regra 249 (opc_ASYNC)
-    $padrão  reduzir usando a regra 246 (opc_comp_iter)
-
-    comp_iter      ir ao estado 379
-    opc_comp_iter  ir ao estado 380
-    comp_for       ir ao estado 381
-    opc_ASYNC      ir ao estado 212
-    comp_if        ir ao estado 382
-
-
-Estado 373
-
-  220 sliceop: COLON opc_test .
-
-    $padrão  reduzir usando a regra 220 (sliceop)
-
-
-Estado 374
-
-  258 func_body_suite: NEWLINE INDENT . stmt fk_stmt DEDENT
-
-    CLASS     deslocar, e ir ao estado 1
-    DEF       deslocar, e ir ao estado 2
-    LAMBDA    deslocar, e ir ao estado 3
-    NOT       deslocar, e ir ao estado 4
-    IF        deslocar, e ir ao estado 5
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
-    FOR       deslocar, e ir ao estado 8
-    WHILE     deslocar, e ir ao estado 9
-    PASS      deslocar, e ir ao estado 10
-    BREAK     deslocar, e ir ao estado 11
-    CONTINUE  deslocar, e ir ao estado 12
-    WITH      deslocar, e ir ao estado 13
-    RETURN    deslocar, e ir ao estado 14
-    YIELD     deslocar, e ir ao estado 15
-    GLOBAL    deslocar, e ir ao estado 16
-    NONLOCAL  deslocar, e ir ao estado 17
-    NONE      deslocar, e ir ao estado 18
-    DEL       deslocar, e ir ao estado 19
-    AWAIT     deslocar, e ir ao estado 20
-    NAME      deslocar, e ir ao estado 21
-    NUMBER    deslocar, e ir ao estado 22
-    STRING    deslocar, e ir ao estado 23
-    LPAR      deslocar, e ir ao estado 25
-    LSQB      deslocar, e ir ao estado 26
-    PLUS      deslocar, e ir ao estado 27
-    MINUS     deslocar, e ir ao estado 28
-    STAR      deslocar, e ir ao estado 29
-    TILDE     deslocar, e ir ao estado 30
-    ELLIPSIS  deslocar, e ir ao estado 31
-
-    stmt                ir ao estado 383
-    simple_stmt         ir ao estado 36
-    small_stmt          ir ao estado 37
-    compound_stmt       ir ao estado 38
-    funcdef             ir ao estado 39
-    expr_stmt           ir ao estado 40
-    testlist_star_expr  ir ao estado 41
-    TSE_stmt            ir ao estado 42
-    del_stmt            ir ao estado 43
-    flow_stmt           ir ao estado 44
-    pass_stmt           ir ao estado 45
-    break_stmt          ir ao estado 46
-    continue_stmt       ir ao estado 47
-    return_stmt         ir ao estado 48
-    yield_stmt          ir ao estado 49
-    global_stmt         ir ao estado 50
-    nonlocal_stmt       ir ao estado 51
-    if_stmt             ir ao estado 52
-    while_stmt          ir ao estado 53
-    for_stmt            ir ao estado 54
-    with_stmt           ir ao estado 55
-    test                ir ao estado 56
-    lambdef             ir ao estado 57
-    or_test             ir ao estado 58
-    and_test            ir ao estado 59
-    not_test            ir ao estado 60
-    comparison          ir ao estado 61
-    star_expr           ir ao estado 62
-    expr                ir ao estado 63
-    xor_expr            ir ao estado 64
-    and_expr            ir ao estado 65
-    shift_expr          ir ao estado 66
-    arith_expr          ir ao estado 67
-    term                ir ao estado 68
-    factor              ir ao estado 69
-    factor_stmt         ir ao estado 70
-    power               ir ao estado 71
-    atom_expr           ir ao estado 72
-    atom                ir ao estado 73
-    classdef            ir ao estado 74
-    yield_expr          ir ao estado 75
-
-
-Estado 375
-
-  260 fk_stmt: stmt fk_stmt .
-
-    $padrão  reduzir usando a regra 260 (fk_stmt)
-
-
-Estado 376
-
-  103 suite: NEWLINE INDENT stmt fk_stmt DEDENT .
-
-    $padrão  reduzir usando a regra 103 (suite)
-
-
-Estado 377
-
-   91 fk_ELIF_NT_COLON_SUITE: ELSE_IF namedexpr_test COLON suite . fk_ELIF_NT_COLON_SUITE
-
-    ELSE_IF  deslocar, e ir ao estado 319
-
-    $padrão  reduzir usando a regra 90 (fk_ELIF_NT_COLON_SUITE)
-
-    fk_ELIF_NT_COLON_SUITE  ir ao estado 384
-
-
-Estado 378
-
-  251 comp_if: IF . test_nocond opc_comp_iter
-
-    LAMBDA    deslocar, e ir ao estado 385
-    NOT       deslocar, e ir ao estado 4
-    TRUE      deslocar, e ir ao estado 6
-    FALSE     deslocar, e ir ao estado 7
     NONE      deslocar, e ir ao estado 18
     AWAIT     deslocar, e ir ao estado 20
     NAME      deslocar, e ir ao estado 21
@@ -6674,9 +6330,10 @@ Estado 378
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test_nocond     ir ao estado 386
-    lambdef_nocond  ir ao estado 387
-    or_test         ir ao estado 388
+    namedexpr_test  ir ao estado 377
+    test            ir ao estado 87
+    lambdef         ir ao estado 57
+    or_test         ir ao estado 58
     and_test        ir ao estado 59
     not_test        ir ao estado 60
     comparison      ir ao estado 61
@@ -6693,37 +6350,23 @@ Estado 378
     atom            ir ao estado 73
 
 
-Estado 379
+Estado 368
 
-  247 opc_comp_iter: comp_iter .
+   90 if_stmt: IF $@7 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE opc_ELSE_COLON_suite .
 
-    $padrão  reduzir usando a regra 247 (opc_comp_iter)
-
-
-Estado 380
-
-  245 sync_comp_for: FOR exprlist IN or_test opc_comp_iter .
-
-    $padrão  reduzir usando a regra 245 (sync_comp_for)
+    $padrão  reduzir usando a regra 90 (if_stmt)
 
 
-Estado 381
+Estado 369
 
-  243 comp_iter: comp_for .
+   95 for_stmt: FOR exprlist IN testlist COLON suite opc_ELSE_COLON_suite .
 
-    $padrão  reduzir usando a regra 243 (comp_iter)
-
-
-Estado 382
-
-  244 comp_iter: comp_if .
-
-    $padrão  reduzir usando a regra 244 (comp_iter)
+    $padrão  reduzir usando a regra 95 (for_stmt)
 
 
-Estado 383
+Estado 370
 
-  258 func_body_suite: NEWLINE INDENT stmt . fk_stmt DEDENT
+  266 fk_stmt: stmt . fk_stmt
 
     CLASS     deslocar, e ir ao estado 1
     DEF       deslocar, e ir ao estado 2
@@ -6756,9 +6399,337 @@ Estado 383
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    $padrão  reduzir usando a regra 259 (fk_stmt)
+    $padrão  reduzir usando a regra 265 (fk_stmt)
 
-    stmt                ir ao estado 366
+    stmt                ir ao estado 370
+    simple_stmt         ir ao estado 36
+    small_stmt          ir ao estado 37
+    compound_stmt       ir ao estado 38
+    funcdef             ir ao estado 39
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    if_stmt             ir ao estado 52
+    while_stmt          ir ao estado 53
+    for_stmt            ir ao estado 54
+    with_stmt           ir ao estado 55
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    classdef            ir ao estado 74
+    yield_expr          ir ao estado 75
+    fk_stmt             ir ao estado 378
+
+
+Estado 371
+
+  106 suite: NEWLINE INDENT stmt fk_stmt . DEDENT
+
+    DEDENT  deslocar, e ir ao estado 379
+
+
+Estado 372
+
+   98 opc_ELSE_COLON_suite: ELSE $@9 COLON . suite
+
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    NEWLINE   deslocar, e ir ao estado 263
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    simple_stmt         ir ao estado 264
+    small_stmt          ir ao estado 37
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    suite               ir ao estado 380
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    yield_expr          ir ao estado 75
+
+
+Estado 373
+
+   88 fk_COMMA_NAME: COMMA NAME $@6 fk_COMMA_NAME .
+
+    $padrão  reduzir usando a regra 88 (fk_COMMA_NAME)
+
+
+Estado 374
+
+  250 sync_comp_for: FOR exprlist IN or_test . opc_comp_iter
+
+    IF     deslocar, e ir ao estado 381
+    ASYNC  deslocar, e ir ao estado 206
+
+    FOR       reduzir usando a regra 254 (opc_ASYNC)
+    $padrão  reduzir usando a regra 251 (opc_comp_iter)
+
+    comp_iter      ir ao estado 382
+    opc_comp_iter  ir ao estado 383
+    comp_for       ir ao estado 384
+    opc_ASYNC      ir ao estado 211
+    comp_if        ir ao estado 385
+
+
+Estado 375
+
+  224 sliceop: COLON opc_test .
+
+    $padrão  reduzir usando a regra 224 (sliceop)
+
+
+Estado 376
+
+  264 func_body_suite: NEWLINE INDENT . stmt fk_stmt DEDENT
+
+    CLASS     deslocar, e ir ao estado 1
+    DEF       deslocar, e ir ao estado 2
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    IF        deslocar, e ir ao estado 5
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    FOR       deslocar, e ir ao estado 8
+    WHILE     deslocar, e ir ao estado 9
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    WITH      deslocar, e ir ao estado 13
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    stmt                ir ao estado 386
+    simple_stmt         ir ao estado 36
+    small_stmt          ir ao estado 37
+    compound_stmt       ir ao estado 38
+    funcdef             ir ao estado 39
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    if_stmt             ir ao estado 52
+    while_stmt          ir ao estado 53
+    for_stmt            ir ao estado 54
+    with_stmt           ir ao estado 55
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    classdef            ir ao estado 74
+    yield_expr          ir ao estado 75
+
+
+Estado 377
+
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 namedexpr_test . COLON suite fk_ELIF_NT_COLON_SUITE
+
+    COLON  deslocar, e ir ao estado 387
+
+
+Estado 378
+
+  266 fk_stmt: stmt fk_stmt .
+
+    $padrão  reduzir usando a regra 266 (fk_stmt)
+
+
+Estado 379
+
+  106 suite: NEWLINE INDENT stmt fk_stmt DEDENT .
+
+    $padrão  reduzir usando a regra 106 (suite)
+
+
+Estado 380
+
+   98 opc_ELSE_COLON_suite: ELSE $@9 COLON suite .
+
+    $padrão  reduzir usando a regra 98 (opc_ELSE_COLON_suite)
+
+
+Estado 381
+
+  257 comp_if: IF . $@18 test_nocond opc_comp_iter
+
+    $padrão  reduzir usando a regra 256 ($@18)
+
+    $@18  ir ao estado 388
+
+
+Estado 382
+
+  252 opc_comp_iter: comp_iter .
+
+    $padrão  reduzir usando a regra 252 (opc_comp_iter)
+
+
+Estado 383
+
+  250 sync_comp_for: FOR exprlist IN or_test opc_comp_iter .
+
+    $padrão  reduzir usando a regra 250 (sync_comp_for)
+
+
+Estado 384
+
+  248 comp_iter: comp_for .
+
+    $padrão  reduzir usando a regra 248 (comp_iter)
+
+
+Estado 385
+
+  249 comp_iter: comp_if .
+
+    $padrão  reduzir usando a regra 249 (comp_iter)
+
+
+Estado 386
+
+  264 func_body_suite: NEWLINE INDENT stmt . fk_stmt DEDENT
+
+    CLASS     deslocar, e ir ao estado 1
+    DEF       deslocar, e ir ao estado 2
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    IF        deslocar, e ir ao estado 5
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    FOR       deslocar, e ir ao estado 8
+    WHILE     deslocar, e ir ao estado 9
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    WITH      deslocar, e ir ao estado 13
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    $padrão  reduzir usando a regra 265 (fk_stmt)
+
+    stmt                ir ao estado 370
     simple_stmt         ir ao estado 36
     small_stmt          ir ao estado 37
     compound_stmt       ir ao estado 38
@@ -6802,88 +6773,77 @@ Estado 383
     fk_stmt             ir ao estado 389
 
 
-Estado 384
-
-   91 fk_ELIF_NT_COLON_SUITE: ELSE_IF namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE .
-
-    $padrão  reduzir usando a regra 91 (fk_ELIF_NT_COLON_SUITE)
-
-
-Estado 385
-
-  114 lambdef_nocond: LAMBDA . opc_argslist COLON test_nocond
-
-    NAME  deslocar, e ir ao estado 78
-
-    $padrão  reduzir usando a regra 29 (opc_argslist)
-
-    opc_argslist  ir ao estado 390
-
-
-Estado 386
-
-  251 comp_if: IF test_nocond . opc_comp_iter
-
-    IF     deslocar, e ir ao estado 378
-    ASYNC  deslocar, e ir ao estado 207
-
-    FOR       reduzir usando a regra 249 (opc_ASYNC)
-    $padrão  reduzir usando a regra 246 (opc_comp_iter)
-
-    comp_iter      ir ao estado 379
-    opc_comp_iter  ir ao estado 391
-    comp_for       ir ao estado 381
-    opc_ASYNC      ir ao estado 212
-    comp_if        ir ao estado 382
-
-
 Estado 387
 
-  112 test_nocond: lambdef_nocond .
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 namedexpr_test COLON . suite fk_ELIF_NT_COLON_SUITE
 
-    $padrão  reduzir usando a regra 112 (test_nocond)
+    LAMBDA    deslocar, e ir ao estado 3
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    PASS      deslocar, e ir ao estado 10
+    BREAK     deslocar, e ir ao estado 11
+    CONTINUE  deslocar, e ir ao estado 12
+    RETURN    deslocar, e ir ao estado 14
+    YIELD     deslocar, e ir ao estado 15
+    GLOBAL    deslocar, e ir ao estado 16
+    NONLOCAL  deslocar, e ir ao estado 17
+    NONE      deslocar, e ir ao estado 18
+    DEL       deslocar, e ir ao estado 19
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    NEWLINE   deslocar, e ir ao estado 263
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    STAR      deslocar, e ir ao estado 29
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    simple_stmt         ir ao estado 264
+    small_stmt          ir ao estado 37
+    expr_stmt           ir ao estado 40
+    testlist_star_expr  ir ao estado 41
+    TSE_stmt            ir ao estado 42
+    del_stmt            ir ao estado 43
+    flow_stmt           ir ao estado 44
+    pass_stmt           ir ao estado 45
+    break_stmt          ir ao estado 46
+    continue_stmt       ir ao estado 47
+    return_stmt         ir ao estado 48
+    yield_stmt          ir ao estado 49
+    global_stmt         ir ao estado 50
+    nonlocal_stmt       ir ao estado 51
+    suite               ir ao estado 390
+    test                ir ao estado 56
+    lambdef             ir ao estado 57
+    or_test             ir ao estado 58
+    and_test            ir ao estado 59
+    not_test            ir ao estado 60
+    comparison          ir ao estado 61
+    star_expr           ir ao estado 62
+    expr                ir ao estado 63
+    xor_expr            ir ao estado 64
+    and_expr            ir ao estado 65
+    shift_expr          ir ao estado 66
+    arith_expr          ir ao estado 67
+    term                ir ao estado 68
+    factor              ir ao estado 69
+    factor_stmt         ir ao estado 70
+    power               ir ao estado 71
+    atom_expr           ir ao estado 72
+    atom                ir ao estado 73
+    yield_expr          ir ao estado 75
 
 
 Estado 388
 
-  111 test_nocond: or_test .
+  257 comp_if: IF $@18 . test_nocond opc_comp_iter
 
-    $padrão  reduzir usando a regra 111 (test_nocond)
-
-
-Estado 389
-
-  258 func_body_suite: NEWLINE INDENT stmt fk_stmt . DEDENT
-
-    DEDENT  deslocar, e ir ao estado 392
-
-
-Estado 390
-
-  114 lambdef_nocond: LAMBDA opc_argslist . COLON test_nocond
-
-    COLON  deslocar, e ir ao estado 393
-
-
-Estado 391
-
-  251 comp_if: IF test_nocond opc_comp_iter .
-
-    $padrão  reduzir usando a regra 251 (comp_if)
-
-
-Estado 392
-
-  258 func_body_suite: NEWLINE INDENT stmt fk_stmt DEDENT .
-
-    $padrão  reduzir usando a regra 258 (func_body_suite)
-
-
-Estado 393
-
-  114 lambdef_nocond: LAMBDA opc_argslist COLON . test_nocond
-
-    LAMBDA    deslocar, e ir ao estado 385
+    LAMBDA    deslocar, e ir ao estado 391
     NOT       deslocar, e ir ao estado 4
     TRUE      deslocar, e ir ao estado 6
     FALSE     deslocar, e ir ao estado 7
@@ -6899,9 +6859,9 @@ Estado 393
     TILDE     deslocar, e ir ao estado 30
     ELLIPSIS  deslocar, e ir ao estado 31
 
-    test_nocond     ir ao estado 394
-    lambdef_nocond  ir ao estado 387
-    or_test         ir ao estado 388
+    test_nocond     ir ao estado 392
+    lambdef_nocond  ir ao estado 393
+    or_test         ir ao estado 394
     and_test        ir ao estado 59
     not_test        ir ao estado 60
     comparison      ir ao estado 61
@@ -6918,8 +6878,135 @@ Estado 393
     atom            ir ao estado 73
 
 
+Estado 389
+
+  264 func_body_suite: NEWLINE INDENT stmt fk_stmt . DEDENT
+
+    DEDENT  deslocar, e ir ao estado 395
+
+
+Estado 390
+
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 namedexpr_test COLON suite . fk_ELIF_NT_COLON_SUITE
+
+    ELSE_IF  deslocar, e ir ao estado 350
+
+    $padrão  reduzir usando a regra 91 (fk_ELIF_NT_COLON_SUITE)
+
+    fk_ELIF_NT_COLON_SUITE  ir ao estado 396
+
+
+Estado 391
+
+  118 lambdef_nocond: LAMBDA . opc_argslist COLON test_nocond
+
+    NAME  deslocar, e ir ao estado 78
+
+    $padrão  reduzir usando a regra 29 (opc_argslist)
+
+    opc_argslist  ir ao estado 397
+
+
+Estado 392
+
+  257 comp_if: IF $@18 test_nocond . opc_comp_iter
+
+    IF     deslocar, e ir ao estado 381
+    ASYNC  deslocar, e ir ao estado 206
+
+    FOR       reduzir usando a regra 254 (opc_ASYNC)
+    $padrão  reduzir usando a regra 251 (opc_comp_iter)
+
+    comp_iter      ir ao estado 382
+    opc_comp_iter  ir ao estado 398
+    comp_for       ir ao estado 384
+    opc_ASYNC      ir ao estado 211
+    comp_if        ir ao estado 385
+
+
+Estado 393
+
+  116 test_nocond: lambdef_nocond .
+
+    $padrão  reduzir usando a regra 116 (test_nocond)
+
+
 Estado 394
 
-  114 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond .
+  115 test_nocond: or_test .
 
-    $padrão  reduzir usando a regra 114 (lambdef_nocond)
+    $padrão  reduzir usando a regra 115 (test_nocond)
+
+
+Estado 395
+
+  264 func_body_suite: NEWLINE INDENT stmt fk_stmt DEDENT .
+
+    $padrão  reduzir usando a regra 264 (func_body_suite)
+
+
+Estado 396
+
+   93 fk_ELIF_NT_COLON_SUITE: ELSE_IF $@8 namedexpr_test COLON suite fk_ELIF_NT_COLON_SUITE .
+
+    $padrão  reduzir usando a regra 93 (fk_ELIF_NT_COLON_SUITE)
+
+
+Estado 397
+
+  118 lambdef_nocond: LAMBDA opc_argslist . COLON test_nocond
+
+    COLON  deslocar, e ir ao estado 399
+
+
+Estado 398
+
+  257 comp_if: IF $@18 test_nocond opc_comp_iter .
+
+    $padrão  reduzir usando a regra 257 (comp_if)
+
+
+Estado 399
+
+  118 lambdef_nocond: LAMBDA opc_argslist COLON . test_nocond
+
+    LAMBDA    deslocar, e ir ao estado 391
+    NOT       deslocar, e ir ao estado 4
+    TRUE      deslocar, e ir ao estado 6
+    FALSE     deslocar, e ir ao estado 7
+    NONE      deslocar, e ir ao estado 18
+    AWAIT     deslocar, e ir ao estado 20
+    NAME      deslocar, e ir ao estado 21
+    NUMBER    deslocar, e ir ao estado 22
+    STRING    deslocar, e ir ao estado 23
+    LPAR      deslocar, e ir ao estado 25
+    LSQB      deslocar, e ir ao estado 26
+    PLUS      deslocar, e ir ao estado 27
+    MINUS     deslocar, e ir ao estado 28
+    TILDE     deslocar, e ir ao estado 30
+    ELLIPSIS  deslocar, e ir ao estado 31
+
+    test_nocond     ir ao estado 400
+    lambdef_nocond  ir ao estado 393
+    or_test         ir ao estado 394
+    and_test        ir ao estado 59
+    not_test        ir ao estado 60
+    comparison      ir ao estado 61
+    expr            ir ao estado 63
+    xor_expr        ir ao estado 64
+    and_expr        ir ao estado 65
+    shift_expr      ir ao estado 66
+    arith_expr      ir ao estado 67
+    term            ir ao estado 68
+    factor          ir ao estado 69
+    factor_stmt     ir ao estado 70
+    power           ir ao estado 71
+    atom_expr       ir ao estado 72
+    atom            ir ao estado 73
+
+
+Estado 400
+
+  118 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond .
+
+    $padrão  reduzir usando a regra 118 (lambdef_nocond)

@@ -643,6 +643,10 @@ Token get_last_token() {
     return vTokens[indexVT-1];
 }
 
+Token get_penultimate_token() {
+    return vTokens[indexVT-2];
+}
+
 ///
 
 

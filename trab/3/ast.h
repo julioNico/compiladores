@@ -14,7 +14,9 @@ typedef enum {
     OP_EQUAL_NODE,
 
     //  LOOPS
-    LOOP_NODE,
+    FOR_NODE,
+    WHILE_NODE,
+    FOR_IN_NODE,
 
     // CONTROLE DE FLUXO
     FLOW_NODE,
@@ -23,7 +25,7 @@ typedef enum {
     RETURN_NODE,
 
     //  ATRIBUICAO
-    EQ_NODE,
+    EQUAL_NODE,
 
     //  IMPORT
     FROM_NODE,
@@ -53,6 +55,9 @@ typedef enum {
 
     //  OPERADORES CONDICIONAIS
     IF_NODE,
+    ELSE_IF_NODE,
+    ELSE_NODE,
+    COLONEQUAL_NODE,
 
     //  OPERADORES BIT_A_BIT
     OP_BIT_A_BIT_NODE,
@@ -60,6 +65,8 @@ typedef enum {
     //  OPERADORES MALUCOS
     YIELD_EXPR_NODE,
     WITH_NODE,
+    WITH_ITEM_NODE,
+    AS_NODE,
 
     //  COMPARADORES
     CURTO_CIRCUITO_NODE,
@@ -71,18 +78,20 @@ typedef enum {
     EXPR_NODE,
 
     //  OUTROS
-    STMT_NODE,
     LOW_NODE,
     NL_NODE,
     SUB_NODE,
     STAR_NODE,
+    DOUBLESTAR_NODE,
     NONE_NODE,
 
     IF_ELSE_NODE,
     LAMBDA_NODE,
-    TEST_LIST_NODE,
+    TEST_NODE,
     VBAR_NODE,
-    COLON_NODE, 
+    COLON_NODE,
+    ARGUMENT_NODE,
+
 } NodeKind;
 
 struct node; // Opaque structure to ensure encapsulation.
