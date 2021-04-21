@@ -4053,6 +4053,7 @@ yyreturn:
 
 
 #include "ast.h"
+#include <string.h>
 
 void check_vars(AST*dad) {
   int i, j, son_id;
@@ -4093,7 +4094,7 @@ void check_vars(AST*dad) {
                 b = get_data(son);
                 if(!strcmp(a,b)){
                   name_OK = true;
-                  printf("\n\nNameOK: name \'%s\'\n", get_data(son));
+                  //printf("\n\nNameOK: name \'%s\'\n", get_data(son));
                   break;
                 }
               }

@@ -3,17 +3,18 @@ a=1
 #global a, b, c
 #def test(a):
 #    z=0
-# z=0
+#z=0
 
-def test():
-    z=0
+#def test():
+#    z=0
 #
-x = a+z
-
-#if e<2 and d<2:
+#x = a+z
+#
+#if a:
+#    z=0
 #    e=3+z
 #    a=1
-    
+
 
 #elif d>2:
 #    e=2
