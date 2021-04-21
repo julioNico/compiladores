@@ -193,7 +193,7 @@ stringerror     (\"[^"]*)|(\'[^']*)$
                 indent();
             }
 
-<<EOF>>     { process_token(ENDMARKER); return -1;
+<<EOF>>     { process_token(NEWLINE); process_token(ENDMARKER); return -1;
                 /*
                   Faz return para encerrar orig_yylex(). Não dê return em nenhuma
                   outra regra, caso contrário você vai encerrar orig_yylex() antes

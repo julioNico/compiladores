@@ -1534,7 +1534,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 #line 197 "scanner.l"
-{ process_token(ENDMARKER); return -1;
+{ process_token(NEWLINE); process_token(ENDMARKER); return -1;
                 /*
                   Faz return para encerrar orig_yylex(). Não dê return em nenhuma
                   outra regra, caso contrário você vai encerrar orig_yylex() antes

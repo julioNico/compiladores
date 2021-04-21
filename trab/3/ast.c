@@ -118,6 +118,9 @@ char* kind2str(NodeKind kind) {
         case FUNK_NODE:                 return "FUNK_NODE";
         case NONE_NODE:                 return "NONE_NODE"; 
         case BOOL_NODE:                 return "BOOL = ";
+        case AND_NODE:                  return "AND";
+        case OR_NODE:                   return "OR";
+        case NOT_NODE:                  return "NOT";
         case COMP_NODE:                 return "";
         case COLONEQUAL_NODE:           return "COLONEQUAL";
         case ARGUMENT_NODE:             return "ARGUMENT_NODE";

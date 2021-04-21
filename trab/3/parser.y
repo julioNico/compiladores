@@ -140,7 +140,8 @@ AST *root;
 
 %%
 
-file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1); }
+file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1); //check_var(root); 
+}
 ;
 
 fk_NEWLINE_stmt:
@@ -152,12 +153,14 @@ fk_NEWLINE_stmt:
   add_child($2, $1);
   $$ = $2; 
 }
-; 
-
-NL_stmt: NEWLINE | stmt { $$ = $1; }
 ;
 
-stmt: simple_stmt { $$ == $1; } | compound_stmt  { $$ == $1; };
+NL_stmt: 
+  NEWLINE   { $$ = new_subtree(LOW_NODE, 0); } 
+| stmt      { $$ = $1; }
+;
+
+stmt: simple_stmt { $$ = $1; } | compound_stmt  { $$ = $1; };
 simple_stmt:  small_stmt fk_SEMI_small_stmt opc_SEMI NEWLINE  { add_child($1, $2); $$ = $1; 
 }
 ;
@@ -435,16 +438,26 @@ lambdef: LAMBDA opc_argslist COLON test { $$ = new_subtree(LAMBDA_NODE, 2, $2, $
 lambdef_nocond: LAMBDA opc_argslist COLON test_nocond { $$ = new_subtree(LAMBDA_NODE, 2, $2, $4); }
 ;
 
-or_test: and_test fk_OR_AT { add_child($1, $2); $$ = $1; }
-;
+or_test: and_test fk_OR_AT { 
+  if(get_child_count($2)==0){
+    $$ = $1; 
+  } else {
+    add_child($2, $1); $$ = $2; 
+  }
+};
 
 fk_OR_AT:
 %empty  { $$ = new_node(LOW_NODE, ""); }
 |   OR and_test fk_OR_AT { $$ = new_subtree(OR_NODE, 2, $2, $3); }
 ;
 
-and_test: not_test fk_AND_NT { add_child($1, $2); $$ = $1; }
-;
+and_test: not_test fk_AND_NT { 
+  if(get_child_count($2)==0){
+    $$ = $1; 
+  } else {
+    add_child($2, $1); $$ = $2; 
+  }
+};
 
 fk_AND_NT:
 %empty   { $$ = new_node(LOW_NODE, ""); }
@@ -818,7 +831,7 @@ func_body_suite:
   simple_stmt { $$ = $1; }
 | NEWLINE INDENT stmt fk_stmt DEDENT  { 
   if (get_child_count($4) == 0) {
-    $$ = $3;
+    $$ = new_subtree(BLOCK_NODE, 1, $3);
   } else {
     add_child($4, $3); $$ = $4; 
   }
@@ -844,6 +857,7 @@ AST* tokenToAST_2(int kind) {
 
 AST* tokenToAST(int kind) {
   Token token = get_last_token();
+
   return new_node(kind, token.lexeme);
 }
 
@@ -855,16 +869,10 @@ void yyerror (char const *s) {
 }
 
 int main(void) {
-  st = create_str_table();
-  vt = create_var_table();
 
   orig_yylex(); // Chama o scanner para acumular todos os tokens.
   if (yyparse() == 0) printf("PARSE SUCCESSFUL!\n");
   else                printf("PARSE FAILED!\n");
-
-  printf("\n\n");
-  print_str_table(st); printf("\n\n");
-  print_var_table(vt); printf("\n\n");
 
   FILE *arq_dot = fopen("test.dot", "w+");
 
@@ -877,8 +885,6 @@ int main(void) {
   print_dot(root, arq_dot);
   fclose(arq_dot);
 
-  free_str_table(st);
-  free_var_table(vt);
   free_tree(root);
   yylex_destroy();  
 }
