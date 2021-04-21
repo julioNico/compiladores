@@ -6,8 +6,6 @@
 #include "ast.h"
 #include "tables.h"
 
-#define CHILDREN_LIMIT 20 // Don't try this at home, kids... :P
-
 struct node
 {
     NodeKind kind;
