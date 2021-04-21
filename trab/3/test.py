@@ -1,12 +1,15 @@
-# z=1
+a=1
+
+x=x
 
 #global a, b, c
-#
 #def test(a):
 #    z=0
 
 def test():
     z=0
+
+x = a+z
 
 #if e<2 and d<2:
 #    e=3+z
@@ -28,5 +31,3 @@ def test():
 
 #with open('file_path', 'w') as file:
 #    file.write('hello world !')
-
-a=1

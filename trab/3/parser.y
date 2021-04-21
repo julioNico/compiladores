@@ -140,7 +140,7 @@ AST *root;
 
 %%
 
-file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1); //check_var(root); 
+file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1); //check_vars(root); 
 }
 ;
 
@@ -849,6 +849,10 @@ fk_stmt:
 ;
 
 %%
+
+void check_vars(AST*arv) {
+
+}
 
 AST* tokenToAST_2(int kind) {
   Token token = get_penultimate_token();

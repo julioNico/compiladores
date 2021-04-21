@@ -2081,7 +2081,7 @@ yyreduce:
       {
   case 2:
 #line 143 "parser.y"
-                                      { root = new_subtree(PROGRAM_NODE, 1, yyvsp[-1]); //check_var(root); 
+                                      { root = new_subtree(PROGRAM_NODE, 1, yyvsp[-1]); //check_vars(root); 
 }
 #line 2087 "parser.c"
     break;
@@ -4049,6 +4049,10 @@ yyreturn:
 }
 #line 851 "parser.y"
 
+
+void check_vars(AST*arv) {
+
+}
 
 AST* tokenToAST_2(int kind) {
   Token token = get_penultimate_token();
