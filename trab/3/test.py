@@ -1,14 +1,13 @@
 a=1
 
-x=x
-
 #global a, b, c
 #def test(a):
 #    z=0
+# z=0
 
 def test():
     z=0
-
+#
 x = a+z
 
 #if e<2 and d<2:

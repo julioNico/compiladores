@@ -8,30 +8,41 @@
 
 struct node
 {
+    int id;
     NodeKind kind;
     char *data;
     int count;
     AST **child;
-    //AST* dad;
+    AST *dad;
 };
 
 AST *new_node(NodeKind kind, char *data)
 {
     AST *node = (AST *)malloc(sizeof(AST));
+    node->id = 0;
     node->kind = kind;
     node->data = data;
     node->count = 0;
     node->child = NULL;
+    node->dad = NULL;
     return node;
 }
 
 void add_child(AST *parent, AST *child)
 {
+    if (child->kind == LOW_NODE)
+    {
+        return;
+    }
+
     if (parent->count == 0)
     {
         parent->child = (AST **)malloc(sizeof(AST *));
     }
     parent->child[parent->count] = (AST *)malloc(sizeof(AST));
+
+    child->dad = parent;
+    child->id = parent->count;
     parent->child[parent->count] = child;
     parent->count++;
 }
@@ -67,6 +78,16 @@ char *get_data(AST *node)
 int get_child_count(AST *node)
 {
     return node->count;
+}
+
+int get_id(AST *node)
+{
+    return node->id;
+}
+
+AST *get_dad(AST *node)
+{
+    return node->dad;
 }
 
 void free_tree(AST *tree)
@@ -214,31 +235,25 @@ int print_node_dot(AST *node, FILE *arq_dot)
 {
     int my_nr = nr++;
 
-    if (node->kind != LOW_NODE)
+    fprintf(arq_dot, "node%d[label=\"", my_nr);
+    if (node->kind == NAME_NODE)
     {
-        fprintf(arq_dot, "node%d[label=\"", my_nr);
-        if (node->kind == NAME_NODE)
-        {
-            fprintf(arq_dot, "%s@", node->data);
-        }
-        else
-        {
-            fprintf(arq_dot, "%s", kind2str(node->kind));
-        }
-        if (has_data(node->kind))
-        {
-            fprintf(arq_dot, "%s", node->data);
-        }
-        fprintf(arq_dot, "\"];\n");
+        fprintf(arq_dot, "%s@", node->data);
+    }
+    else
+    {
+        fprintf(arq_dot, "%s", kind2str(node->kind));
+    }
+    if (has_data(node->kind))
+    {
+        fprintf(arq_dot, "%s", node->data);
+    }
+    fprintf(arq_dot, "\"];\n");
 
-        for (int i = 0; i < node->count; i++)
-        {
-            if (node->child[i]->kind != LOW_NODE)
-            {
-                int child_nr = print_node_dot(node->child[i], arq_dot);
-                fprintf(arq_dot, "node%d -> node%d;\n", my_nr, child_nr);
-            }
-        }
+    for (int i = 0; i < node->count; i++)
+    {
+        int child_nr = print_node_dot(node->child[i], arq_dot);
+        fprintf(arq_dot, "node%d -> node%d;\n", my_nr, child_nr);
     }
     return my_nr;
 }

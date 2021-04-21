@@ -18,10 +18,9 @@ int yylex_destroy(void);
 int orig_yylex(void);
 Token get_last_token();
 Token get_penultimate_token();
-
 AST* tokenToAST(int kind);
-
 AST* tokenToAST_2(int kind);
+void check_vars(AST*arv);
 
 void yyerror(char const *s);
 
@@ -140,18 +139,20 @@ AST *root;
 
 %%
 
-file_input: fk_NEWLINE_stmt ENDMARKER { root = new_subtree(PROGRAM_NODE, 1, $1); //check_vars(root); 
-}
-;
+file_input: fk_NEWLINE_stmt ENDMARKER { 
+  root = new_subtree(PROGRAM_NODE, 1, $1); 
+  check_vars(root); 
+};
 
 fk_NEWLINE_stmt:
 %empty %prec LOW  { $$ = new_subtree(LOW_NODE, 0); }         
 | NL_stmt fk_NEWLINE_stmt   {
   if(get_child_count($2) == 0){
-    $2 = new_subtree(BLOCK_NODE, 1, $2); 
-  }; 
-  add_child($2, $1);
-  $$ = $2; 
+    $$ = new_subtree(BLOCK_NODE, 1, $1); 
+  } else {
+    add_child($2, $1);
+    $$ = $2; 
+  } 
 }
 ;
 
@@ -850,8 +851,78 @@ fk_stmt:
 
 %%
 
-void check_vars(AST*arv) {
+#include "ast.h"
 
+void check_vars(AST*dad) {
+  int i, j, son_id;
+  AST * son, *block_dad, *dad_aux, *son_aux;
+  son = block_dad = dad_aux = son_aux = NULL;
+  bool name_OK;
+
+  for (i = 0; i < get_child_count(dad); i++) {
+    name_OK = false;
+    son = get_child(dad, i);
+    check_vars(son);
+    if  ( get_kind(son) == NAME_NODE 
+          &&  (
+                get_kind(dad) != EQUAL_NODE || (get_kind(dad) 
+                == 
+                EQUAL_NODE && (i+1 < get_child_count(dad)))
+              )
+          && get_kind(dad) != FUNK_NODE
+        )
+    { 
+      //printf("\n");
+      //printf("PAI: %s\n",kind2str(get_kind(dad)));
+      //printf("FILHO: %s\n",get_data(son));
+      //printf("ID: %d\n", get_id(son));
+      //printf("i: %d\n", i);
+
+      dad_aux = dad;
+      son_id = i;
+      while(true){
+        if(get_kind(dad_aux) == BLOCK_NODE){
+          block_dad = dad_aux;
+          for(j = 0; j < get_child_count(block_dad); j++){
+            if(j>son_id){
+              son_aux = get_child(block_dad, j);
+              if(get_kind(son_aux) == EQUAL_NODE){
+                char *a, *b;
+                a = get_data(get_child(son_aux, get_child_count(son_aux)-1));
+                b = get_data(son);
+                if(!strcmp(a,b)){
+                  name_OK = true;
+                  printf("\n\nNameOK: name \'%s\'\n", get_data(son));
+                  break;
+                }
+              }
+            }
+          }
+
+          if(name_OK){
+            break;
+          } else {
+            if(get_dad(block_dad) != NULL){
+              dad_aux = get_dad(block_dad);
+            } else {
+              break;
+            }
+          }
+        } else {
+          if(get_dad(dad_aux) != NULL){
+            dad_aux = get_dad(dad_aux);
+            son_id = get_id(dad_aux);
+          } else {
+            break;
+          }
+        }
+      }
+      if(!name_OK){
+        printf("\n\nNameError: name \'%s\' is not defined\n", get_data(son));
+      }
+    }
+  }
+  return;
 }
 
 AST* tokenToAST_2(int kind) {

@@ -111,6 +111,8 @@ char* kind2str(NodeKind kind);
 char* get_data(AST *node);
 
 int get_child_count(AST *node);
+int get_id(AST *node);
+AST * get_dad(AST *node);
 
 void print_tree(AST *ast);
 void print_dot(AST *ast, FILE *arq_dot);

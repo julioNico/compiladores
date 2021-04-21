@@ -27,16 +27,10 @@ node10 -> node11;
 node7 -> node10;
 node1 -> node7;
 node14[label="="];
-node15[label="x@x"];
+node15[label="(NUMBER) 1"];
 node14 -> node15;
-node16[label="x@x"];
+node16[label="a@a"];
 node14 -> node16;
 node1 -> node14;
-node17[label="="];
-node18[label="(NUMBER) 1"];
-node17 -> node18;
-node19[label="a@a"];
-node17 -> node19;
-node1 -> node17;
 node0 -> node1;
 }
