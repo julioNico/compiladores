@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include<stdbool.h>
 #include "token.h"
-#include "tables.h"
 #include "ast.h"
 #include "parser.h"
 
@@ -23,9 +22,6 @@ AST* tokenToAST_2(int kind);
 void check_vars(AST*arv);
 
 void yyerror(char const *s);
-
-StrTable *st;
-VarTable *vt;
 
 AST *root;
 %}
@@ -919,7 +915,8 @@ void check_vars(AST*dad) {
         }
       }
       if(!name_OK){
-        printf("\n\nNameError: name \'%s\' is not defined\n", get_data(son));
+        printf("\n\nSEMANTIC ERROR - NameError: name \'%s\' is not defined\n", get_data(son));
+        exit(EXIT_FAILURE);
       }
     }
   }

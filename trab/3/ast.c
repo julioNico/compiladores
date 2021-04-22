@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "ast.h"
-#include "tables.h"
 
 struct node
 {
@@ -104,8 +103,6 @@ void free_tree(AST *tree)
 // Dot output.
 
 int nr;
-
-extern VarTable *vt;
 
 char *kind2str(NodeKind kind)
 {
