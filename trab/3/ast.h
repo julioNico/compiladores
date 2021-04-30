@@ -1,7 +1,8 @@
 #ifndef AST_H
 #define AST_H
 
-typedef enum {
+typedef enum
+{
 
     //  ESCOPO
     PROGRAM_NODE,
@@ -50,7 +51,7 @@ typedef enum {
 
     //  OPERADORES BOLEANOS
     AND_NODE,
-    OR_NODE,    
+    OR_NODE,
     NOT_NODE,
 
     //  OPERADORES CONDICIONAIS
@@ -94,29 +95,34 @@ typedef enum {
 
 } NodeKind;
 
+#include<stdbool.h>
+
 struct node; // Opaque structure to ensure encapsulation.
 
 typedef struct node AST;
 
-AST* new_node(NodeKind kind, char* data);
+AST *new_node(NodeKind kind, char *data);
 
 void add_child(AST *parent, AST *child);
-AST* get_child(AST *parent, int idx);
+AST *get_child(AST *parent, int idx);
 
-AST* new_subtree(NodeKind kind, int child_count, ...);
+AST *new_subtree(NodeKind kind, int child_count, ...);
 
 NodeKind get_kind(AST *node);
-char* kind2str(NodeKind kind);
+char *kind2str(NodeKind kind);
 
-char* get_data(AST *node);
+char *get_data(AST *node);
 
 int get_child_count(AST *node);
 int get_id(AST *node);
-AST * get_dad(AST *node);
+AST *get_dad(AST *node);
 
 void print_tree(AST *ast);
 void print_dot(AST *ast, FILE *arq_dot);
 
 void free_tree(AST *ast);
+bool isBuiltIn(char* word);
+bool DadIsLoop(AST *ast);
+bool isLoop(AST *ast);
 
 #endif

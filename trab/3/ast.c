@@ -27,6 +27,77 @@ AST *new_node(NodeKind kind, char *data)
     return node;
 }
 
+char *funkBuiltIn[] = {
+    "abs",
+    "delattr",
+    "hash",
+    "memoryview",
+    "set",
+    "all",
+    "dict",
+    "help",
+    "min",
+    "setattr",
+    "any",
+    "dir",
+    "hex",
+    "next",
+    "slice",
+    "ascii",
+    "divmod",
+    "id",
+    "object",
+    "sorted",
+    "bin",
+    "enumerate",
+    "input",
+    "oct",
+    "staticmethod",
+    "bool",
+    "eval",
+    "int",
+    "open",
+    "str",
+    "breakpoint",
+    "exec",
+    "isinstance",
+    "ord",
+    "sum",
+    "bytearray",
+    "filter",
+    "issubclass",
+    "pow",
+    "super",
+    "bytes",
+    "float",
+    "iter",
+    "print",
+    "tuple",
+    "callable",
+    "format",
+    "len",
+    "property",
+    "type",
+    "chr",
+    "frozenset",
+    "list",
+    "range",
+    "vars",
+    "classmethod",
+    "getattr",
+    "locals",
+    "repr",
+    "zip",
+    "compile",
+    "globals",
+    "map",
+    "reversed",
+    "__import__",
+    "complex",
+    "hasattr",
+    "max",
+    "round"};
+
 void add_child(AST *parent, AST *child)
 {
     if (child->kind == LOW_NODE)
@@ -232,25 +303,31 @@ int print_node_dot(AST *node, FILE *arq_dot)
 {
     int my_nr = nr++;
 
-    fprintf(arq_dot, "node%d[label=\"", my_nr);
+    fprintf(arq_dot,
+            "node%d[label=\"", my_nr);
     if (node->kind == NAME_NODE)
     {
-        fprintf(arq_dot, "%s@", node->data);
+        fprintf(arq_dot,
+                "%s@", node->data);
     }
     else
     {
-        fprintf(arq_dot, "%s", kind2str(node->kind));
+        fprintf(arq_dot,
+                "%s", kind2str(node->kind));
     }
     if (has_data(node->kind))
     {
-        fprintf(arq_dot, "%s", node->data);
+        fprintf(arq_dot,
+                "%s", node->data);
     }
-    fprintf(arq_dot, "\"];\n");
+    fprintf(arq_dot,
+            "\"];\n");
 
     for (int i = 0; i < node->count; i++)
     {
         int child_nr = print_node_dot(node->child[i], arq_dot);
-        fprintf(arq_dot, "node%d -> node%d;\n", my_nr, child_nr);
+        fprintf(arq_dot,
+                "node%d -> node%d;\n", my_nr, child_nr);
     }
     return my_nr;
 }
@@ -258,7 +335,36 @@ int print_node_dot(AST *node, FILE *arq_dot)
 void print_dot(AST *tree, FILE *arq_dot)
 {
     nr = 0;
-    fprintf(arq_dot, "digraph {\ngraph [ordering=\"out\"];\n");
+    fprintf(arq_dot,
+            "digraph {\ngraph [ordering=\"out\"];\n");
     print_node_dot(tree, arq_dot);
-    fprintf(arq_dot, "}\n");
+    fprintf(arq_dot,
+            "}\n");
+}
+
+bool isBuiltIn(char *word)
+{
+    int i, len = sizeof(funkBuiltIn) / sizeof(funkBuiltIn[0]);
+
+    for (i = 0; i < len; i++)
+    {
+        if (!strcmp(word, funkBuiltIn[i]))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isLoop(AST *ast)
+{   
+    switch (ast->kind)
+    {
+    case WHILE_NODE:
+    case FOR_IN_NODE:
+    case FOR_NODE:
+        return true;
+    default:
+        return false;
+    }
 }

@@ -714,7 +714,12 @@ opc_sliceop:
 sliceop: COLON opc_test   { $1 = new_node(COLON_NODE, ":"), add_child($1, $2); $$ = $1; }
 ;
 
-exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA  { add_child($1, $2); $$ = $1; }
+exprlist: exprlist_stmt fk_COMMA_E_SE opc_COMMA  { 
+  if (get_child_count($2) == 0) {
+    $2 = new_subtree(EXPR_STMT_LIST_NODE, 1, $2); 
+  };
+  add_child($2, $1); $$ = $2; 
+  }
 ;
 
 fk_COMMA_E_SE:
@@ -856,18 +861,18 @@ void check_vars(AST*dad) {
   son = block_dad = dad_aux = son_aux = NULL;
   bool name_OK;
 
-  for (i = 0; i < get_child_count(dad); i++) {
+  for (i = 0; i < get_child_count(dad) && !isLoop(dad); i++) {
     name_OK = false;
     son = get_child(dad, i);
     check_vars(son);
-    if  ( get_kind(son) == NAME_NODE 
-          &&  (
-                get_kind(dad) != EQUAL_NODE || (get_kind(dad) 
-                == 
-                EQUAL_NODE && (i+1 < get_child_count(dad)))
-              )
-          && get_kind(dad) != FUNK_NODE
-        )
+    if( get_kind(son) == NAME_NODE 
+        &&  (
+              get_kind(dad) != EQUAL_NODE || (get_kind(dad) 
+              == 
+              EQUAL_NODE && (i+1 < get_child_count(dad)))
+            )
+        && get_kind(dad) != FUNK_NODE)
+        
     { 
       //printf("\n");
       //printf("PAI: %s\n",kind2str(get_kind(dad)));
@@ -887,7 +892,7 @@ void check_vars(AST*dad) {
                 char *a, *b;
                 a = get_data(get_child(son_aux, get_child_count(son_aux)-1));
                 b = get_data(son);
-                if(!strcmp(a,b)){
+                if(!strcmp(a,b) || isBuiltIn(b)){
                   name_OK = true;
                   //printf("\n\nNameOK: name \'%s\'\n", get_data(son));
                   break;
@@ -895,7 +900,6 @@ void check_vars(AST*dad) {
               }
             }
           }
-
           if(name_OK){
             break;
           } else {
@@ -905,6 +909,8 @@ void check_vars(AST*dad) {
               break;
             }
           }
+        } else if (isLoop(dad_aux)) {
+          break;
         } else {
           if(get_dad(dad_aux) != NULL){
             dad_aux = get_dad(dad_aux);

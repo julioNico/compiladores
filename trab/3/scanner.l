@@ -1,9 +1,9 @@
 /* Opções do flex. */
- /* Flex output */
+/* Flex output */
 %option outfile="scanner.c"
- /* Auto increment variable yylineno every time a '\n' is read. */
+/* Auto increment variable yylineno every time a '\n' is read. */
 %option yylineno
- /* Unused functions */
+/* Unused functions */
 %option noyywrap
 %option nounput
 %option noinput
