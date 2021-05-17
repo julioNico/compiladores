@@ -8,16 +8,13 @@ const char *jasmin_start = R"(
     .limit stack 50
 )";
 
-const char *print_jasmin = R"(
+const char *print_hello = R"(
     getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "HelloWord JASMIN"
+	ldc "HOLA MUNDO DESDE JASMIN"
     invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
 )";
 
 const char *jasmin_end = R"(
-    ; getstatic java/lang/System/out Ljava/io/PrintStream;
-    ; aload 0
-    ; invokevirtual java/io/PrintStream/println(Ljava/lang/Object;)V
     return	
 .end method
 )";
@@ -61,7 +58,7 @@ void genPrintLastF(FILE *arq_j)
 {
     str_aux = strdup("\n   gstatic java/lang/System/out Ljava/io/PrintStream;");
     fprintf(arq_j, "%s", str_aux);
-    sprintf(buffer, "%d", tamPilha);
+    sprintf(buffer, "%d", tamPilha-1);
     str_aux = strdup("\n   fload ");
     fprintf(arq_j, "%s %s", str_aux, buffer);
     str_aux = strdup("\n   invokevirtual java/io/PrintStream/println(I)V");
@@ -126,7 +123,7 @@ void genOpMathCode(AST *node, FILE *arq_j)
 
     if (data2 != NULL)
     {
-        printf("\n%s\n", data2);
+        //printf("\n%s\n", data2);
     }
 
     str_aux = strdup("\n   bipush ");
@@ -153,7 +150,6 @@ void genOpMathCode(AST *node, FILE *arq_j)
     str_aux = strdup("\n   fload ");
     fprintf(arq_j, "%s %s", str_aux, buffer);
 
-    
     genAtomOpMath(node, arq_j);
 
     sprintf(buffer, "%d", tamPilha);
@@ -161,7 +157,6 @@ void genOpMathCode(AST *node, FILE *arq_j)
     fprintf(arq_j, "%s %s", str_aux, buffer);
     tamPilha++;
 
-    genPrintLastF(arq_j);
 
     while (true)
     {
@@ -170,7 +165,7 @@ void genOpMathCode(AST *node, FILE *arq_j)
             break;
         }
 
-        printf("%s", kind2str(get_kind(dad)));
+        //printf("%s", kind2str(get_kind(dad)));
 
         son2 = get_child(node, 1);
 
@@ -205,9 +200,9 @@ void genOpMathCode(AST *node, FILE *arq_j)
         str_aux = strdup("\n   fstore ");
         fprintf(arq_j, "%s %s", str_aux, buffer);
         tamPilha++;
-
-        genPrintLastF(arq_j);
         
+        //genPrintLastF(arq_j);
+
         dad = get_dad(dad);
         if(dad==NULL){
             break;
@@ -261,9 +256,9 @@ void generateCodeFromAST(AST *node, FILE *arq_j)
         break;
     case OP_MATH_NODE:
         //printf("%s", kind2str(get_kind(node)));
-        son1 = get_child(node, 0);
-        if (get_child_count(son1) == 2)
+        if (get_child_count(node) == 2)
         {   
+            //printf("\nAQUIIIII\n", kind2str(get_kind(node)));
             genOpMathCode(node, arq_j);
         }
         break;
@@ -274,10 +269,6 @@ void generateCodeFromAST(AST *node, FILE *arq_j)
     for (i = total_filhos - 1; i >= 0; i--)
     {
         son = get_child(node, i);
-        if (get_data(son) != NULL)
-        {
-            //printf("DATA: %s\n", get_data(son));
-        }
         generateCodeFromAST(son, arq_j);
     }
 }
@@ -288,8 +279,7 @@ void generate(AST *root, FILE *arq_j)
 
     mem = (Memoria *)malloc(sizeof(Memoria));
     mem->numVar = 0;
-    generateCodeFromAST(root, arq_j);
-
-    fprintf(arq_j, "%s", print_jasmin);
+    //generateCodeFromAST(root, arq_j);
+    fprintf(arq_j, "%s", print_hello);
     fprintf(arq_j, "%s", jasmin_end);
 }
