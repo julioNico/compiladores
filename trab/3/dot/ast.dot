@@ -1,0 +1,32 @@
+digraph {
+graph [ordering="out"];
+node0[label="PROGRAM"];
+node1[label="block"];
+node2[label="="];
+node3[label="+"];
+node4[label="/"];
+node5[label="(NUMBER) 2"];
+node4 -> node5;
+node6[label="z@z"];
+node4 -> node6;
+node3 -> node4;
+node7[label="a@a"];
+node3 -> node7;
+node2 -> node3;
+node8[label="x@x"];
+node2 -> node8;
+node1 -> node2;
+node9[label="="];
+node10[label="(NUMBER) 0"];
+node9 -> node10;
+node11[label="z@z"];
+node9 -> node11;
+node1 -> node9;
+node12[label="="];
+node13[label="(NUMBER) 1"];
+node12 -> node13;
+node14[label="a@a"];
+node12 -> node14;
+node1 -> node12;
+node0 -> node1;
+}

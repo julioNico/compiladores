@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include<stdbool.h>
 #include "token.h"
+#include "code_gen.h"
 #include "ast.h"
 #include "parser.h"
 
@@ -20,6 +21,8 @@ Token get_penultimate_token();
 AST* tokenToAST(int kind);
 AST* tokenToAST_2(int kind);
 void check_vars(AST*arv);
+
+void generate(AST* raiz, FILE *arq_j);
 
 void yyerror(char const *s);
 
@@ -547,16 +550,26 @@ arith_expr: term fk_T_PLUS_MINUS  {
 
 fk_T_PLUS_MINUS:
 %empty %prec LOW                  { $$ = new_subtree(LOW_NODE, 0); }
-|   AE_stmt term fk_T_PLUS_MINUS  { add_child($1, $2); add_child($1, $3); $$ = $1; }
-;
+|   AE_stmt term fk_T_PLUS_MINUS  { 
+  add_child($1, $2); 
+  add_child($1, $3); 
+  $$ = $1; 
+  
+};
 
 AE_stmt: 
   PLUS    { $$ = tokenToAST(OP_MATH_NODE); } 
 | MINUS   { $$ = tokenToAST(OP_MATH_NODE); } 
 ;
 
-term: factor fk_MATH  { add_child($1, $2); $$ = $1; }
-;
+term: factor fk_MATH  {
+  if(get_child_count($2)==0) {
+    $$ = $1;
+  } else {
+    add_child($2, $1);
+    $$ = $2;
+  }
+};
 
 fk_MATH:
 %empty %prec LOW              { $$ = new_subtree(LOW_NODE, 0); }
@@ -572,7 +585,7 @@ fk_MATH:
 
 term_stmt: 
   STAR          { $$ = tokenToAST(OP_MATH_NODE); }
-| AT            { $$ = tokenToAST(OP_MATH_NODE); }
+| AT            { $$ = tokenToAST(EQUAL_NODE); }
 | SLASH         { $$ = tokenToAST(OP_MATH_NODE); }
 | PERCENT       { $$ = tokenToAST(OP_MATH_NODE); }
 | DOUBLESLASH   { $$ = tokenToAST(OP_MATH_NODE); }
@@ -852,7 +865,7 @@ fk_stmt:
 
 %%
 
-#include "ast.h"
+#include "code_gen.h"
 #include <string.h>
 
 void check_vars(AST*dad) {
@@ -953,7 +966,7 @@ int main(void) {
   if (yyparse() == 0) printf("PARSE SUCCESSFUL!\n");
   else                printf("PARSE FAILED!\n");
 
-  FILE *arq_dot = fopen("test.dot", "w+");
+  FILE *arq_dot = fopen("ast.dot", "w+");
 
   if(arq_dot == NULL)
   {
@@ -963,6 +976,10 @@ int main(void) {
 
   print_dot(root, arq_dot);
   fclose(arq_dot);
+
+  FILE *arq_j = fopen("new_code/code.j", "w+");
+  generate(root, arq_j);
+  fclose(arq_j);
 
   free_tree(root);
   yylex_destroy();  

@@ -8,24 +8,21 @@ flex: scanner.l
 	flex scanner.l
 
 gcc: scanner.c parser.c
-	gcc -Wall -o trab scanner.c parser.c ast.c
+	gcc -Wall -o trab scanner.c parser.c ast.c code_gen.c
 
-exec: test.py
-	./trab < test.py
+exec: tests/test.py
+	./trab < tests/test.py
+	mv *.dot dot/
 
-dot: test.dot
-	dot -Tpdf test.dot -o test.pdf
+.PHONY: dot
 
-test: trab
-	@for name in tests/should_succeed/*; do\
-	 	echo -e '\n'$${name};\
-        ./trab < $${name};\
-    done; echo "Done."\
+dot: dot/ast.dot
+	dot -Tpdf dot/ast.dot -o dot/ast.pdf
 
-	@for name in tests/should_fail/*; do\
-	 	echo -e '\n'$${name};\
-        ./trab < $${name};\
-    done; echo "Done."\
+jasmin: new_code/code.j
+	java -jar jasmin/jasmin.jar new_code/code.j
+	mv *.class new_code/
+	java -cp new_code/ Code
 
 clean:
-	@rm -f *.o *.output scanner.c parser.h parser.c *.dot *.pdf trab
+	@rm -f *.o *.output scanner.c parser.h parser.c dot/*.dot dot/*.pdf new_code/*.class trab

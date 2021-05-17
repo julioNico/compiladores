@@ -27,6 +27,8 @@
         "system_error": "c",
         "tuple": "c",
         "utility": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "constantes.h": "c",
+        "code_gen.h": "c"
     }
 }

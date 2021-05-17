@@ -95,6 +95,15 @@ typedef enum
 
 } NodeKind;
 
+typedef enum
+{
+    OP_PLUS,
+    OP_MINUS,
+    OP_OVER,
+    OP_TIMES,
+    OP_NONE,
+} OpMath;
+
 #include<stdbool.h>
 
 struct node; // Opaque structure to ensure encapsulation.
@@ -109,6 +118,8 @@ AST *get_child(AST *parent, int idx);
 AST *new_subtree(NodeKind kind, int child_count, ...);
 
 NodeKind get_kind(AST *node);
+OpMath get_op_arit(AST *node);
+
 char *kind2str(NodeKind kind);
 
 char *get_data(AST *node);

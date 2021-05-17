@@ -140,6 +140,22 @@ NodeKind get_kind(AST *node)
     return node->kind;
 }
 
+OpMath get_op_arit(AST *node)
+{
+    if(node->kind == OP_MATH_NODE && (node->data != NULL)){
+        if(strcmp(node->data,"+")){
+            return OP_PLUS;
+        } else if (strcmp(node->data,"-")){
+            return OP_MINUS;
+        } else if (strcmp(node->data,"*")){
+            return OP_TIMES;
+        } else if (strcmp(node->data,"/")){
+            return (OpMath) OP_OVER;
+        }
+    }
+    return OP_NONE;
+}
+
 char *get_data(AST *node)
 {
     return node->data;
